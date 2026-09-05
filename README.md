@@ -1,2 +1,33 @@
 # Hrček
-Hrček - a tool for saving interesting online content
+
+Hrček — a tool for saving interesting online content.
+
+A small, self-hosted service for storing references to things you find
+on the web. Built for family-scale use: SQLite, one process, no moving
+parts you have to babysit.
+
+## Status
+
+Early. The service, its API, error handling, translations and tooling
+are in place; saving content is not built yet.
+
+## Documentation
+
+- [User manual](docs/manual/index.md)
+- [Developer documentation](docs/dev/index.md)
+- [Working agreement](CLAUDE.md)
+
+## Quick start
+
+```bash
+uv sync
+uv run pytest
+uv run python manage.py runserver
+```
+
+Requires [uv](https://docs.astral.sh/uv/) and GNU gettext. See
+[development setup](docs/dev/development-setup.md).
+
+## Licence
+
+See [LICENSE](LICENSE).

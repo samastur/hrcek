@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Lint, type-check and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # makemessages and compilemessages shell out to the GNU gettext
+      # tools, which the runner image does not include.
+      - name: Install gettext
+        run: sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install Python
+        run: uv python install 3.13
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Install prek
+        run: uv tool install prek
+
+      - name: Run commit-stage hooks
+        run: prek run --all-files --show-diff-on-failure
+
+      # The translation guards only run before a push locally, so CI is
+      # where they are checked on every change.
+      - name: Run push-stage hooks
+        run: prek run --all-files --hook-stage pre-push
+
+      - name: Run the test suite
+        run: uv run pytest

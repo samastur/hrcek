@@ -52,7 +52,8 @@ coverage.xml
 cover/
 
 # Translations
-*.mo
+# *.mo is intentionally NOT ignored: compiled translations are committed
+# so a fresh checkout runs without a build step (see docs/dev/i18n.md).
 *.pot
 
 # Django stuff:
@@ -195,9 +196,9 @@ cython_debug/
 .abstra/
 
 # Visual Studio Code
-#   Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
+#   Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore
 #   that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#   and can be added to the global gitignore or merged into this file. However, if you prefer, 
+#   and can be added to the global gitignore or merged into this file. However, if you prefer,
 #   you could uncomment the following to ignore the entire vscode folder
 # .vscode/
 # Temporary file for partial code execution
@@ -216,3 +217,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Superpowers working documents (specs, plans) - intentionally untracked
+docs/superpowers/
+
+# Uncommitted code review guide (see CLAUDE.md)
+REVIEW_GUIDE.md

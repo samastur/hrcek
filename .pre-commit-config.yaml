@@ -1,0 +1,53 @@
+default_install_hook_types: [pre-commit, pre-push]
+# Compiled catalogues are binary and machine-generated; whitespace and
+# newline fixers must not touch them.
+exclude: '\.mo$'
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.6
+    hooks:
+      - id: ruff-format
+      - id: ruff-check
+        args: [--fix]
+
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty (type check)
+        entry: uv run ty check
+        language: system
+        types_or: [python, pyi]
+        pass_filenames: false
+
+      - id: django-missing-migrations
+        name: django (no missing migrations)
+        entry: uv run python manage.py makemigrations --check --dry-run
+        language: system
+        files: ^src/.*\.py$
+        pass_filenames: false
+
+      - id: translations-extracted
+        name: translations (catalogues match the source)
+        entry: scripts/check_translations.sh extract
+        language: script
+        stages: [pre-push]
+        pass_filenames: false
+
+      - id: translations-compiled
+        name: translations (.mo files match .po files)
+        entry: scripts/check_translations.sh compile
+        language: script
+        stages: [pre-push]
+        pass_filenames: false

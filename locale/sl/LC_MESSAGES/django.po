@@ -1,0 +1,44 @@
+# Hrček translation catalogue.
+# Copyright (C) Hrček contributors
+# This file is distributed under the same license as the hrcek package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hrcek 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-05 14:04+0000\n"
+"Language-Team: Slovenian\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
+
+#: src/hrcek/core/api.py
+msgid "Service is running."
+msgstr "Storitev deluje."
+
+#: src/hrcek/core/apps.py
+msgid "Core"
+msgstr "Osnova"
+
+#: src/hrcek/core/errors.py
+msgid "An unexpected error occurred."
+msgstr "Prišlo je do nepričakovane napake."
+
+#: src/hrcek/core/errors.py
+msgid "The submitted data is not valid."
+msgstr "Poslani podatki niso veljavni."
+
+#: src/hrcek/core/errors.py
+msgid "The requested resource does not exist."
+msgstr "Zahtevani vir ne obstaja."
+
+#: src/hrcek/settings/base.py
+msgid "English"
+msgstr "angleščina"
+
+#: src/hrcek/settings/base.py
+msgid "Slovenian"
+msgstr "slovenščina"

@@ -1,2 +1,2 @@
-# hrcek
+# Hrček
 Hrček - a tool for saving interesting online content

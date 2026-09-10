@@ -267,8 +267,62 @@ msgstr ""
 msgid "Create my account"
 msgstr ""
 
+#: src/hrcek/accounts/templates/accounts/login.html
+#: src/hrcek/accounts/templates/accounts/password_reset_complete.html
+msgid "Sign in"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/login.html
+msgid "Forgotten your password?"
+msgstr ""
+
 #: src/hrcek/accounts/templates/accounts/message.html
 msgid "Something went wrong"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset.html
+#: src/hrcek/accounts/templates/emails/password_reset.html
+#: src/hrcek/accounts/templates/emails/password_reset.subject.txt
+msgid "Reset your password"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset.html
+msgid ""
+"Enter your email address and we will send you a link to choose a new "
+"password."
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset.html
+msgid "Send the link"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset_complete.html
+msgid "Your password has been changed"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
+#: src/hrcek/accounts/templates/emails/password_reset.html
+msgid "Choose a new password"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
+msgid "Save my new password"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
+msgid "This link is invalid, probably because it has already been used."
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
+msgid "Ask for a new one"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset_done.html
+msgid "Check your email"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/password_reset_done.html
+msgid "If that address has an account here, a link is on its way."
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/welcome.html
@@ -347,16 +401,7 @@ msgid "This link stops working on %(expires_at)s."
 msgstr ""
 
 #: src/hrcek/accounts/templates/emails/password_reset.html
-#: src/hrcek/accounts/templates/emails/password_reset.subject.txt
-msgid "Reset your password"
-msgstr ""
-
-#: src/hrcek/accounts/templates/emails/password_reset.html
 msgid "Use the button below to choose a new password for your Hrček account."
-msgstr ""
-
-#: src/hrcek/accounts/templates/emails/password_reset.html
-msgid "Choose a new password"
 msgstr ""
 
 #: src/hrcek/accounts/templates/emails/password_reset.html

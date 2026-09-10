@@ -1,0 +1,10 @@
+{% extends "accounts/base.html" %}{% load i18n %}
+{% block heading %}{% trans "Sign in" %}{% endblock %}
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% trans "Sign in" %}</button>
+  </form>
+  <p><a href="{% url 'accounts:password_reset' %}">{% trans "Forgotten your password?" %}</a></p>
+{% endblock %}

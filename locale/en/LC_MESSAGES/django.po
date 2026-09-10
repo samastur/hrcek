@@ -14,6 +14,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: src/hrcek/accounts/admin.py
+msgid "Profile"
+msgstr ""
+
+#: src/hrcek/accounts/admin.py
+msgid "Permissions"
+msgstr ""
+
+#: src/hrcek/accounts/admin.py
+msgid "Important dates"
+msgstr ""
+
+#: src/hrcek/accounts/admin_site.py
+msgid "Hrcek administration"
+msgstr ""
+
+#: src/hrcek/accounts/admin_site.py
+msgid "Hrcek"
+msgstr ""
+
+#: src/hrcek/accounts/admin_site.py
+msgid "Administration"
+msgstr ""
+
 #: src/hrcek/accounts/apps.py
 msgid "Accounts"
 msgstr ""

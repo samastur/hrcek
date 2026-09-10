@@ -15,6 +15,30 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3);\n"
 
+#: src/hrcek/accounts/admin.py
+msgid "Profile"
+msgstr "Profil"
+
+#: src/hrcek/accounts/admin.py
+msgid "Permissions"
+msgstr "Dovoljenja"
+
+#: src/hrcek/accounts/admin.py
+msgid "Important dates"
+msgstr "Pomembni datumi"
+
+#: src/hrcek/accounts/admin_site.py
+msgid "Hrcek administration"
+msgstr "Skrbništvo Hrčka"
+
+#: src/hrcek/accounts/admin_site.py
+msgid "Hrcek"
+msgstr "Hrček"
+
+#: src/hrcek/accounts/admin_site.py
+msgid "Administration"
+msgstr "Skrbništvo"
+
 #: src/hrcek/accounts/apps.py
 msgid "Accounts"
 msgstr "Računi"

@@ -31,8 +31,13 @@ DEBUG = env_bool("HRCEK_DEBUG", default=False)
 ALLOWED_HOSTS = env_list("HRCEK_ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 
 INSTALLED_APPS = [
-    "django.contrib.contenttypes",
+    # Not "django.contrib.admin": this subclass swaps in Hrcek's own
+    # admin site while keeping autodiscovery.
+    "hrcek.accounts.admin_site.HrcekAdminConfig",
     "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
     "django.contrib.staticfiles",
     "ninja",
     "hrcek.core",
@@ -42,8 +47,14 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "hrcek.core.middleware.RequestIDMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    # Session must precede authentication and locale; CSRF must precede
+    # authentication.
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
 ]
 
 API_DOCS_ENABLED = env_bool("HRCEK_API_DOCS", default=True)
@@ -60,6 +71,8 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },

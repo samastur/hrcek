@@ -50,6 +50,26 @@ msgstr "Skrbništvo"
 msgid "Accounts"
 msgstr "Računi"
 
+#: src/hrcek/accounts/errors.py
+msgid "The email address or password is not correct."
+msgstr "E-poštni naslov ali geslo ni pravilno."
+
+#: src/hrcek/accounts/errors.py
+msgid "Confirm your email address before signing in."
+msgstr "Pred prijavo potrdite svoj e-poštni naslov."
+
+#: src/hrcek/accounts/errors.py
+msgid "You must sign in to do that."
+msgstr "Za to dejanje se morate prijaviti."
+
+#: src/hrcek/accounts/errors.py
+msgid "This API token is invalid or has expired."
+msgstr "Ta API-žeton ni veljaven ali je potekel."
+
+#: src/hrcek/accounts/errors.py
+msgid "The request could not be verified. Try again."
+msgstr "Zahteve ni bilo mogoče preveriti. Poskusite znova."
+
 #: src/hrcek/accounts/models.py
 msgid "email address"
 msgstr "e-poštni naslov"

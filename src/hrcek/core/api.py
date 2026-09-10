@@ -12,7 +12,7 @@ from hrcek.core.schemas import HealthOut
 router = Router(tags=["core"])
 
 
-@router.get("/health", response=HealthOut, operation_id="health")
+@router.get("/health", response=HealthOut, operation_id="health", auth=None)
 def health(request: HttpRequest) -> dict[str, str]:
     """Report that the service is up, in the caller's language."""
     return {

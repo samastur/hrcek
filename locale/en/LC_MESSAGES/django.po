@@ -26,6 +26,11 @@ msgstr ""
 msgid "Important dates"
 msgstr ""
 
+#: src/hrcek/accounts/admin.py
+#, python-format
+msgid "API token created. Copy it now, it will not be shown again: %(token)s"
+msgstr ""
+
 #: src/hrcek/accounts/admin_site.py
 msgid "Hrcek administration"
 msgstr ""
@@ -76,6 +81,34 @@ msgstr ""
 
 #: src/hrcek/accounts/models.py
 msgid "users"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "name"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "created at"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "last used at"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "expires at"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "revoked at"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "API token"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "API tokens"
 msgstr ""
 
 #: src/hrcek/accounts/validators.py

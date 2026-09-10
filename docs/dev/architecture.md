@@ -9,6 +9,7 @@
 | `src/hrcek/api.py` | Root `NinjaAPI`; turns failures into responses |
 | `src/hrcek/urls.py` | Mounts the API at `/api/` |
 | `src/hrcek/core/` | Cross-cutting app: errors, logging, telemetry |
+| `src/hrcek/accounts/` | Identity: users, sign-in, invitations, email |
 | `locale/` | Translation catalogues; `.po` and `.mo` are committed |
 | `tests/` | Mirrors `src/hrcek/` |
 
@@ -21,8 +22,10 @@ editable mode by `uv sync`, which keeps imports unambiguous.
 1. `RequestIDMiddleware` assigns or accepts an id and puts it on the
    logging context and the Sentry scope.
 2. `LocaleMiddleware` negotiates the language from `Accept-Language`.
-3. django-ninja routes to an operation.
-4. Anything raised is caught by a handler in `hrcek/api.py` and rendered
+3. Authentication runs: bearer token first, then session. See
+   [accounts](accounts.md) for why that order is not arbitrary.
+4. django-ninja routes to an operation.
+5. Anything raised is caught by a handler in `hrcek/api.py` and rendered
    as a registered error code, translated into the negotiated language.
 
 ## Why these choices

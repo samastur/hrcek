@@ -8,8 +8,9 @@ parts you have to babysit.
 
 ## Status
 
-Early. The service, its API, error handling, translations and tooling
-are in place; saving content is not built yet.
+Early. Accounts work — invitations, gated self-signup, email
+confirmation, password reset, and API authentication by session or
+bearer token. Saving content is not built yet.
 
 ## Documentation
 

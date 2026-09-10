@@ -8,9 +8,13 @@ from typing import Any
 from django.conf import settings
 from django.http import Http404, HttpRequest, HttpResponse
 from ninja import NinjaAPI
+from ninja.errors import AuthenticationError
 from ninja.errors import ValidationError as NinjaValidationError
 from sentry_sdk import capture_exception
 
+from hrcek.accounts.api import router as accounts_router
+from hrcek.accounts.auth import ApiTokenAuth, SessionAuth
+from hrcek.accounts.errors import AUTHENTICATION_REQUIRED
 from hrcek.core.api import router as core_router
 from hrcek.core.errors import (
     INTERNAL_ERROR,
@@ -69,6 +73,16 @@ def register_exception_handlers(api: NinjaAPI) -> None:
             status=NOT_FOUND.http_status,
         )
 
+    @api.exception_handler(AuthenticationError)
+    def _handle_unauthenticated(
+        request: HttpRequest, exc: AuthenticationError
+    ) -> HttpResponse:
+        return api.create_response(
+            request,
+            error_payload(AUTHENTICATION_REQUIRED),
+            status=AUTHENTICATION_REQUIRED.http_status,
+        )
+
     @api.exception_handler(Exception)
     def _handle_unexpected(request: HttpRequest, exc: Exception) -> HttpResponse:
         # The traceback goes to the log and to Sentry; the client gets a
@@ -87,6 +101,9 @@ api = NinjaAPI(
     version="1.0.0",
     # Interactive docs are useful in development and noise in production.
     docs_url="/docs" if settings.API_DOCS_ENABLED else None,
+    # Token first: see the module docstring in hrcek/accounts/auth.py.
+    auth=[ApiTokenAuth(), SessionAuth()],
 )
 register_exception_handlers(api)
 api.add_router("/", core_router)
+api.add_router("/auth/", accounts_router)

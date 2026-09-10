@@ -44,6 +44,11 @@ must never contain anything private.
 | `HRC-CORE-0001` | 500 | An unexpected error occurred. The traceback is in the logs and in Sentry; the client is told nothing more. |
 | `HRC-CORE-0002` | 422 | The submitted data is not valid. `details.fields` lists the offending fields. |
 | `HRC-CORE-0003` | 404 | The requested resource does not exist. |
+| `HRC-AUTH-0001` | 401 | The email address or password is not correct. Also returned for a disabled account, deliberately. |
+| `HRC-AUTH-0002` | 403 | The account exists and the password was right, but the email address is not confirmed. |
+| `HRC-AUTH-0003` | 401 | The endpoint needs a session or a bearer token and got neither. |
+| `HRC-AUTH-0004` | 401 | The bearer token is unknown, revoked, expired, or belongs to a disabled account. |
+| `HRC-AUTH-0005` | 403 | A session-authenticated unsafe request arrived without a valid CSRF token. |
 
 ## Response shape
 

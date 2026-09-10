@@ -1,0 +1,21 @@
+{% load i18n %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% trans "Hrček" %}{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 32rem;
+           margin: 3rem auto; padding: 0 1rem; line-height: 1.5; }
+    label { display: block; margin-top: 1rem; font-weight: 600; }
+    input { width: 100%; padding: .5rem; font-size: 1rem; }
+    button { margin-top: 1.5rem; padding: .6rem 1.2rem; font-size: 1rem; }
+    .errorlist { color: #b91c1c; padding-left: 1rem; }
+    .code { color: #71717a; font-family: monospace; font-size: .875rem; }
+  </style>
+</head>
+<body>
+  <h1>{% block heading %}{% trans "Hrček" %}{% endblock %}</h1>
+  {% block content %}{% endblock %}
+</body>
+</html>

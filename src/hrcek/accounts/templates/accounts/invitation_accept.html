@@ -1,0 +1,10 @@
+{% extends "accounts/base.html" %}{% load i18n %}
+{% block heading %}{% trans "Accept your invitation" %}{% endblock %}
+{% block content %}
+  <p>{% blocktrans %}Setting up the account for {{ email }}.{% endblocktrans %}</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% trans "Create my account" %}</button>
+  </form>
+{% endblock %}

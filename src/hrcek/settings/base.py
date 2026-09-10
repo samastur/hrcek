@@ -128,6 +128,9 @@ USE_TZ = True
 
 HRCEK_BASE_URL = env_str("HRCEK_BASE_URL", "http://localhost:8000")
 HRCEK_INVITATION_EXPIRY_DAYS = env_int("HRCEK_INVITATION_EXPIRY_DAYS", 7)
+HRCEK_EMAIL_CONFIRMATION_EXPIRY_HOURS = env_int(
+    "HRCEK_EMAIL_CONFIRMATION_EXPIRY_HOURS", 48
+)
 DEFAULT_FROM_EMAIL = env_str("HRCEK_FROM_EMAIL", "hrcek@localhost")
 
 # Django 6.1's mailers API. The old EMAIL_* settings, and the

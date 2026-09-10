@@ -1,14 +1,23 @@
 from __future__ import annotations
 
+from django.conf import settings
 from django.contrib.auth import login
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from hrcek.accounts.errors import INVITATION_INVALID
-from hrcek.accounts.forms import InvitationAcceptForm
+from hrcek.accounts.allowlist import is_signup_allowed
+from hrcek.accounts.errors import (
+    CONFIRMATION_INVALID,
+    INVITATION_INVALID,
+    SIGNUP_NOT_ALLOWED,
+)
+from hrcek.accounts.forms import InvitationAcceptForm, SignupForm
+from hrcek.accounts.mail import absolute_url, send_email
 from hrcek.accounts.models import Invitation, User
+from hrcek.accounts.tokens import make_confirmation_token, read_confirmation_token
 from hrcek.core.errors import ErrorCode
 
 
@@ -62,3 +71,62 @@ def invitation_accept(request: HttpRequest, token: str) -> HttpResponse:
         "accounts/invitation_accept.html",
         {"form": form, "email": invitation.email},
     )
+
+
+def signup(request: HttpRequest) -> HttpResponse:
+    if request.method != "POST":
+        return render(request, "accounts/signup.html", {"form": SignupForm()})
+
+    form = SignupForm(request.POST)
+    if not form.is_valid():
+        return render(request, "accounts/signup.html", {"form": form})
+
+    email = form.cleaned_data["email"]
+    if not is_signup_allowed(email):
+        # A refusal the visitor cannot remedy, so it gets its own page
+        # and a truthful status rather than a redisplayed form.
+        return _error_page(request, SIGNUP_NOT_ALLOWED)
+
+    existing = User.objects.filter(email__iexact=email).first()
+    if existing is not None:
+        # Same page, different email. Anything else would turn this form
+        # into a way to discover who has an account.
+        send_email(
+            "signup_existing_account",
+            email,
+            {"reset_url": absolute_url(reverse("accounts:password_reset"))},
+        )
+    else:
+        user = User.objects.create_user(
+            email=email,
+            password=form.cleaned_data["password1"],
+            display_name=form.cleaned_data["display_name"],
+        )
+        send_email(
+            "email_confirmation",
+            email,
+            {
+                "confirm_url": absolute_url(
+                    reverse("accounts:confirm", args=[make_confirmation_token(user)])
+                ),
+                "expires_hours": settings.HRCEK_EMAIL_CONFIRMATION_EXPIRY_HOURS,
+            },
+        )
+
+    # No context: the page must not vary with what we just discovered.
+    return render(request, "accounts/signup_done.html")
+
+
+def confirm(request: HttpRequest, token: str) -> HttpResponse:
+    user = read_confirmation_token(token)
+    if user is None:
+        return _error_page(
+            request,
+            CONFIRMATION_INVALID,
+            _("Sign up again to get a fresh link."),
+        )
+    if not user.is_email_confirmed:
+        user.email_verified_at = timezone.now()
+        user.save(update_fields=["email_verified_at"])
+    login(request, user)
+    return redirect("accounts:welcome")

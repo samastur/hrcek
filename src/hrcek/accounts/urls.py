@@ -8,6 +8,8 @@ app_name = "accounts"
 
 urlpatterns = [
     path("welcome/", views.welcome, name="welcome"),
+    path("signup/", views.signup, name="signup"),
+    path("confirm/<str:token>/", views.confirm, name="confirm"),
     path(
         "invitation/<str:token>/",
         views.invitation_accept,

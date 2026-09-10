@@ -68,6 +68,21 @@ class InvitationAcceptForm(forms.Form):
         return cleaned
 
 
+class SignupForm(InvitationAcceptForm):
+    """Invitation acceptance, plus an email address that must be allowed."""
+
+    email = forms.EmailField(label=_("Email address"), max_length=254)
+
+    field_order = ("email", "display_name", "password1", "password2")
+
+    def clean_email(self) -> str:
+        # Normalisation only. Whether the address is allowed, and whether
+        # it is already registered, are both decided by the view: the
+        # first so the refusal can carry a 403 rather than a redisplayed
+        # form, the second so the answer is identical either way.
+        return self.cleaned_data["email"].strip().lower()
+
+
 class HrcekPasswordResetForm(PasswordResetForm):
     """Django's reset flow, sending Hrcek's email instead of its own.
 

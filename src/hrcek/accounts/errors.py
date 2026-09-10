@@ -27,3 +27,13 @@ INVITATION_INVALID = register(
 DISPLAY_NAME_TAKEN = register(
     "HRC-ACCT-0004", 409, _("That display name is already taken.")
 )
+SIGNUP_NOT_ALLOWED = register(
+    "HRC-ACCT-0001",
+    403,
+    _("This email address is not allowed to create an account here."),
+)
+CONFIRMATION_INVALID = register(
+    "HRC-ACCT-0003",
+    400,
+    _("This confirmation link is not valid. It may have expired."),
+)

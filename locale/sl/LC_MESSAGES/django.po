@@ -27,6 +27,13 @@ msgstr "Dovoljenja"
 msgid "Important dates"
 msgstr "Pomembni datumi"
 
+#: src/hrcek/accounts/admin.py
+#, python-format
+msgid "API token created. Copy it now, it will not be shown again: %(token)s"
+msgstr ""
+"API-žeton je ustvarjen. Prekopirajte ga zdaj, ker ne bo več prikazan: "
+"%(token)s"
+
 #: src/hrcek/accounts/admin_site.py
 msgid "Hrcek administration"
 msgstr "Skrbništvo Hrčka"
@@ -78,6 +85,34 @@ msgstr "uporabnik"
 #: src/hrcek/accounts/models.py
 msgid "users"
 msgstr "uporabniki"
+
+#: src/hrcek/accounts/models.py
+msgid "name"
+msgstr "ime"
+
+#: src/hrcek/accounts/models.py
+msgid "created at"
+msgstr "ustvarjeno ob"
+
+#: src/hrcek/accounts/models.py
+msgid "last used at"
+msgstr "nazadnje uporabljeno ob"
+
+#: src/hrcek/accounts/models.py
+msgid "expires at"
+msgstr "poteče ob"
+
+#: src/hrcek/accounts/models.py
+msgid "revoked at"
+msgstr "preklicano ob"
+
+#: src/hrcek/accounts/models.py
+msgid "API token"
+msgstr "API-žeton"
+
+#: src/hrcek/accounts/models.py
+msgid "API tokens"
+msgstr "API-žetoni"
 
 #: src/hrcek/accounts/validators.py
 msgid "A display name may not contain \"@\"."

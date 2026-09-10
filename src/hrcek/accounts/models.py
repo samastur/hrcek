@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import hashlib
+import secrets
+from datetime import datetime, timedelta
 from typing import Any, ClassVar
 
+from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
@@ -83,3 +87,79 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_email_confirmed(self) -> bool:
         return self.email_verified_at is not None
+
+
+class ApiToken(models.Model):
+    """A bearer credential for non-browser clients.
+
+    Only the hash is stored. The raw value exists once, at creation, and
+    is shown to the person who made it and never again.
+    """
+
+    # Not a secret: a public marker so secret scanners can spot the
+    # tokens that follow it.
+    TOKEN_PREFIX = "hrcek_"  # noqa: S105
+    # Writing last_used_at on every request would turn reads into SQLite
+    # writes for no benefit; a minute's resolution is plenty.
+    TOUCH_INTERVAL = timedelta(minutes=1)
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="api_tokens",
+        verbose_name=_("user"),
+    )
+    name = models.CharField(_("name"), max_length=50)
+    token_hash = models.CharField(max_length=64, unique=True, editable=False)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    last_used_at = models.DateTimeField(
+        _("last used at"), null=True, blank=True, editable=False
+    )
+    expires_at = models.DateTimeField(_("expires at"), null=True, blank=True)
+    revoked_at = models.DateTimeField(_("revoked at"), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("API token")
+        verbose_name_plural = _("API tokens")
+        ordering = ("-created_at",)
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.user})"
+
+    @classmethod
+    def new_raw_token(cls) -> str:
+        # The prefix makes the string recognisable to secret scanners.
+        return f"{cls.TOKEN_PREFIX}{secrets.token_urlsafe(32)}"
+
+    @staticmethod
+    def hash_token(raw: str) -> str:
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+    @classmethod
+    def issue(
+        cls, user: User, name: str, expires_at: datetime | None = None
+    ) -> tuple[ApiToken, str]:
+        raw = cls.new_raw_token()
+        token = cls.objects.create(
+            user=user,
+            name=name,
+            token_hash=cls.hash_token(raw),
+            expires_at=expires_at,
+        )
+        return token, raw
+
+    @property
+    def is_usable(self) -> bool:
+        if self.revoked_at is not None:
+            return False
+        return self.expires_at is None or self.expires_at > timezone.now()
+
+    def touch(self) -> None:
+        now = timezone.now()
+        if (
+            self.last_used_at is not None
+            and now - self.last_used_at < self.TOUCH_INTERVAL
+        ):
+            return
+        ApiToken.objects.filter(pk=self.pk).update(last_used_at=now)
+        self.last_used_at = now

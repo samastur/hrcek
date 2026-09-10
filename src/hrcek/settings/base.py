@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from importlib.metadata import version
 from pathlib import Path
+from typing import Any
 
 from django.utils.translation import gettext_lazy as _
 
@@ -119,6 +120,17 @@ LOCALE_PATHS = [BASE_DIR / "locale"]
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
+
+HRCEK_BASE_URL = env_str("HRCEK_BASE_URL", "http://localhost:8000")
+DEFAULT_FROM_EMAIL = env_str("HRCEK_FROM_EMAIL", "hrcek@localhost")
+
+# Django 6.1's mailers API. The old EMAIL_* settings, and the
+# fail_silently and connection arguments, all raise
+# RemovedInDjango70Warning, which this project's test suite treats as an
+# error. Leaving MAILERS undefined warns too.
+MAILERS: dict[str, dict[str, Any]] = {
+    "default": {"BACKEND": "django.core.mail.backends.console.EmailBackend"},
+}
 
 STATIC_URL = "static/"
 

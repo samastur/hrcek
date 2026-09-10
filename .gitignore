@@ -223,3 +223,6 @@ docs/superpowers/
 
 # Uncommitted code review guide (see CLAUDE.md)
 REVIEW_GUIDE.md
+
+# Rendered email previews (manage.py preview_emails)
+build/

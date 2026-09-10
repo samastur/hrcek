@@ -15,8 +15,14 @@ uv sync
 uv tool install prek
 prek install
 uv run pytest
+uv run python manage.py migrate
+uv run python manage.py createsuperuser
 uv run python manage.py runserver
 ```
+
+`createsuperuser` asks only for an email address and a password, and the
+account it makes is confirmed immediately — nobody could send a
+confirmation email to the very first user.
 
 The API is then at `http://127.0.0.1:8000/api/`, with interactive
 documentation at `/api/docs` and a health check at `/api/health`.
@@ -35,6 +41,11 @@ file cannot surprise a deployment.
 | `HRCEK_DB_PATH` | `db.sqlite3` | SQLite file location |
 | `HRCEK_DEBUG_SQL` | `false` | Log every query |
 | `HRCEK_API_DOCS` | `true` | Serve `/api/docs`; forced off in production |
+| `HRCEK_BASE_URL` | `http://localhost:8000` | Absolute links in email are built from this |
+| `HRCEK_FROM_EMAIL` | `hrcek@localhost` | Sender address |
+| `HRCEK_INVITATION_EXPIRY_DAYS` | `7` | Invitation lifetime |
+| `HRCEK_EMAIL_CONFIRMATION_EXPIRY_HOURS` | `48` | Confirmation lifetime |
+| `HRCEK_SMTP_HOST`, `HRCEK_SMTP_PORT`, `HRCEK_SMTP_USER`, `HRCEK_SMTP_PASSWORD`, `HRCEK_SMTP_USE_TLS` | — | Production mail, via `MAILERS` |
 | `SENTRY_DSN` | empty | Empty disables Sentry entirely |
 | `SENTRY_ENVIRONMENT` | `development` | Tags reported events |
 | `SENTRY_TRACES_SAMPLE_RATE` | `1.0` | Trace sampling |

@@ -7,6 +7,7 @@ process, no queue.
 - [Architecture](architecture.md) — how the pieces fit together
 - [Development setup](development-setup.md) — getting a working checkout
 - [Testing](testing.md) — how we work, and why warnings are errors
+- [Accounts](accounts.md) — identity, sign-in, invitations, email
 - [Error codes](error-codes.md) — the registry and how to extend it
 - [Internationalisation](i18n.md) — translating strings
 - [Debugging and telemetry](debugging-and-telemetry.md) — logs, the

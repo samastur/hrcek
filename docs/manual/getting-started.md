@@ -21,6 +21,12 @@ answers:
 If the page does not load at all, Hrček is not running. Ask whoever
 looks after it to start the service.
 
+## Getting an account
+
+You need an account before Hrček is much use. Either somebody invites
+you, or you sign yourself up if your address is permitted. See
+[your account](accounts.md).
+
 ## Browsing what Hrček can do
 
 `http://localhost:8000/api/docs` lists every available operation and

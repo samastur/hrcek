@@ -1,0 +1,68 @@
+# Your account
+
+Hrček keeps a small number of accounts, one per person. This page
+explains how to get one and how to get back in when something goes
+wrong.
+
+## Getting an account
+
+There are two ways in.
+
+**Someone invites you.** Whoever looks after this Hrček sends an
+invitation to your email address. Open the link in it, choose a
+password, and you are done — following the link is proof enough that
+the address is yours, so there is nothing else to confirm.
+
+Invitation links expire, by default after a week. If yours has, ask for
+a new one; the old link cannot be revived.
+
+**You sign yourself up.** Go to `/accounts/signup/` and fill in your
+email address and a password. This only works if your address has been
+permitted in advance, either individually or because your whole email
+domain is allowed. If it has not, you will be told so, and the way
+forward is an invitation.
+
+After signing up you get a confirmation email. **You cannot sign in
+until you follow that link.** It expires after two days.
+
+## Your display name
+
+A display name is optional. Set one and you can sign in with it instead
+of your email address, which is shorter to type.
+
+Two rules:
+
+- It may not contain `@`. Hrček accepts either identifier at sign-in,
+  and an `@` would make a display name indistinguishable from an email
+  address.
+- Capitals do not count. If somebody is already `Nina`, you cannot be
+  `nina`.
+
+You can leave it empty, and any number of people can.
+
+## Signing in
+
+Use either your email address or your display name, with your password.
+Capitals do not matter for either identifier.
+
+If you are told your details are wrong when you are sure they are not,
+two things are worth checking: whether you ever followed the
+confirmation link, and whether your account has been disabled. Hrček
+deliberately gives the same answer for a wrong password as for a
+disabled account, so it cannot tell you which — ask whoever runs it.
+
+## Forgotten password
+
+Go to `/accounts/password/reset/` and enter your email address. If
+there is an account for it, a link arrives; if there is not, you get
+the same page anyway, so nobody can use that form to find out who has
+an account here.
+
+The link works once. After you set a new password it stops working, so
+if you need to change it again, ask for a new link.
+
+## When something goes wrong
+
+Every failure comes with a code such as `HRC-ACCT-0002`. The wording
+may change between versions; the code does not. Quote it when asking
+for help — see [when something goes wrong](troubleshooting.md).

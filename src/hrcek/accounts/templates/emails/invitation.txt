@@ -1,0 +1,6 @@
+{% load i18n %}{% blocktrans %}{{ invited_by }} invited you to join Hrček.{% endblocktrans %}
+
+{% trans "Accept the invitation:" %}
+{{ accept_url }}
+
+{% blocktrans %}This link stops working on {{ expires_at }}.{% endblocktrans %}

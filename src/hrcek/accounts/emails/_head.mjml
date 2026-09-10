@@ -1,0 +1,17 @@
+<mj-head>
+  <mj-title>Hrček</mj-title>
+  <!-- The inbox snippet. mail.py derives it from the plain-text body,
+       so it never has to be written or translated twice. -->
+  <mj-preview>{{ preview }}</mj-preview>
+  <mj-attributes>
+    <mj-all font-family="Helvetica, Arial, sans-serif" />
+    <mj-body background-color="#f4f4f5" />
+    <mj-section background-color="#ffffff" padding="0 32px" />
+    <mj-text font-size="16px" color="#27272a" line-height="1.6" />
+    <mj-button background-color="#2563eb" color="#ffffff" border-radius="6px"
+               font-size="16px" padding="24px 0" />
+    <mj-class name="brand" font-size="18px" font-weight="bold" color="#3f3f46" />
+    <mj-class name="heading" font-size="22px" font-weight="bold" padding-top="28px" />
+    <mj-class name="muted" font-size="13px" color="#71717a" />
+  </mj-attributes>
+</mj-head>

@@ -1,0 +1,4 @@
+{% load i18n %}{% trans "Confirm your address to finish setting up your Hrček account:" %}
+{{ confirm_url }}
+
+{% blocktrans %}This link stops working in {{ expires_hours }} hours.{% endblocktrans %}

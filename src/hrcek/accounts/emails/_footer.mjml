@@ -1,0 +1,5 @@
+<mj-section background-color="#f4f4f5" padding="20px 32px 32px">
+  <mj-column>
+    <mj-text mj-class="muted">{% trans "You are receiving this because someone used your address with Hrček." %}</mj-text>
+  </mj-column>
+</mj-section>

@@ -1,0 +1,15 @@
+<mjml>
+  <mj-include path="_head.mjml" />
+  <mj-body>
+    <mj-include path="_header.mjml" />
+    <mj-section>
+      <mj-column>
+        <mj-text mj-class="heading">{% trans "You have been invited to Hrček" %}</mj-text>
+        <mj-text>{% blocktrans %}{{ invited_by }} invited you to join Hrček, a place to keep track of interesting things found on the web.{% endblocktrans %}</mj-text>
+        <mj-button href="{{ accept_url }}">{% trans "Accept the invitation" %}</mj-button>
+        <mj-text mj-class="muted">{% blocktrans %}This link stops working on {{ expires_at }}. If you were not expecting this, ignore this message.{% endblocktrans %}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="_footer.mjml" />
+  </mj-body>
+</mjml>

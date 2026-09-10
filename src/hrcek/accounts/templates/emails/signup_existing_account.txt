@@ -1,0 +1,4 @@
+{% load i18n %}{% trans "Somebody just tried to create a Hrček account with this email address. You already have one, so nothing has changed." %}
+
+{% trans "If you have forgotten your password, you can reset it:" %}
+{{ reset_url }}

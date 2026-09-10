@@ -1,0 +1,5 @@
+<mj-section padding="28px 32px 0">
+  <mj-column>
+    <mj-text mj-class="brand">Hrček</mj-text>
+  </mj-column>
+</mj-section>

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 14:04+0000\n"
+"POT-Creation-Date: 2026-09-11 04:45+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -14,6 +14,54 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3);\n"
+
+#: src/hrcek/accounts/apps.py
+msgid "Accounts"
+msgstr "Računi"
+
+#: src/hrcek/accounts/models.py
+msgid "email address"
+msgstr "e-poštni naslov"
+
+#: src/hrcek/accounts/models.py
+msgid "display name"
+msgstr "prikazno ime"
+
+#: src/hrcek/accounts/models.py
+msgid "Optional. Can be used to sign in instead of the email."
+msgstr "Neobvezno. Uporabite ga lahko za prijavo namesto e-poštnega naslova."
+
+#: src/hrcek/accounts/models.py
+msgid "email confirmed at"
+msgstr "e-pošta potrjena ob"
+
+#: src/hrcek/accounts/models.py
+msgid "active"
+msgstr "aktiven"
+
+#: src/hrcek/accounts/models.py
+msgid "staff status"
+msgstr "status osebja"
+
+#: src/hrcek/accounts/models.py
+msgid "date joined"
+msgstr "datum vpisa"
+
+#: src/hrcek/accounts/models.py
+msgid "user"
+msgstr "uporabnik"
+
+#: src/hrcek/accounts/models.py
+msgid "users"
+msgstr "uporabniki"
+
+#: src/hrcek/accounts/validators.py
+msgid "A display name may not contain \"@\"."
+msgstr "Prikazno ime ne sme vsebovati znaka \"@\"."
+
+#: src/hrcek/accounts/validators.py
+msgid "A display name may not be blank."
+msgstr "Prikazno ime ne sme biti prazno."
 
 #: src/hrcek/core/api.py
 msgid "Service is running."

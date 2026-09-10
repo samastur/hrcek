@@ -62,7 +62,10 @@ max-complexity = 8
 known-first-party = ["hrcek"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101", "PLR2004"]
+# Test fixtures need literal passwords (S105/S106) and bare asserts.
+"tests/*" = ["S101", "S105", "S106", "PLR2004"]
+# Migrations are generated; their layout is Django's business, not ours.
+"src/hrcek/*/migrations/*" = ["E501", "RUF012"]
 
 [tool.ty.src]
 include = ["src", "tests"]

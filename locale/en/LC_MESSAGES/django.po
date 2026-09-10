@@ -6,13 +6,61 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 14:04+0000\n"
+"POT-Creation-Date: 2026-09-11 04:45+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/hrcek/accounts/apps.py
+msgid "Accounts"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "email address"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "display name"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "Optional. Can be used to sign in instead of the email."
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "email confirmed at"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "active"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "staff status"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "date joined"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "user"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "users"
+msgstr ""
+
+#: src/hrcek/accounts/validators.py
+msgid "A display name may not contain \"@\"."
+msgstr ""
+
+#: src/hrcek/accounts/validators.py
+msgid "A display name may not be blank."
+msgstr ""
 
 #: src/hrcek/core/api.py
 msgid "Service is running."

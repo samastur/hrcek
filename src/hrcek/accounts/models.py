@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from hrcek.accounts.managers import UserManager
-from hrcek.accounts.validators import validate_display_name
+from hrcek.accounts.validators import validate_display_name, validate_domain
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -163,3 +163,45 @@ class ApiToken(models.Model):
             return
         ApiToken.objects.filter(pk=self.pk).update(last_used_at=now)
         self.last_used_at = now
+
+
+class AllowedEmail(models.Model):
+    """One address permitted to register without an invitation."""
+
+    email = models.EmailField(_("email address"), max_length=254, unique=True)
+    note = models.CharField(_("note"), max_length=200, blank=True)
+    created_at = models.DateTimeField(_("added at"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("allowed email address")
+        verbose_name_plural = _("allowed email addresses")
+        ordering = ("email",)
+
+    def __str__(self) -> str:
+        return self.email
+
+    def save(self, **kwargs: Any) -> None:
+        self.email = self.email.strip().lower()
+        super().save(**kwargs)
+
+
+class AllowedDomain(models.Model):
+    """Every address on this domain may register without an invitation."""
+
+    domain = models.CharField(
+        _("domain"), max_length=255, unique=True, validators=[validate_domain]
+    )
+    note = models.CharField(_("note"), max_length=200, blank=True)
+    created_at = models.DateTimeField(_("added at"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("allowed domain")
+        verbose_name_plural = _("allowed domains")
+        ordering = ("domain",)
+
+    def __str__(self) -> str:
+        return self.domain
+
+    def save(self, **kwargs: Any) -> None:
+        self.domain = self.domain.strip().lower().lstrip("@")
+        super().save(**kwargs)

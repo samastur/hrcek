@@ -134,6 +134,34 @@ msgstr "API-žeton"
 msgid "API tokens"
 msgstr "API-žetoni"
 
+#: src/hrcek/accounts/models.py
+msgid "note"
+msgstr "opomba"
+
+#: src/hrcek/accounts/models.py
+msgid "added at"
+msgstr "dodano ob"
+
+#: src/hrcek/accounts/models.py
+msgid "allowed email address"
+msgstr "dovoljeni e-poštni naslov"
+
+#: src/hrcek/accounts/models.py
+msgid "allowed email addresses"
+msgstr "dovoljeni e-poštni naslovi"
+
+#: src/hrcek/accounts/models.py
+msgid "domain"
+msgstr "domena"
+
+#: src/hrcek/accounts/models.py
+msgid "allowed domain"
+msgstr "dovoljena domena"
+
+#: src/hrcek/accounts/models.py
+msgid "allowed domains"
+msgstr "dovoljene domene"
+
 #: src/hrcek/accounts/validators.py
 msgid "A display name may not contain \"@\"."
 msgstr "Prikazno ime ne sme vsebovati znaka \"@\"."
@@ -141,6 +169,14 @@ msgstr "Prikazno ime ne sme vsebovati znaka \"@\"."
 #: src/hrcek/accounts/validators.py
 msgid "A display name may not be blank."
 msgstr "Prikazno ime ne sme biti prazno."
+
+#: src/hrcek/accounts/validators.py
+msgid "Enter a domain only, without \"@\"."
+msgstr "Vnesite samo domeno, brez znaka \"@\"."
+
+#: src/hrcek/accounts/validators.py
+msgid "Enter a valid domain, for example example.com."
+msgstr "Vnesite veljavno domeno, na primer example.com."
 
 #: src/hrcek/core/api.py
 msgid "Service is running."

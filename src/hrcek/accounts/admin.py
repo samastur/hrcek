@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from hrcek.accounts.forms import UserChangeForm, UserCreationForm
-from hrcek.accounts.models import ApiToken, User
+from hrcek.accounts.models import AllowedDomain, AllowedEmail, ApiToken, User
 
 
 class UserAdmin(BaseUserAdmin):
@@ -98,3 +98,17 @@ class ApiTokenAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ApiToken, ApiTokenAdmin)
+
+
+class AllowedEmailAdmin(admin.ModelAdmin):
+    list_display = ("email", "note", "created_at")
+    search_fields = ("email", "note")
+
+
+class AllowedDomainAdmin(admin.ModelAdmin):
+    list_display = ("domain", "note", "created_at")
+    search_fields = ("domain", "note")
+
+
+admin.site.register(AllowedEmail, AllowedEmailAdmin)
+admin.site.register(AllowedDomain, AllowedDomainAdmin)

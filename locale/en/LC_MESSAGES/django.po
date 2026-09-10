@@ -131,12 +131,48 @@ msgstr ""
 msgid "API tokens"
 msgstr ""
 
+#: src/hrcek/accounts/models.py
+msgid "note"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "added at"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "allowed email address"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "allowed email addresses"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "domain"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "allowed domain"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "allowed domains"
+msgstr ""
+
 #: src/hrcek/accounts/validators.py
 msgid "A display name may not contain \"@\"."
 msgstr ""
 
 #: src/hrcek/accounts/validators.py
 msgid "A display name may not be blank."
+msgstr ""
+
+#: src/hrcek/accounts/validators.py
+msgid "Enter a domain only, without \"@\"."
+msgstr ""
+
+#: src/hrcek/accounts/validators.py
+msgid "Enter a valid domain, for example example.com."
 msgstr ""
 
 #: src/hrcek/core/api.py

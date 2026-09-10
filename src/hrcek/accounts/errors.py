@@ -19,3 +19,11 @@ INVALID_API_TOKEN = register(
 CSRF_FAILED = register(
     "HRC-AUTH-0005", 403, _("The request could not be verified. Try again.")
 )
+INVITATION_INVALID = register(
+    "HRC-ACCT-0002",
+    400,
+    _("This invitation link is not valid. It may have expired or been used."),
+)
+DISPLAY_NAME_TAKEN = register(
+    "HRC-ACCT-0004", 409, _("That display name is already taken.")
+)

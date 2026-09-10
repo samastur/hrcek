@@ -2,10 +2,17 @@ from __future__ import annotations
 
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from hrcek.accounts.forms import UserChangeForm, UserCreationForm
-from hrcek.accounts.models import AllowedDomain, AllowedEmail, ApiToken, User
+from hrcek.accounts.models import (
+    AllowedDomain,
+    AllowedEmail,
+    ApiToken,
+    Invitation,
+    User,
+)
 
 
 class UserAdmin(BaseUserAdmin):
@@ -112,3 +119,65 @@ class AllowedDomainAdmin(admin.ModelAdmin):
 
 admin.site.register(AllowedEmail, AllowedEmailAdmin)
 admin.site.register(AllowedDomain, AllowedDomainAdmin)
+
+
+class InvitationAdmin(admin.ModelAdmin):
+    list_display = (
+        "email",
+        "invited_by",
+        "created_at",
+        "expires_at",
+        "accepted_at",
+        "revoked_at",
+    )
+    search_fields = ("email",)
+    actions = ("resend", "revoke")
+
+    def get_fields(self, request, obj=None):
+        if obj is None:
+            return ("email",)
+        return (
+            "email",
+            "invited_by",
+            "created_at",
+            "expires_at",
+            "accepted_at",
+            "revoked_at",
+        )
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj is None:
+            return ()
+        return (
+            "email",
+            "invited_by",
+            "created_at",
+            "expires_at",
+            "accepted_at",
+            "revoked_at",
+        )
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            super().save_model(request, obj, form, change)
+            return
+        # Creating an invitation is the act of sending it. Saving obj
+        # directly would leave a row with no token.
+        Invitation.issue(obj.email, request.user)
+        self.message_user(
+            request, _("Invitation sent to %(email)s.") % {"email": obj.email}
+        )
+
+    @admin.action(description=_("Resend the selected invitations"))
+    def resend(self, request, queryset):
+        for invitation in queryset:
+            Invitation.issue(invitation.email, request.user)
+        self.message_user(request, _("Invitations resent."))
+
+    @admin.action(description=_("Revoke the selected invitations"))
+    def revoke(self, request, queryset):
+        queryset.filter(accepted_at__isnull=True).update(revoked_at=timezone.now())
+        self.message_user(request, _("Invitations revoked."))
+
+
+admin.site.register(Invitation, InvitationAdmin)

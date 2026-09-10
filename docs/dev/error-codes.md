@@ -49,6 +49,8 @@ must never contain anything private.
 | `HRC-AUTH-0003` | 401 | The endpoint needs a session or a bearer token and got neither. |
 | `HRC-AUTH-0004` | 401 | The bearer token is unknown, revoked, expired, or belongs to a disabled account. |
 | `HRC-AUTH-0005` | 403 | A session-authenticated unsafe request arrived without a valid CSRF token. |
+| `HRC-ACCT-0002` | 400 | The invitation link is unknown, expired, revoked or already used. |
+| `HRC-ACCT-0004` | 409 | The requested display name belongs to somebody else, ignoring case. |
 
 ## Response shape
 

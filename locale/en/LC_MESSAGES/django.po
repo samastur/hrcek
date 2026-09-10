@@ -31,6 +31,27 @@ msgstr ""
 msgid "API token created. Copy it now, it will not be shown again: %(token)s"
 msgstr ""
 
+#: src/hrcek/accounts/admin.py
+#, python-format
+msgid "Invitation sent to %(email)s."
+msgstr ""
+
+#: src/hrcek/accounts/admin.py
+msgid "Resend the selected invitations"
+msgstr ""
+
+#: src/hrcek/accounts/admin.py
+msgid "Invitations resent."
+msgstr ""
+
+#: src/hrcek/accounts/admin.py
+msgid "Revoke the selected invitations"
+msgstr ""
+
+#: src/hrcek/accounts/admin.py
+msgid "Invitations revoked."
+msgstr ""
+
 #: src/hrcek/accounts/admin_site.py
 msgid "Hrcek administration"
 msgstr ""
@@ -65,6 +86,34 @@ msgstr ""
 
 #: src/hrcek/accounts/errors.py
 msgid "The request could not be verified. Try again."
+msgstr ""
+
+#: src/hrcek/accounts/errors.py
+msgid "This invitation link is not valid. It may have expired or been used."
+msgstr ""
+
+#: src/hrcek/accounts/errors.py
+msgid "That display name is already taken."
+msgstr ""
+
+#: src/hrcek/accounts/forms.py
+msgid "Display name"
+msgstr ""
+
+#: src/hrcek/accounts/forms.py
+msgid "Optional. You can sign in with this instead of your email."
+msgstr ""
+
+#: src/hrcek/accounts/forms.py
+msgid "Password"
+msgstr ""
+
+#: src/hrcek/accounts/forms.py
+msgid "Repeat password"
+msgstr ""
+
+#: src/hrcek/accounts/forms.py
+msgid "The two passwords do not match."
 msgstr ""
 
 #: src/hrcek/accounts/management/commands/compile_emails.py
@@ -183,6 +232,51 @@ msgstr ""
 
 #: src/hrcek/accounts/models.py
 msgid "allowed domains"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "invited by"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "accepted at"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "invitation"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "invitations"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/base.html
+msgid "Hrček"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/invitation_accept.html
+msgid "Accept your invitation"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/invitation_accept.html
+#, python-format
+msgid "Setting up the account for %(email)s."
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/invitation_accept.html
+msgid "Create my account"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/message.html
+msgid "Something went wrong"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/welcome.html
+msgid "Your account is ready"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/welcome.html
+msgid "You are signed in. There is nothing else to see yet."
 msgstr ""
 
 #: src/hrcek/accounts/templates/emails/email_confirmation.html
@@ -316,6 +410,10 @@ msgstr ""
 
 #: src/hrcek/accounts/validators.py
 msgid "Enter a valid domain, for example example.com."
+msgstr ""
+
+#: src/hrcek/accounts/views.py
+msgid "Ask whoever invited you to send a new invitation."
 msgstr ""
 
 #: src/hrcek/core/api.py

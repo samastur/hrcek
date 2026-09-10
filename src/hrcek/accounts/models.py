@@ -205,3 +205,88 @@ class AllowedDomain(models.Model):
     def save(self, **kwargs: Any) -> None:
         self.domain = self.domain.strip().lower().lstrip("@")
         super().save(**kwargs)
+
+
+class Invitation(models.Model):
+    """An admin's offer of an account, redeemable once.
+
+    Only the hash of the token is stored, so a leaked database backup
+    yields no usable invitations. The raw token exists in exactly one
+    place: the link in the email.
+    """
+
+    email = models.EmailField(_("email address"), max_length=254)
+    invited_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="invitations_sent",
+        verbose_name=_("invited by"),
+    )
+    token_hash = models.CharField(max_length=64, unique=True, editable=False)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    expires_at = models.DateTimeField(_("expires at"))
+    accepted_at = models.DateTimeField(_("accepted at"), null=True, blank=True)
+    revoked_at = models.DateTimeField(_("revoked at"), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("invitation")
+        verbose_name_plural = _("invitations")
+        ordering = ("-created_at",)
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                Lower("email"),
+                condition=models.Q(accepted_at__isnull=True, revoked_at__isnull=True),
+                name="one_pending_invitation_per_email",
+            )
+        ]
+
+    def __str__(self) -> str:
+        return self.email
+
+    @property
+    def is_pending(self) -> bool:
+        return (
+            self.accepted_at is None
+            and self.revoked_at is None
+            and self.expires_at > timezone.now()
+        )
+
+    @classmethod
+    def issue(cls, email: str, invited_by: User) -> tuple[Invitation, str]:
+        """Create or refresh a pending invitation and send the email."""
+        # Imported here, not at module level: mail reads settings, which
+        # import models, so a top-level import would be circular.
+        from hrcek.accounts.mail import absolute_url, send_email  # noqa: PLC0415
+
+        address = email.strip().lower()
+        raw = ApiToken.new_raw_token()
+        expires_at = timezone.now() + timedelta(
+            days=settings.HRCEK_INVITATION_EXPIRY_DAYS
+        )
+        invitation, _created = cls.objects.update_or_create(
+            email=address,
+            accepted_at=None,
+            revoked_at=None,
+            defaults={
+                "invited_by": invited_by,
+                "token_hash": ApiToken.hash_token(raw),
+                "expires_at": expires_at,
+            },
+        )
+        send_email(
+            "invitation",
+            address,
+            {
+                "invited_by": str(invited_by),
+                "accept_url": absolute_url(f"/accounts/invitation/{raw}/"),
+                "expires_at": expires_at.date().isoformat(),
+            },
+        )
+        return invitation, raw
+
+    @classmethod
+    def find_pending(cls, raw_token: str) -> Invitation | None:
+        invitation = cls.objects.filter(
+            token_hash=ApiToken.hash_token(raw_token)
+        ).first()
+        return invitation if invitation is not None and invitation.is_pending else None

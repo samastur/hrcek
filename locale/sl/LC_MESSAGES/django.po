@@ -34,6 +34,27 @@ msgstr ""
 "API-žeton je ustvarjen. Prekopirajte ga zdaj, ker ne bo več prikazan: "
 "%(token)s"
 
+#: src/hrcek/accounts/admin.py
+#, python-format
+msgid "Invitation sent to %(email)s."
+msgstr "Povabilo je poslano na %(email)s."
+
+#: src/hrcek/accounts/admin.py
+msgid "Resend the selected invitations"
+msgstr "Ponovno pošlji izbrana povabila"
+
+#: src/hrcek/accounts/admin.py
+msgid "Invitations resent."
+msgstr "Povabila so ponovno poslana."
+
+#: src/hrcek/accounts/admin.py
+msgid "Revoke the selected invitations"
+msgstr "Prekliči izbrana povabila"
+
+#: src/hrcek/accounts/admin.py
+msgid "Invitations revoked."
+msgstr "Povabila so preklicana."
+
 #: src/hrcek/accounts/admin_site.py
 msgid "Hrcek administration"
 msgstr "Skrbništvo Hrčka"
@@ -69,6 +90,36 @@ msgstr "Ta API-žeton ni veljaven ali je potekel."
 #: src/hrcek/accounts/errors.py
 msgid "The request could not be verified. Try again."
 msgstr "Zahteve ni bilo mogoče preveriti. Poskusite znova."
+
+#: src/hrcek/accounts/errors.py
+msgid "This invitation link is not valid. It may have expired or been used."
+msgstr ""
+"Ta povezava za povabilo ni veljavna. Morda je potekla ali bila že "
+"uporabljena."
+
+#: src/hrcek/accounts/errors.py
+msgid "That display name is already taken."
+msgstr "To prikazno ime je že zasedeno."
+
+#: src/hrcek/accounts/forms.py
+msgid "Display name"
+msgstr "Prikazno ime"
+
+#: src/hrcek/accounts/forms.py
+msgid "Optional. You can sign in with this instead of your email."
+msgstr "Neobvezno. S tem se lahko prijavite namesto z e-poštnim naslovom."
+
+#: src/hrcek/accounts/forms.py
+msgid "Password"
+msgstr "Geslo"
+
+#: src/hrcek/accounts/forms.py
+msgid "Repeat password"
+msgstr "Ponovite geslo"
+
+#: src/hrcek/accounts/forms.py
+msgid "The two passwords do not match."
+msgstr "Gesli se ne ujemata."
 
 #: src/hrcek/accounts/management/commands/compile_emails.py
 #, python-format
@@ -189,6 +240,51 @@ msgstr "dovoljena domena"
 #: src/hrcek/accounts/models.py
 msgid "allowed domains"
 msgstr "dovoljene domene"
+
+#: src/hrcek/accounts/models.py
+msgid "invited by"
+msgstr "povabil"
+
+#: src/hrcek/accounts/models.py
+msgid "accepted at"
+msgstr "sprejeto ob"
+
+#: src/hrcek/accounts/models.py
+msgid "invitation"
+msgstr "povabilo"
+
+#: src/hrcek/accounts/models.py
+msgid "invitations"
+msgstr "povabila"
+
+#: src/hrcek/accounts/templates/accounts/base.html
+msgid "Hrček"
+msgstr "Hrček"
+
+#: src/hrcek/accounts/templates/accounts/invitation_accept.html
+msgid "Accept your invitation"
+msgstr "Sprejmite povabilo"
+
+#: src/hrcek/accounts/templates/accounts/invitation_accept.html
+#, python-format
+msgid "Setting up the account for %(email)s."
+msgstr "Nastavljanje računa za %(email)s."
+
+#: src/hrcek/accounts/templates/accounts/invitation_accept.html
+msgid "Create my account"
+msgstr "Ustvari moj račun"
+
+#: src/hrcek/accounts/templates/accounts/message.html
+msgid "Something went wrong"
+msgstr "Nekaj je šlo narobe"
+
+#: src/hrcek/accounts/templates/accounts/welcome.html
+msgid "Your account is ready"
+msgstr "Vaš račun je pripravljen"
+
+#: src/hrcek/accounts/templates/accounts/welcome.html
+msgid "You are signed in. There is nothing else to see yet."
+msgstr "Prijavljeni ste. Zaenkrat ni še ničesar drugega za videti."
 
 #: src/hrcek/accounts/templates/emails/email_confirmation.html
 #: src/hrcek/accounts/templates/emails/email_confirmation.subject.txt
@@ -329,6 +425,10 @@ msgstr "Vnesite samo domeno, brez znaka \"@\"."
 #: src/hrcek/accounts/validators.py
 msgid "Enter a valid domain, for example example.com."
 msgstr "Vnesite veljavno domeno, na primer example.com."
+
+#: src/hrcek/accounts/views.py
+msgid "Ask whoever invited you to send a new invitation."
+msgstr "Prosite tistega, ki vas je povabil, naj pošlje novo povabilo."
 
 #: src/hrcek/core/api.py
 msgid "Service is running."

@@ -3,9 +3,10 @@ from __future__ import annotations
 from typing import Any
 
 from django import forms
-from django.contrib.auth.forms import BaseUserCreationForm
+from django.contrib.auth.forms import BaseUserCreationForm, PasswordResetForm
 from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.password_validation import validate_password
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from hrcek.accounts.errors import DISPLAY_NAME_TAKEN
@@ -65,3 +66,34 @@ class InvitationAcceptForm(forms.Form):
         if first:
             validate_password(first)
         return cleaned
+
+
+class HrcekPasswordResetForm(PasswordResetForm):
+    """Django's reset flow, sending Hrcek's email instead of its own.
+
+    Overriding send_mail keeps every message in one place and one style.
+    Django's context supplies a uid and a token; we turn those into the
+    absolute link the templates expect.
+    """
+
+    # The signature is Django's, not ours; it cannot be narrowed without
+    # breaking the override.
+    def send_mail(  # noqa: PLR0913, PLR0917
+        self,
+        subject_template_name: str,
+        email_template_name: str,
+        context: dict[str, Any],
+        from_email: str | None,
+        to_email: str,
+        html_email_template_name: str | None = None,
+    ) -> None:
+        # Imported here to avoid a circular import through settings.
+        from hrcek.accounts.mail import absolute_url, send_email  # noqa: PLC0415
+
+        reset_url = absolute_url(
+            reverse(
+                "accounts:password_reset_confirm",
+                kwargs={"uidb64": context["uid"], "token": context["token"]},
+            )
+        )
+        send_email("password_reset", to_email, {"reset_url": reset_url})

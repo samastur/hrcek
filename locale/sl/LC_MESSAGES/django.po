@@ -274,9 +274,65 @@ msgstr "Nastavljanje računa za %(email)s."
 msgid "Create my account"
 msgstr "Ustvari moj račun"
 
+#: src/hrcek/accounts/templates/accounts/login.html
+#: src/hrcek/accounts/templates/accounts/password_reset_complete.html
+msgid "Sign in"
+msgstr "Prijava"
+
+#: src/hrcek/accounts/templates/accounts/login.html
+msgid "Forgotten your password?"
+msgstr "Ste pozabili geslo?"
+
 #: src/hrcek/accounts/templates/accounts/message.html
 msgid "Something went wrong"
 msgstr "Nekaj je šlo narobe"
+
+#: src/hrcek/accounts/templates/accounts/password_reset.html
+#: src/hrcek/accounts/templates/emails/password_reset.html
+#: src/hrcek/accounts/templates/emails/password_reset.subject.txt
+msgid "Reset your password"
+msgstr "Ponastavite geslo"
+
+#: src/hrcek/accounts/templates/accounts/password_reset.html
+msgid ""
+"Enter your email address and we will send you a link to choose a new "
+"password."
+msgstr ""
+"Vnesite svoj e-poštni naslov in poslali vam bomo povezavo za izbiro novega "
+"gesla."
+
+#: src/hrcek/accounts/templates/accounts/password_reset.html
+msgid "Send the link"
+msgstr "Pošlji povezavo"
+
+#: src/hrcek/accounts/templates/accounts/password_reset_complete.html
+msgid "Your password has been changed"
+msgstr "Vaše geslo je spremenjeno"
+
+#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
+#: src/hrcek/accounts/templates/emails/password_reset.html
+msgid "Choose a new password"
+msgstr "Izberite novo geslo"
+
+#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
+msgid "Save my new password"
+msgstr "Shrani moje novo geslo"
+
+#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
+msgid "This link is invalid, probably because it has already been used."
+msgstr "Ta povezava ni veljavna, verjetno zato, ker je bila že uporabljena."
+
+#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
+msgid "Ask for a new one"
+msgstr "Zaprosite za novo"
+
+#: src/hrcek/accounts/templates/accounts/password_reset_done.html
+msgid "Check your email"
+msgstr "Preverite e-pošto"
+
+#: src/hrcek/accounts/templates/accounts/password_reset_done.html
+msgid "If that address has an account here, a link is on its way."
+msgstr "Če ima ta naslov tukaj račun, je povezava že na poti."
 
 #: src/hrcek/accounts/templates/accounts/welcome.html
 msgid "Your account is ready"
@@ -357,17 +413,8 @@ msgid "This link stops working on %(expires_at)s."
 msgstr "Povezava preneha delovati %(expires_at)s."
 
 #: src/hrcek/accounts/templates/emails/password_reset.html
-#: src/hrcek/accounts/templates/emails/password_reset.subject.txt
-msgid "Reset your password"
-msgstr "Ponastavite geslo"
-
-#: src/hrcek/accounts/templates/emails/password_reset.html
 msgid "Use the button below to choose a new password for your Hrček account."
 msgstr "Z gumbom spodaj izberite novo geslo za svoj račun v Hrčku."
-
-#: src/hrcek/accounts/templates/emails/password_reset.html
-msgid "Choose a new password"
-msgstr "Izberite novo geslo"
 
 #: src/hrcek/accounts/templates/emails/password_reset.html
 msgid ""

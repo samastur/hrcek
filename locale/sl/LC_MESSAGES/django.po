@@ -88,6 +88,16 @@ msgstr "E-poštne predloge so posodobljene."
 msgid "Compiled: %(names)s"
 msgstr "Prevedeno: %(names)s"
 
+#: src/hrcek/accounts/management/commands/preview_emails.py
+#, python-format
+msgid "Previews written to %(path)s"
+msgstr "Predogledi so zapisani v %(path)s"
+
+#: src/hrcek/accounts/management/commands/preview_emails.py
+#, python-format
+msgid "Open %(path)s"
+msgstr "Odprite %(path)s"
+
 #: src/hrcek/accounts/models.py
 msgid "email address"
 msgstr "e-poštni naslov"

@@ -83,6 +83,16 @@ msgstr ""
 msgid "Compiled: %(names)s"
 msgstr ""
 
+#: src/hrcek/accounts/management/commands/preview_emails.py
+#, python-format
+msgid "Previews written to %(path)s"
+msgstr ""
+
+#: src/hrcek/accounts/management/commands/preview_emails.py
+#, python-format
+msgid "Open %(path)s"
+msgstr ""
+
 #: src/hrcek/accounts/models.py
 msgid "email address"
 msgstr ""

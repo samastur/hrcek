@@ -15,3 +15,7 @@ DATABASES = {
 
 # The suite must never reach Sentry.
 SENTRY_DSN = ""
+
+MAILERS = {
+    "default": {"BACKEND": "django.core.mail.backends.locmem.EmailBackend"},
+}

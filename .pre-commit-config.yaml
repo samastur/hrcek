@@ -38,6 +38,13 @@ repos:
         files: ^src/.*\.py$
         pass_filenames: false
 
+      - id: emails-compiled
+        name: emails (.html matches .mjml)
+        entry: uv run python manage.py compile_emails --check
+        language: system
+        files: ^src/hrcek/accounts/(emails|templates/emails)/
+        pass_filenames: false
+
       - id: translations-extracted
         name: translations (catalogues match the source)
         entry: scripts/check_translations.sh extract

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 04:45+0000\n"
+"POT-Creation-Date: 2026-09-12 15:51+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -69,6 +69,24 @@ msgstr "Ta API-žeton ni veljaven ali je potekel."
 #: src/hrcek/accounts/errors.py
 msgid "The request could not be verified. Try again."
 msgstr "Zahteve ni bilo mogoče preveriti. Poskusite znova."
+
+#: src/hrcek/accounts/management/commands/compile_emails.py
+#, python-format
+msgid ""
+"Email templates are out of date: %(names)s. Run: uv run python manage.py "
+"compile_emails"
+msgstr ""
+"E-poštne predloge niso posodobljene: %(names)s. Zaženite: uv run python "
+"manage.py compile_emails"
+
+#: src/hrcek/accounts/management/commands/compile_emails.py
+msgid "Email templates are up to date."
+msgstr "E-poštne predloge so posodobljene."
+
+#: src/hrcek/accounts/management/commands/compile_emails.py
+#, python-format
+msgid "Compiled: %(names)s"
+msgstr "Prevedeno: %(names)s"
 
 #: src/hrcek/accounts/models.py
 msgid "email address"
@@ -161,6 +179,130 @@ msgstr "dovoljena domena"
 #: src/hrcek/accounts/models.py
 msgid "allowed domains"
 msgstr "dovoljene domene"
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+#: src/hrcek/accounts/templates/emails/email_confirmation.subject.txt
+msgid "Confirm your email address"
+msgstr "Potrdite svoj e-poštni naslov"
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+msgid "Confirm your address to finish setting up your Hrček account."
+msgstr "Potrdite svoj naslov in dokončajte nastavitev računa v Hrčku."
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+msgid "Confirm my address"
+msgstr "Potrdi moj naslov"
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+#: src/hrcek/accounts/templates/emails/email_confirmation.txt
+#, python-format
+msgid "This link stops working in %(expires_hours)s hours."
+msgstr "Povezava preneha delovati čez %(expires_hours)s ur."
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+#: src/hrcek/accounts/templates/emails/invitation.html
+#: src/hrcek/accounts/templates/emails/password_reset.html
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+msgid "You are receiving this because someone used your address with Hrček."
+msgstr "To sporočilo ste prejeli, ker je nekdo uporabil vaš naslov v Hrčku."
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.txt
+msgid "Confirm your address to finish setting up your Hrček account:"
+msgstr "Potrdite svoj naslov in dokončajte nastavitev računa v Hrčku:"
+
+#: src/hrcek/accounts/templates/emails/invitation.html
+#: src/hrcek/accounts/templates/emails/invitation.subject.txt
+msgid "You have been invited to Hrček"
+msgstr "Povabljeni ste v Hrčka"
+
+#: src/hrcek/accounts/templates/emails/invitation.html
+#, python-format
+msgid ""
+"%(invited_by)s invited you to join Hrček, a place to keep track of "
+"interesting things found on the web."
+msgstr ""
+"%(invited_by)s vas vabi v Hrčka, kjer shranjujemo zanimive stvari s spleta."
+
+#: src/hrcek/accounts/templates/emails/invitation.html
+msgid "Accept the invitation"
+msgstr "Sprejmi povabilo"
+
+#: src/hrcek/accounts/templates/emails/invitation.html
+#, python-format
+msgid ""
+"This link stops working on %(expires_at)s. If you were not expecting this, "
+"ignore this message."
+msgstr ""
+"Povezava preneha delovati %(expires_at)s. Če tega niste pričakovali, "
+"sporočilo prezrite."
+
+#: src/hrcek/accounts/templates/emails/invitation.txt
+#, python-format
+msgid "%(invited_by)s invited you to join Hrček."
+msgstr "%(invited_by)s vas vabi v Hrčka."
+
+#: src/hrcek/accounts/templates/emails/invitation.txt
+msgid "Accept the invitation:"
+msgstr "Sprejmite povabilo:"
+
+#: src/hrcek/accounts/templates/emails/invitation.txt
+#, python-format
+msgid "This link stops working on %(expires_at)s."
+msgstr "Povezava preneha delovati %(expires_at)s."
+
+#: src/hrcek/accounts/templates/emails/password_reset.html
+#: src/hrcek/accounts/templates/emails/password_reset.subject.txt
+msgid "Reset your password"
+msgstr "Ponastavite geslo"
+
+#: src/hrcek/accounts/templates/emails/password_reset.html
+msgid "Use the button below to choose a new password for your Hrček account."
+msgstr "Z gumbom spodaj izberite novo geslo za svoj račun v Hrčku."
+
+#: src/hrcek/accounts/templates/emails/password_reset.html
+msgid "Choose a new password"
+msgstr "Izberite novo geslo"
+
+#: src/hrcek/accounts/templates/emails/password_reset.html
+msgid ""
+"If you did not ask for this, ignore this message and nothing will change."
+msgstr ""
+"Če tega niste zahtevali, sporočilo prezrite in nič se ne bo spremenilo."
+
+#: src/hrcek/accounts/templates/emails/password_reset.txt
+msgid "Choose a new password for your Hrček account:"
+msgstr "Izberite novo geslo za svoj račun v Hrčku:"
+
+#: src/hrcek/accounts/templates/emails/password_reset.txt
+msgid "If you did not ask for this, ignore this message."
+msgstr "Če tega niste zahtevali, sporočilo prezrite."
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+#: src/hrcek/accounts/templates/emails/signup_existing_account.subject.txt
+msgid "Someone tried to register with your address"
+msgstr "Nekdo se je poskusil registrirati z vašim naslovom"
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+#: src/hrcek/accounts/templates/emails/signup_existing_account.txt
+msgid ""
+"Somebody just tried to create a Hrček account with this email address. You "
+"already have one, so nothing has changed."
+msgstr ""
+"Nekdo je pravkar poskusil ustvariti račun v Hrčku s tem e-poštnim naslovom. "
+"Račun že imate, zato se ni nič spremenilo."
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+msgid "Reset my password"
+msgstr "Ponastavi moje geslo"
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+msgid "If this was you, sign in as usual. If not, you can ignore this message."
+msgstr ""
+"Če ste bili to vi, se prijavite kot običajno. Če ne, sporočilo prezrite."
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.txt
+msgid "If you have forgotten your password, you can reset it:"
+msgstr "Če ste pozabili geslo, ga lahko ponastavite:"
 
 #: src/hrcek/accounts/validators.py
 msgid "A display name may not contain \"@\"."

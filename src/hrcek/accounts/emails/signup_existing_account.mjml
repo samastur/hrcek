@@ -1,0 +1,15 @@
+<mjml>
+  <mj-include path="_head.mjml" />
+  <mj-body>
+    <mj-include path="_header.mjml" />
+    <mj-section>
+      <mj-column>
+        <mj-text mj-class="heading">{% trans "Someone tried to register with your address" %}</mj-text>
+        <mj-text>{% trans "Somebody just tried to create a Hrček account with this email address. You already have one, so nothing has changed." %}</mj-text>
+        <mj-button href="{{ reset_url }}">{% trans "Reset my password" %}</mj-button>
+        <mj-text mj-class="muted">{% trans "If this was you, sign in as usual. If not, you can ignore this message." %}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="_footer.mjml" />
+  </mj-body>
+</mjml>

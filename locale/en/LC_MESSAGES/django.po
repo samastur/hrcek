@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 04:45+0000\n"
+"POT-Creation-Date: 2026-09-12 15:51+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -65,6 +65,22 @@ msgstr ""
 
 #: src/hrcek/accounts/errors.py
 msgid "The request could not be verified. Try again."
+msgstr ""
+
+#: src/hrcek/accounts/management/commands/compile_emails.py
+#, python-format
+msgid ""
+"Email templates are out of date: %(names)s. Run: uv run python manage.py "
+"compile_emails"
+msgstr ""
+
+#: src/hrcek/accounts/management/commands/compile_emails.py
+msgid "Email templates are up to date."
+msgstr ""
+
+#: src/hrcek/accounts/management/commands/compile_emails.py
+#, python-format
+msgid "Compiled: %(names)s"
 msgstr ""
 
 #: src/hrcek/accounts/models.py
@@ -157,6 +173,123 @@ msgstr ""
 
 #: src/hrcek/accounts/models.py
 msgid "allowed domains"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+#: src/hrcek/accounts/templates/emails/email_confirmation.subject.txt
+msgid "Confirm your email address"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+msgid "Confirm your address to finish setting up your Hrček account."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+msgid "Confirm my address"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+#: src/hrcek/accounts/templates/emails/email_confirmation.txt
+#, python-format
+msgid "This link stops working in %(expires_hours)s hours."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+#: src/hrcek/accounts/templates/emails/invitation.html
+#: src/hrcek/accounts/templates/emails/password_reset.html
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+msgid "You are receiving this because someone used your address with Hrček."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/email_confirmation.txt
+msgid "Confirm your address to finish setting up your Hrček account:"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/invitation.html
+#: src/hrcek/accounts/templates/emails/invitation.subject.txt
+msgid "You have been invited to Hrček"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/invitation.html
+#, python-format
+msgid ""
+"%(invited_by)s invited you to join Hrček, a place to keep track of "
+"interesting things found on the web."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/invitation.html
+msgid "Accept the invitation"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/invitation.html
+#, python-format
+msgid ""
+"This link stops working on %(expires_at)s. If you were not expecting this, "
+"ignore this message."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/invitation.txt
+#, python-format
+msgid "%(invited_by)s invited you to join Hrček."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/invitation.txt
+msgid "Accept the invitation:"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/invitation.txt
+#, python-format
+msgid "This link stops working on %(expires_at)s."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/password_reset.html
+#: src/hrcek/accounts/templates/emails/password_reset.subject.txt
+msgid "Reset your password"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/password_reset.html
+msgid "Use the button below to choose a new password for your Hrček account."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/password_reset.html
+msgid "Choose a new password"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/password_reset.html
+msgid ""
+"If you did not ask for this, ignore this message and nothing will change."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/password_reset.txt
+msgid "Choose a new password for your Hrček account:"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/password_reset.txt
+msgid "If you did not ask for this, ignore this message."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+#: src/hrcek/accounts/templates/emails/signup_existing_account.subject.txt
+msgid "Someone tried to register with your address"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+#: src/hrcek/accounts/templates/emails/signup_existing_account.txt
+msgid ""
+"Somebody just tried to create a Hrček account with this email address. You "
+"already have one, so nothing has changed."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+msgid "Reset my password"
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+msgid "If this was you, sign in as usual. If not, you can ignore this message."
+msgstr ""
+
+#: src/hrcek/accounts/templates/emails/signup_existing_account.txt
+msgid "If you have forgotten your password, you can reset it:"
 msgstr ""
 
 #: src/hrcek/accounts/validators.py

@@ -96,6 +96,14 @@ msgstr ""
 msgid "That display name is already taken."
 msgstr ""
 
+#: src/hrcek/accounts/errors.py
+msgid "This email address is not allowed to create an account here."
+msgstr ""
+
+#: src/hrcek/accounts/errors.py
+msgid "This confirmation link is not valid. It may have expired."
+msgstr ""
+
 #: src/hrcek/accounts/forms.py
 msgid "Display name"
 msgstr ""
@@ -114,6 +122,10 @@ msgstr ""
 
 #: src/hrcek/accounts/forms.py
 msgid "The two passwords do not match."
+msgstr ""
+
+#: src/hrcek/accounts/forms.py
+msgid "Email address"
 msgstr ""
 
 #: src/hrcek/accounts/management/commands/compile_emails.py
@@ -264,6 +276,7 @@ msgid "Setting up the account for %(email)s."
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/invitation_accept.html
+#: src/hrcek/accounts/templates/accounts/signup.html
 msgid "Create my account"
 msgstr ""
 
@@ -318,11 +331,22 @@ msgid "Ask for a new one"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/password_reset_done.html
+#: src/hrcek/accounts/templates/accounts/signup_done.html
 msgid "Check your email"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/password_reset_done.html
 msgid "If that address has an account here, a link is on its way."
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/signup.html
+msgid "Create an account"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/signup_done.html
+msgid ""
+"If that address can have an account here, a message is on its way. Follow "
+"the link in it to finish."
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/welcome.html
@@ -459,6 +483,10 @@ msgstr ""
 
 #: src/hrcek/accounts/views.py
 msgid "Ask whoever invited you to send a new invitation."
+msgstr ""
+
+#: src/hrcek/accounts/views.py
+msgid "Sign up again to get a fresh link."
 msgstr ""
 
 #: src/hrcek/core/api.py

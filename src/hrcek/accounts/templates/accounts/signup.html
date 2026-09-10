@@ -1,0 +1,9 @@
+{% extends "accounts/base.html" %}{% load i18n %}
+{% block heading %}{% trans "Create an account" %}{% endblock %}
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% trans "Create my account" %}</button>
+  </form>
+{% endblock %}

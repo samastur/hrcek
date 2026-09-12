@@ -62,7 +62,7 @@ MIDDLEWARE = [
 API_DOCS_ENABLED = env_bool("HRCEK_API_DOCS", default=True)
 
 LOGIN_URL = "landing"
-LOGIN_REDIRECT_URL = "accounts:welcome"
+LOGIN_REDIRECT_URL = "accounts:account"
 LOGOUT_REDIRECT_URL = "landing"
 
 ROOT_URLCONF = "hrcek.urls"

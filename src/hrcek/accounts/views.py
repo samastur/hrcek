@@ -1,13 +1,18 @@
 from __future__ import annotations
 
+from typing import Any
+
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.views.decorators.http import require_http_methods
 
 from hrcek.accounts.allowlist import is_signup_allowed
 from hrcek.accounts.errors import (
@@ -17,6 +22,7 @@ from hrcek.accounts.errors import (
 )
 from hrcek.accounts.forms import (
     ConfirmedUserAuthenticationForm,
+    DisplayNameForm,
     InvitationAcceptForm,
     SignupForm,
 )
@@ -36,12 +42,35 @@ def _error_page(request: HttpRequest, code: ErrorCode, hint: str = "") -> HttpRe
     )
 
 
-def welcome(request: HttpRequest) -> HttpResponse:
-    """Where the flows land.
+@login_required
+def account(request: HttpRequest) -> HttpResponse:
+    return render_account(request)
 
-    Hrcek has no application UI yet, and a redirect to "/" would 404.
+
+def render_account(request: HttpRequest, **overrides: Any) -> HttpResponse:
+    """Render the hub, letting one caller substitute a bound form.
+
+    Each form on the page posts to its own URL. When one fails
+    validation its view re-renders this page with its own form bound, so
+    the person sees a single page while each view keeps one
+    responsibility.
     """
-    return render(request, "accounts/welcome.html")
+    context: dict[str, Any] = {
+        "display_name_form": DisplayNameForm(instance=request.user),
+    }
+    context.update(overrides)
+    return render(request, "accounts/account.html", context)
+
+
+@require_http_methods(["POST"])
+@login_required
+def display_name(request: HttpRequest) -> HttpResponse:
+    form = DisplayNameForm(request.POST, instance=request.user)
+    if not form.is_valid():
+        return render_account(request, display_name_form=form)
+    form.save()
+    messages.success(request, _("Your display name has been updated."))
+    return redirect("accounts:account")
 
 
 def invitation_accept(request: HttpRequest, token: str) -> HttpResponse:
@@ -67,7 +96,7 @@ def invitation_accept(request: HttpRequest, token: str) -> HttpResponse:
             invitation.accepted_at = timezone.now()
             invitation.save(update_fields=["accepted_at"])
             login(request, user)
-            return redirect("accounts:welcome")
+            return redirect("accounts:account")
     else:
         form = InvitationAcceptForm()
 
@@ -134,7 +163,7 @@ def confirm(request: HttpRequest, token: str) -> HttpResponse:
         user.email_verified_at = timezone.now()
         user.save(update_fields=["email_verified_at"])
     login(request, user)
-    return redirect("accounts:welcome")
+    return redirect("accounts:account")
 
 
 # The landing page is the login page. redirect_authenticated_user sends

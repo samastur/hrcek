@@ -135,3 +135,26 @@ class ConfirmedUserAuthenticationForm(AuthenticationForm):
             raise forms.ValidationError(
                 str(EMAIL_NOT_CONFIRMED.message), code=EMAIL_NOT_CONFIRMED.code
             )
+
+
+class DisplayNameForm(forms.ModelForm):
+    """The optional handle, which doubles as a sign-in identifier."""
+
+    class Meta:
+        model = User
+        fields = ("display_name",)
+
+    def clean_display_name(self) -> str | None:
+        name = (self.cleaned_data.get("display_name") or "").strip()
+        if not name:
+            return None
+        # Excluding yourself is what makes re-saving your own name work
+        # rather than colliding with yourself.
+        taken = User.objects.filter(display_name__iexact=name).exclude(
+            pk=self.instance.pk
+        )
+        if taken.exists():
+            raise forms.ValidationError(
+                str(DISPLAY_NAME_TAKEN.message), code=DISPLAY_NAME_TAKEN.code
+            )
+        return name

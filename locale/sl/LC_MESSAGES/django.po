@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 18:12+0000\n"
+"POT-Creation-Date: 2026-09-12 18:14+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -158,6 +158,10 @@ msgstr "Trenutno geslo"
 msgid "That is already your email address."
 msgstr "To je že vaš e-poštni naslov."
 
+#: src/hrcek/accounts/forms.py
+msgid "Token name"
+msgstr "Ime žetona"
+
 #: src/hrcek/accounts/management/commands/compile_emails.py
 #, python-format
 msgid ""
@@ -251,6 +255,7 @@ msgid "API token"
 msgstr "API-žeton"
 
 #: src/hrcek/accounts/models.py
+#: src/hrcek/accounts/templates/accounts/account.html
 msgid "API tokens"
 msgstr "API-žetoni"
 
@@ -327,6 +332,34 @@ msgstr "Spremeni moj e-poštni naslov"
 #: src/hrcek/accounts/templates/accounts/password_change.html
 msgid "Change your password"
 msgstr "Spremenite geslo"
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "For scripts and other clients that sign in without a browser."
+msgstr "Za skripte in druge odjemalce, ki se prijavijo brez brskalnika."
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Name"
+msgstr "Ime"
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Created"
+msgstr "Ustvarjeno"
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Last used"
+msgstr "Nazadnje uporabljeno"
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Delete"
+msgstr "Izbriši"
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "You have no tokens yet."
+msgstr "Zaenkrat nimate nobenega žetona."
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Create a token"
+msgstr "Ustvari žeton"
 
 #: src/hrcek/accounts/templates/accounts/account.html
 msgid "Sign out"
@@ -651,6 +684,15 @@ msgstr "Spremembo znova zahtevajte na strani svojega računa."
 #: src/hrcek/accounts/views.py
 msgid "The pending email change has been cancelled."
 msgstr "Sprememba e-poštnega naslova je preklicana."
+
+#: src/hrcek/accounts/views.py
+#, python-format
+msgid "Copy this token now, it will not be shown again: %(token)s"
+msgstr "Prekopirajte ta žeton zdaj, ker ne bo več prikazan: %(token)s"
+
+#: src/hrcek/accounts/views.py
+msgid "The token has been deleted."
+msgstr "Žeton je izbrisan."
 
 #: src/hrcek/core/api.py
 msgid "Service is running."

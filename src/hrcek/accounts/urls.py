@@ -10,6 +10,12 @@ urlpatterns = [
     path("me/", views.account, name="account"),
     path("me/display-name/", views.display_name, name="display_name"),
     path("me/email/", views.email_change, name="email_change"),
+    path("me/tokens/", views.token_create, name="token_create"),
+    path(
+        "me/tokens/<int:pk>/delete/",
+        views.token_delete,
+        name="token_delete",
+    ),
     path(
         "me/email/cancel/",
         views.email_change_cancel,

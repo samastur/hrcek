@@ -32,3 +32,22 @@ class EntryOut(Schema):
     @staticmethod
     def resolve_tags(obj: Entry) -> list[str]:
         return [tag.name for tag in obj.tags.all()]
+
+
+class BatchError(Schema):
+    code: str
+    message: str
+    details: dict = Field(default_factory=dict)
+
+
+class BatchResult(Schema):
+    """One row of a batch, in the order it was submitted."""
+
+    index: int
+    status: str  # "created", "updated" or "error"
+    id: int | None = None
+    error: BatchError | None = None
+
+
+class BatchOut(Schema):
+    results: list[BatchResult]

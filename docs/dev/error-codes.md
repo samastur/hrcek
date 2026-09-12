@@ -54,6 +54,7 @@ must never contain anything private.
 | `HRC-ACCT-0003` | 400 | The confirmation link is expired, tampered with, or refers to a deleted user. |
 | `HRC-ACCT-0004` | 409 | The requested display name belongs to somebody else, ignoring case. |
 | `HRC-ACCT-0005` | 400 | The email change link is expired, tampered with, or superseded by a later request. |
+| `HRC-ENTRY-0001` | 422 | More rows in one batch than the limit allows. The whole request is refused; nothing is saved. |
 | `HRC-ACCT-0006` | 409 | Another account already uses that email address. Shown inline on the form too, where the status is 200 because the person can simply pick another. |
 
 ## Response shape

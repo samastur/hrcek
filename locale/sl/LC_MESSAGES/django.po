@@ -723,6 +723,10 @@ msgstr "Vnosi"
 msgid "Sign out"
 msgstr "Odjava"
 
+#: src/hrcek/entries/errors.py
+msgid "Too many entries in one request."
+msgstr "Preveč vnosov v enem zahtevku."
+
 #: src/hrcek/entries/forms.py src/hrcek/entries/templates/entries/list.html
 msgid "Tags"
 msgstr "Oznake"

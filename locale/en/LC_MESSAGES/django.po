@@ -696,6 +696,10 @@ msgstr ""
 msgid "Sign out"
 msgstr ""
 
+#: src/hrcek/entries/errors.py
+msgid "Too many entries in one request."
+msgstr ""
+
 #: src/hrcek/entries/forms.py src/hrcek/entries/templates/entries/list.html
 msgid "Tags"
 msgstr ""

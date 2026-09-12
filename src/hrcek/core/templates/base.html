@@ -12,9 +12,27 @@
     button { margin-top: 1.5rem; padding: .6rem 1.2rem; font-size: 1rem; }
     .errorlist { color: #b91c1c; padding-left: 1rem; }
     .code { color: #71717a; font-family: monospace; font-size: .875rem; }
+    nav { margin-bottom: 2rem; font-size: .875rem; }
+    /* Lists that read as a row rather than a stack. Still lists: the
+       markup carries the structure, the styling only changes how it
+       looks. */
+    ul.inline { list-style: none; padding: 0; margin: 0;
+                display: flex; flex-wrap: wrap; gap: .75rem; }
+    ul.stacked { list-style: none; padding: 0; }
+    ul.stacked > li + li { margin-top: 2rem; }
+    .tag { font-size: .875rem; color: #3f3f46; }
   </style>
 </head>
 <body>
+  {% if user.is_authenticated %}
+    <nav aria-label="{% trans "Main" %}">
+      <ul class="inline">
+        <li><a href="{% url 'entries:list' %}">{% trans "Entries" %}</a></li>
+        <li><a href="{% url 'accounts:account' %}">{% trans "Your account" %}</a></li>
+        <li><a href="{% url 'accounts:logout' %}">{% trans "Sign out" %}</a></li>
+      </ul>
+    </nav>
+  {% endif %}
   <h1>{% block heading %}{% trans "Hrček" %}{% endblock %}</h1>
   {% block content %}{% endblock %}
 </body>

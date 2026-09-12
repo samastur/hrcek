@@ -8,5 +8,6 @@ urlpatterns = [
     path("", account_views.landing, name="landing"),
     path("admin/", admin.site.urls),
     path("accounts/", include("hrcek.accounts.urls")),
+    path("entries/", include("hrcek.entries.urls")),
     path("api/", api.urls),
 ]

@@ -1,0 +1,59 @@
+{% extends "base.html" %}{% load i18n %}
+{% block heading %}{% trans "Your entries" %}{% endblock %}
+{% block content %}
+  {% if messages %}
+    <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  <p><a href="{% url 'entries:create' %}">{% trans "Save something" %}</a></p>
+
+  {% if tags %}
+    <nav aria-label="{% trans "Tags" %}">
+      <ul class="inline">
+        {% for each in tags %}
+          <li><a href="?tag={{ each.name|urlencode }}">{{ each.name }}</a></li>
+        {% endfor %}
+        {% if tag %}
+          <li><a href="{% url 'entries:list' %}">{% trans "All entries" %}</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+
+  {% if page %}
+    <ul class="stacked">
+      {% for entry in page %}
+        <li>
+          <article>
+            <h2><a href="{{ entry.url }}">{{ entry.display_title }}</a></h2>
+            {% if entry.notes %}<p>{{ entry.notes|linebreaks }}</p>{% endif %}
+            {% if entry.tags.all %}
+              <ul class="inline">
+                {% for each in entry.tags.all %}
+                  <li class="tag">{{ each.name }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+            <p><a href="{% url 'entries:edit' entry.pk %}">{% trans "Edit" %}</a></p>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% trans "Nothing saved yet." %}</p>
+  {% endif %}
+
+  {% if page.has_other_pages %}
+    <nav aria-label="{% trans "Pages" %}">
+      <ul class="inline">
+        {% if page.has_previous %}
+          <li><a href="?page={{ page.previous_page_number }}{% if tag %}&tag={{ tag|urlencode }}{% endif %}">{% trans "Newer" %}</a></li>
+        {% endif %}
+        <li>{% blocktrans with current=page.number total=page.paginator.num_pages %}Page {{ current }} of {{ total }}{% endblocktrans %}</li>
+        {% if page.has_next %}
+          <li><a href="?page={{ page.next_page_number }}{% if tag %}&tag={{ tag|urlencode }}{% endif %}">{% trans "Older" %}</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+{% endblock %}

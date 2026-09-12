@@ -3,13 +3,17 @@ from __future__ import annotations
 from typing import cast
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import gettext as _
 
 from hrcek.accounts.models import User
+from hrcek.entries.forms import EntryForm
 from hrcek.entries.models import Entry, Tag
+from hrcek.entries.services import save_entry
 
 
 @login_required
@@ -31,3 +35,67 @@ def entry_list(request: HttpRequest) -> HttpResponse:
         "entries/list.html",
         {"page": page, "tag": tag, "tags": Tag.objects.filter(owner=owner)},
     )
+
+
+@login_required
+def entry_create(request: HttpRequest) -> HttpResponse:
+    owner = cast("User", request.user)
+    if request.method != "POST":
+        return render(request, "entries/form.html", {"form": EntryForm()})
+
+    form = EntryForm(request.POST)
+    if not form.is_valid():
+        return render(request, "entries/form.html", {"form": form})
+
+    # A URL already held is an update, not a duplicate.
+    save_entry(
+        owner,
+        url=form.cleaned_data["url"],
+        title=form.cleaned_data["title"],
+        notes=form.cleaned_data["notes"],
+        tag_names=form.tag_names(),
+    )
+    messages.success(request, _("Saved."))
+    return redirect("entries:list")
+
+
+@login_required
+def entry_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    owner = cast("User", request.user)
+    entry = get_object_or_404(Entry, pk=pk, owner=owner)
+
+    if request.method != "POST":
+        return render(
+            request,
+            "entries/form.html",
+            {"form": EntryForm(instance=entry), "entry": entry},
+        )
+
+    form = EntryForm(request.POST, instance=entry)
+    if not form.is_valid():
+        return render(request, "entries/form.html", {"form": form, "entry": entry})
+
+    save_entry(
+        owner,
+        url=form.cleaned_data["url"],
+        title=form.cleaned_data["title"],
+        notes=form.cleaned_data["notes"],
+        tag_names=form.tag_names(),
+    )
+    messages.success(request, _("Saved."))
+    return redirect("entries:list")
+
+
+@login_required
+def entry_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    owner = cast("User", request.user)
+    entry = get_object_or_404(Entry, pk=pk, owner=owner)
+
+    if request.method != "POST":
+        return render(request, "entries/confirm_delete.html", {"entry": entry})
+
+    entry.delete()
+    # Deleting the entry can leave tags with nothing on them.
+    Tag.prune_orphans(owner)
+    messages.success(request, _("Deleted."))
+    return redirect("entries:list")

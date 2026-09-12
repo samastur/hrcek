@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.conf import settings
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -14,7 +15,11 @@ from hrcek.accounts.errors import (
     INVITATION_INVALID,
     SIGNUP_NOT_ALLOWED,
 )
-from hrcek.accounts.forms import InvitationAcceptForm, SignupForm
+from hrcek.accounts.forms import (
+    ConfirmedUserAuthenticationForm,
+    InvitationAcceptForm,
+    SignupForm,
+)
 from hrcek.accounts.mail import absolute_url, send_email
 from hrcek.accounts.models import Invitation, User
 from hrcek.accounts.tokens import make_confirmation_token, read_confirmation_token
@@ -130,3 +135,12 @@ def confirm(request: HttpRequest, token: str) -> HttpResponse:
         user.save(update_fields=["email_verified_at"])
     login(request, user)
     return redirect("accounts:welcome")
+
+
+# The landing page is the login page. redirect_authenticated_user sends
+# anyone already signed in to LOGIN_REDIRECT_URL instead.
+landing = LoginView.as_view(
+    template_name="accounts/landing.html",
+    authentication_form=ConfirmedUserAuthenticationForm,
+    redirect_authenticated_user=True,
+)

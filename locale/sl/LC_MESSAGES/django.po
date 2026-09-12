@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 15:51+0000\n"
+"POT-Creation-Date: 2026-09-12 17:59+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -287,12 +287,12 @@ msgstr "Nastavljanje računa za %(email)s."
 msgid "Create my account"
 msgstr "Ustvari moj račun"
 
-#: src/hrcek/accounts/templates/accounts/login.html
+#: src/hrcek/accounts/templates/accounts/landing.html
 #: src/hrcek/accounts/templates/accounts/password_reset_complete.html
 msgid "Sign in"
 msgstr "Prijava"
 
-#: src/hrcek/accounts/templates/accounts/login.html
+#: src/hrcek/accounts/templates/accounts/landing.html
 msgid "Forgotten your password?"
 msgstr "Ste pozabili geslo?"
 

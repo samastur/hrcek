@@ -96,4 +96,4 @@ def test_a_weak_new_password_is_refused(client, person):
 
 
 def test_the_login_page_renders(client):
-    assert client.get(reverse("accounts:login")).status_code == 200
+    assert client.get(reverse("landing")).status_code == 200

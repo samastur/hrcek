@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% load i18n %}
+{% block heading %}
+  {% if entry %}{% trans "Edit entry" %}{% else %}{% trans "Save something" %}{% endif %}
+{% endblock %}
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% trans "Save" %}</button>
+  </form>
+  {% if entry %}
+    <p><a href="{% url 'entries:delete' entry.pk %}">{% trans "Delete this entry" %}</a></p>
+  {% endif %}
+  <p><a href="{% url 'entries:list' %}">{% trans "Back to your entries" %}</a></p>
+{% endblock %}

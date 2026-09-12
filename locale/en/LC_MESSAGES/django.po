@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 21:57+0000\n"
+"POT-Creation-Date: 2026-09-13 07:23+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -684,12 +684,24 @@ msgstr ""
 msgid "Hrček"
 msgstr ""
 
+#: src/hrcek/core/templates/base.html
+msgid "Main"
+msgstr ""
+
 #: src/hrcek/core/templates/base.html src/hrcek/entries/apps.py
 msgid "Entries"
 msgstr ""
 
 #: src/hrcek/core/templates/base.html
 msgid "Sign out"
+msgstr ""
+
+#: src/hrcek/entries/forms.py src/hrcek/entries/templates/entries/list.html
+msgid "Tags"
+msgstr ""
+
+#: src/hrcek/entries/forms.py
+msgid "Separated by commas."
 msgstr ""
 
 #: src/hrcek/entries/models.py
@@ -732,12 +744,45 @@ msgstr ""
 msgid "entries"
 msgstr ""
 
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+msgid "Delete this entry?"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+msgid "This cannot be undone."
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+msgid "Yes, delete it"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+msgid "Keep it"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/form.html
+msgid "Edit entry"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/form.html
 #: src/hrcek/entries/templates/entries/list.html
-msgid "Your entries"
+msgid "Save something"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/form.html
+msgid "Save"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/form.html
+msgid "Delete this entry"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/form.html
+msgid "Back to your entries"
 msgstr ""
 
 #: src/hrcek/entries/templates/entries/list.html
-msgid "Save something"
+msgid "Your entries"
 msgstr ""
 
 #: src/hrcek/entries/templates/entries/list.html
@@ -753,6 +798,10 @@ msgid "Nothing saved yet."
 msgstr ""
 
 #: src/hrcek/entries/templates/entries/list.html
+msgid "Pages"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
 msgid "Newer"
 msgstr ""
 
@@ -763,6 +812,14 @@ msgstr ""
 
 #: src/hrcek/entries/templates/entries/list.html
 msgid "Older"
+msgstr ""
+
+#: src/hrcek/entries/views.py
+msgid "Saved."
+msgstr ""
+
+#: src/hrcek/entries/views.py
+msgid "Deleted."
 msgstr ""
 
 #: src/hrcek/settings/base.py

@@ -23,6 +23,15 @@ PREVIEW_CONTEXTS: dict[str, dict[str, Any]] = {
     "signup_existing_account": {
         "reset_url": "https://hrcek.example.com/accounts/password/reset/",
     },
+    "email_change": {
+        "confirm_url": "https://hrcek.example.com/accounts/email/confirm/"
+        "Y2hhbmdlOnNpZ25hdHVyZQ/",
+        "expires_hours": 48,
+    },
+    "email_change_notice": {
+        "new_email": "nina.new@example.com",
+        "account_url": "https://hrcek.example.com/accounts/me/",
+    },
     "password_reset": {
         "reset_url": "https://hrcek.example.com/accounts/password/reset/"
         "MQ/ct1a2b-3c4d5e6f/",

@@ -1,0 +1,4 @@
+{% load i18n %}{% blocktrans %}Somebody asked to move your Hrček account to {{ new_email }}. Nothing has changed yet, and this address still works until that one is confirmed.{% endblocktrans %}
+
+{% trans "If this was not you, sign in now and cancel the change:" %}
+{{ account_url }}

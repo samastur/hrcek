@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 18:03+0000\n"
+"POT-Creation-Date: 2026-09-12 18:09+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -109,6 +109,15 @@ msgstr "Ta e-poštni naslov tukaj ne more ustvariti računa."
 msgid "This confirmation link is not valid. It may have expired."
 msgstr "Ta potrditvena povezava ni veljavna. Morda je potekla."
 
+#: src/hrcek/accounts/errors.py
+msgid "This email change link is not valid. It may have expired."
+msgstr ""
+"Ta povezava za spremembo e-poštnega naslova ni veljavna. Morda je potekla."
+
+#: src/hrcek/accounts/errors.py
+msgid "That email address is already in use."
+msgstr "Ta e-poštni naslov je že v uporabi."
+
 #: src/hrcek/accounts/forms.py
 #: src/hrcek/accounts/templates/accounts/account.html
 msgid "Display name"
@@ -135,6 +144,18 @@ msgstr "Gesli se ne ujemata."
 #: src/hrcek/accounts/templates/accounts/account.html
 msgid "Email address"
 msgstr "E-poštni naslov"
+
+#: src/hrcek/accounts/forms.py
+msgid "New email address"
+msgstr "Nov e-poštni naslov"
+
+#: src/hrcek/accounts/forms.py
+msgid "Current password"
+msgstr "Trenutno geslo"
+
+#: src/hrcek/accounts/forms.py
+msgid "That is already your email address."
+msgstr "To je že vaš e-poštni naslov."
 
 #: src/hrcek/accounts/management/commands/compile_emails.py
 #, python-format
@@ -167,6 +188,10 @@ msgstr "Odprite %(path)s"
 #: src/hrcek/accounts/models.py
 msgid "email address"
 msgstr "e-poštni naslov"
+
+#: src/hrcek/accounts/models.py
+msgid "pending email address"
+msgstr "e-poštni naslov v čakanju"
 
 #: src/hrcek/accounts/models.py
 msgid "display name"
@@ -281,12 +306,42 @@ msgid "Save display name"
 msgstr "Shrani prikazno ime"
 
 #: src/hrcek/accounts/templates/accounts/account.html
+#, python-format
+msgid ""
+"Waiting for confirmation at %(pending)s. Until you confirm it, this address "
+"keeps working."
+msgstr ""
+"Čakamo na potrditev na %(pending)s. Dokler je ne potrdite, ta naslov še "
+"naprej deluje."
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Cancel the change"
+msgstr "Prekliči spremembo"
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Change my email address"
+msgstr "Spremeni moj e-poštni naslov"
+
+#: src/hrcek/accounts/templates/accounts/account.html
 msgid "Sign out"
 msgstr "Odjava"
 
 #: src/hrcek/accounts/templates/accounts/base.html
 msgid "Hrček"
 msgstr "Hrček"
+
+#: src/hrcek/accounts/templates/accounts/email_change_done.html
+msgid "Your email address has been changed"
+msgstr "Vaš e-poštni naslov je spremenjen"
+
+#: src/hrcek/accounts/templates/accounts/email_change_done.html
+#, python-format
+msgid "You now sign in with %(email)s."
+msgstr "Odslej se prijavljate z %(email)s."
+
+#: src/hrcek/accounts/templates/accounts/email_change_done.html
+msgid "Go to your account"
+msgstr "Pojdi na svoj račun"
 
 #: src/hrcek/accounts/templates/accounts/invitation_accept.html
 msgid "Accept your invitation"
@@ -375,6 +430,68 @@ msgstr ""
 "Če ima ta naslov lahko račun tukaj, je sporočilo že na poti. Sledite "
 "povezavi v njem, da zaključite."
 
+#: src/hrcek/accounts/templates/emails/email_change.html
+#: src/hrcek/accounts/templates/emails/email_change.subject.txt
+msgid "Confirm your new email address"
+msgstr "Potrdite svoj novi e-poštni naslov"
+
+#: src/hrcek/accounts/templates/emails/email_change.html
+#: src/hrcek/accounts/templates/emails/email_change.txt
+msgid ""
+"Confirm this address to finish moving your Hrček account to it. Until you "
+"do, your current address keeps working."
+msgstr ""
+"Potrdite ta naslov, da nanj prenesete svoj račun v Hrčku. Do takrat vaš "
+"trenutni naslov še naprej deluje."
+
+#: src/hrcek/accounts/templates/emails/email_change.html
+msgid "Confirm this address"
+msgstr "Potrdi ta naslov"
+
+#: src/hrcek/accounts/templates/emails/email_change.html
+#: src/hrcek/accounts/templates/emails/email_change.txt
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+#: src/hrcek/accounts/templates/emails/email_confirmation.txt
+#, python-format
+msgid "This link stops working in %(expires_hours)s hours."
+msgstr "Povezava preneha delovati čez %(expires_hours)s ur."
+
+#: src/hrcek/accounts/templates/emails/email_change.html
+#: src/hrcek/accounts/templates/emails/email_change_notice.html
+#: src/hrcek/accounts/templates/emails/email_confirmation.html
+#: src/hrcek/accounts/templates/emails/invitation.html
+#: src/hrcek/accounts/templates/emails/password_reset.html
+#: src/hrcek/accounts/templates/emails/signup_existing_account.html
+msgid "You are receiving this because someone used your address with Hrček."
+msgstr "To sporočilo ste prejeli, ker je nekdo uporabil vaš naslov v Hrčku."
+
+#: src/hrcek/accounts/templates/emails/email_change_notice.html
+#: src/hrcek/accounts/templates/emails/email_change_notice.subject.txt
+msgid "Your email address is being changed"
+msgstr "Vaš e-poštni naslov se spreminja"
+
+#: src/hrcek/accounts/templates/emails/email_change_notice.html
+#: src/hrcek/accounts/templates/emails/email_change_notice.txt
+#, python-format
+msgid ""
+"Somebody asked to move your Hrček account to %(new_email)s. Nothing has "
+"changed yet, and this address still works until that one is confirmed."
+msgstr ""
+"Nekdo je zahteval prenos vašega računa v Hrčku na %(new_email)s. Zaenkrat se "
+"ni nič spremenilo in ta naslov deluje, dokler oni ni potrjen."
+
+#: src/hrcek/accounts/templates/emails/email_change_notice.html
+msgid "If this was not you, sign in now and cancel the change."
+msgstr "Če to niste bili vi, se takoj prijavite in prekličite spremembo."
+
+#: src/hrcek/accounts/templates/emails/email_change_notice.html
+msgid "Review my account"
+msgstr "Preveri moj račun"
+
+#: src/hrcek/accounts/templates/emails/email_change_notice.txt
+msgid "If this was not you, sign in now and cancel the change:"
+msgstr "Če to niste bili vi, se takoj prijavite in prekličite spremembo:"
+
 #: src/hrcek/accounts/templates/emails/email_confirmation.html
 #: src/hrcek/accounts/templates/emails/email_confirmation.subject.txt
 msgid "Confirm your email address"
@@ -387,19 +504,6 @@ msgstr "Potrdite svoj naslov in dokončajte nastavitev računa v Hrčku."
 #: src/hrcek/accounts/templates/emails/email_confirmation.html
 msgid "Confirm my address"
 msgstr "Potrdi moj naslov"
-
-#: src/hrcek/accounts/templates/emails/email_confirmation.html
-#: src/hrcek/accounts/templates/emails/email_confirmation.txt
-#, python-format
-msgid "This link stops working in %(expires_hours)s hours."
-msgstr "Povezava preneha delovati čez %(expires_hours)s ur."
-
-#: src/hrcek/accounts/templates/emails/email_confirmation.html
-#: src/hrcek/accounts/templates/emails/invitation.html
-#: src/hrcek/accounts/templates/emails/password_reset.html
-#: src/hrcek/accounts/templates/emails/signup_existing_account.html
-msgid "You are receiving this because someone used your address with Hrček."
-msgstr "To sporočilo ste prejeli, ker je nekdo uporabil vaš naslov v Hrčku."
 
 #: src/hrcek/accounts/templates/emails/email_confirmation.txt
 msgid "Confirm your address to finish setting up your Hrček account:"
@@ -517,6 +621,23 @@ msgstr "Prosite tistega, ki vas je povabil, naj pošlje novo povabilo."
 #: src/hrcek/accounts/views.py
 msgid "Sign up again to get a fresh link."
 msgstr "Znova se prijavite, da dobite novo povezavo."
+
+#: src/hrcek/accounts/views.py
+#, python-format
+msgid ""
+"Check %(email)s for a confirmation link. Until you follow it, your current "
+"address keeps working."
+msgstr ""
+"Na %(email)s poiščite potrditveno povezavo. Dokler ji ne sledite, vaš "
+"trenutni naslov še naprej deluje."
+
+#: src/hrcek/accounts/views.py
+msgid "Ask for the change again from your account page."
+msgstr "Spremembo znova zahtevajte na strani svojega računa."
+
+#: src/hrcek/accounts/views.py
+msgid "The pending email change has been cancelled."
+msgstr "Sprememba e-poštnega naslova je preklicana."
 
 #: src/hrcek/core/api.py
 msgid "Service is running."

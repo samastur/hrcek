@@ -1,0 +1,15 @@
+<mjml>
+  <mj-include path="_head.mjml" />
+  <mj-body>
+    <mj-include path="_header.mjml" />
+    <mj-section>
+      <mj-column>
+        <mj-text mj-class="heading">{% trans "Your email address is being changed" %}</mj-text>
+        <mj-text>{% blocktrans %}Somebody asked to move your Hrček account to {{ new_email }}. Nothing has changed yet, and this address still works until that one is confirmed.{% endblocktrans %}</mj-text>
+        <mj-text>{% trans "If this was not you, sign in now and cancel the change." %}</mj-text>
+        <mj-button href="{{ account_url }}">{% trans "Review my account" %}</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-include path="_footer.mjml" />
+  </mj-body>
+</mjml>

@@ -14,7 +14,12 @@ from django.contrib.auth.password_validation import validate_password
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from hrcek.accounts.errors import DISPLAY_NAME_TAKEN, EMAIL_NOT_CONFIRMED
+from hrcek.accounts.errors import (
+    DISPLAY_NAME_TAKEN,
+    EMAIL_ALREADY_IN_USE,
+    EMAIL_NOT_CONFIRMED,
+    INVALID_CREDENTIALS,
+)
 from hrcek.accounts.models import User
 from hrcek.accounts.validators import validate_display_name
 
@@ -158,3 +163,38 @@ class DisplayNameForm(forms.ModelForm):
                 str(DISPLAY_NAME_TAKEN.message), code=DISPLAY_NAME_TAKEN.code
             )
         return name
+
+
+class EmailChangeForm(forms.Form):
+    """Move the account to a different address, once it is confirmed."""
+
+    new_email = forms.EmailField(label=_("New email address"), max_length=254)
+    current_password = forms.CharField(
+        label=_("Current password"), widget=forms.PasswordInput, strip=False
+    )
+
+    def __init__(self, user: User, *args: Any, **kwargs: Any) -> None:
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_current_password(self) -> str:
+        password = self.cleaned_data["current_password"]
+        # Without this, anyone holding a live session could move the
+        # account to an address of their own and lock the owner out.
+        if not self.user.check_password(password):
+            raise forms.ValidationError(
+                str(INVALID_CREDENTIALS.message), code=INVALID_CREDENTIALS.code
+            )
+        return password
+
+    def clean_new_email(self) -> str:
+        email = self.cleaned_data["new_email"].strip().lower()
+        if email == self.user.email:
+            raise forms.ValidationError(
+                _("That is already your email address."), code="unchanged"
+            )
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError(
+                str(EMAIL_ALREADY_IN_USE.message), code=EMAIL_ALREADY_IN_USE.code
+            )
+        return email

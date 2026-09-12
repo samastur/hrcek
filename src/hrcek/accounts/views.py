@@ -8,7 +8,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -28,9 +28,10 @@ from hrcek.accounts.forms import (
     EmailChangeForm,
     InvitationAcceptForm,
     SignupForm,
+    TokenForm,
 )
 from hrcek.accounts.mail import absolute_url, send_email
-from hrcek.accounts.models import Invitation, User
+from hrcek.accounts.models import ApiToken, Invitation, User
 from hrcek.accounts.tokens import (
     make_confirmation_token,
     make_email_change_token,
@@ -68,6 +69,11 @@ def render_account(request: HttpRequest, **overrides: Any) -> HttpResponse:
     context: dict[str, Any] = {
         "display_name_form": DisplayNameForm(instance=user),
         "email_change_form": EmailChangeForm(user),
+        # Queried directly rather than through the reverse accessor:
+        # ty does not run the django-stubs plugin, so it cannot see
+        # related_name attributes.
+        "tokens": ApiToken.objects.filter(user=user),
+        "token_form": TokenForm(),
     }
     context.update(overrides)
     return render(request, "accounts/account.html", context)
@@ -268,4 +274,33 @@ def email_change_cancel(request: HttpRequest) -> HttpResponse:
     user.pending_email = None
     user.save(update_fields=["pending_email"])
     messages.success(request, _("The pending email change has been cancelled."))
+    return redirect("accounts:account")
+
+
+@require_http_methods(["POST"])
+@login_required
+def token_create(request: HttpRequest) -> HttpResponse:
+    form = TokenForm(request.POST)
+    if not form.is_valid():
+        return render_account(request, token_form=form)
+
+    user = cast("User", request.user)
+    _token, raw = ApiToken.issue(user, name=form.cleaned_data["name"])
+    # The only moment this value will ever be visible.
+    messages.warning(
+        request,
+        _("Copy this token now, it will not be shown again: %(token)s")
+        % {"token": raw},
+    )
+    return redirect("accounts:account")
+
+
+@require_http_methods(["POST"])
+@login_required
+def token_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    # Scoped to the owner, so somebody else's id is simply not found.
+    # A 403 would confirm that it exists.
+    token = get_object_or_404(ApiToken, pk=pk, user=request.user)
+    token.delete()
+    messages.success(request, _("The token has been deleted."))
     return redirect("accounts:account")

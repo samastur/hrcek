@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 18:12+0000\n"
+"POT-Creation-Date: 2026-09-12 18:14+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -152,6 +152,10 @@ msgstr ""
 msgid "That is already your email address."
 msgstr ""
 
+#: src/hrcek/accounts/forms.py
+msgid "Token name"
+msgstr ""
+
 #: src/hrcek/accounts/management/commands/compile_emails.py
 #, python-format
 msgid ""
@@ -243,6 +247,7 @@ msgid "API token"
 msgstr ""
 
 #: src/hrcek/accounts/models.py
+#: src/hrcek/accounts/templates/accounts/account.html
 msgid "API tokens"
 msgstr ""
 
@@ -316,6 +321,34 @@ msgstr ""
 #: src/hrcek/accounts/templates/accounts/account.html
 #: src/hrcek/accounts/templates/accounts/password_change.html
 msgid "Change your password"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "For scripts and other clients that sign in without a browser."
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Name"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Created"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Last used"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Delete"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "You have no tokens yet."
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Create a token"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/account.html
@@ -623,6 +656,15 @@ msgstr ""
 
 #: src/hrcek/accounts/views.py
 msgid "The pending email change has been cancelled."
+msgstr ""
+
+#: src/hrcek/accounts/views.py
+#, python-format
+msgid "Copy this token now, it will not be shown again: %(token)s"
+msgstr ""
+
+#: src/hrcek/accounts/views.py
+msgid "The token has been deleted."
 msgstr ""
 
 #: src/hrcek/core/api.py

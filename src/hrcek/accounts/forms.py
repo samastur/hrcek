@@ -198,3 +198,14 @@ class EmailChangeForm(forms.Form):
                 str(EMAIL_ALREADY_IN_USE.message), code=EMAIL_ALREADY_IN_USE.code
             )
         return email
+
+
+class TokenForm(forms.Form):
+    """A name, so the list still means something months later.
+
+    Expiry is deliberately not offered here: the model supports it and
+    the admin can set it, and most people making a token for a script do
+    not want to answer a date question.
+    """
+
+    name = forms.CharField(label=_("Token name"), max_length=50)

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 22:01+0000\n"
+"POT-Creation-Date: 2026-09-13 07:31+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -684,6 +684,10 @@ msgstr ""
 msgid "Hrček"
 msgstr ""
 
+#: src/hrcek/core/templates/base.html
+msgid "Main"
+msgstr ""
+
 #: src/hrcek/core/templates/base.html src/hrcek/entries/apps.py
 msgid "Entries"
 msgstr ""
@@ -692,7 +696,7 @@ msgstr ""
 msgid "Sign out"
 msgstr ""
 
-#: src/hrcek/entries/forms.py
+#: src/hrcek/entries/forms.py src/hrcek/entries/templates/entries/list.html
 msgid "Tags"
 msgstr ""
 
@@ -738,6 +742,10 @@ msgstr ""
 
 #: src/hrcek/entries/models.py
 msgid "entries"
+msgstr ""
+
+#: src/hrcek/entries/services.py
+msgid "That address is too long."
 msgstr ""
 
 #: src/hrcek/entries/templates/entries/confirm_delete.html
@@ -791,6 +799,10 @@ msgstr ""
 
 #: src/hrcek/entries/templates/entries/list.html
 msgid "Nothing saved yet."
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Pages"
 msgstr ""
 
 #: src/hrcek/entries/templates/entries/list.html

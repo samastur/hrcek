@@ -75,13 +75,15 @@ class Tag(models.Model):
 class Entry(models.Model):
     """Something somebody found worth keeping."""
 
+    URL_MAX_LENGTH = 2000
+
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="entries",
         verbose_name=_("owner"),
     )
-    url = models.URLField(_("address"), max_length=2000)
+    url = models.URLField(_("address"), max_length=URL_MAX_LENGTH)
     title = models.CharField(_("title"), max_length=300, blank=True)
     notes = models.TextField(_("notes"), blank=True)
     tags = models.ManyToManyField(

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 18:09+0000\n"
+"POT-Creation-Date: 2026-09-12 18:12+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -129,6 +129,7 @@ msgid "Optional. You can sign in with this instead of your email."
 msgstr "Neobvezno. S tem se lahko prijavite namesto z e-poštnim naslovom."
 
 #: src/hrcek/accounts/forms.py
+#: src/hrcek/accounts/templates/accounts/account.html
 msgid "Password"
 msgstr "Geslo"
 
@@ -323,6 +324,11 @@ msgid "Change my email address"
 msgstr "Spremeni moj e-poštni naslov"
 
 #: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/accounts/templates/accounts/password_change.html
+msgid "Change your password"
+msgstr "Spremenite geslo"
+
+#: src/hrcek/accounts/templates/accounts/account.html
 msgid "Sign out"
 msgstr "Odjava"
 
@@ -370,6 +376,21 @@ msgstr "Ste pozabili geslo?"
 msgid "Something went wrong"
 msgstr "Nekaj je šlo narobe"
 
+#: src/hrcek/accounts/templates/accounts/password_change.html
+#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
+msgid "Save my new password"
+msgstr "Shrani moje novo geslo"
+
+#: src/hrcek/accounts/templates/accounts/password_change.html
+#: src/hrcek/accounts/templates/accounts/password_change_done.html
+msgid "Back to your account"
+msgstr "Nazaj na svoj račun"
+
+#: src/hrcek/accounts/templates/accounts/password_change_done.html
+#: src/hrcek/accounts/templates/accounts/password_reset_complete.html
+msgid "Your password has been changed"
+msgstr "Vaše geslo je spremenjeno"
+
 #: src/hrcek/accounts/templates/accounts/password_reset.html
 #: src/hrcek/accounts/templates/emails/password_reset.html
 #: src/hrcek/accounts/templates/emails/password_reset.subject.txt
@@ -388,18 +409,10 @@ msgstr ""
 msgid "Send the link"
 msgstr "Pošlji povezavo"
 
-#: src/hrcek/accounts/templates/accounts/password_reset_complete.html
-msgid "Your password has been changed"
-msgstr "Vaše geslo je spremenjeno"
-
 #: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
 #: src/hrcek/accounts/templates/emails/password_reset.html
 msgid "Choose a new password"
 msgstr "Izberite novo geslo"
-
-#: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
-msgid "Save my new password"
-msgstr "Shrani moje novo geslo"
 
 #: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
 msgid "This link is invalid, probably because it has already been used."

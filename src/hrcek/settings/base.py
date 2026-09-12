@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "ninja",
     "hrcek.core",
     "hrcek.accounts",
+    "hrcek.entries",
 ]
 
 MIDDLEWARE = [

@@ -771,6 +771,10 @@ msgstr "vnos"
 msgid "entries"
 msgstr "vnosi"
 
+#: src/hrcek/entries/services.py
+msgid "That address is too long."
+msgstr "Ta naslov je predolg."
+
 #: src/hrcek/entries/templates/entries/confirm_delete.html
 msgid "Delete this entry?"
 msgstr "Izbrišem ta vnos?"

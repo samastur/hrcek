@@ -7,7 +7,10 @@ copies.
 
 from __future__ import annotations
 
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
 
 from hrcek.accounts.models import User
 from hrcek.entries.models import Entry, Tag
@@ -28,6 +31,12 @@ def save_entry(
     "created" or "updated" without asking again.
     """
     address = Entry.normalise_url(url)
+    # The web form validates through its URLField; the API has no form in
+    # front of it, so the shared path is where this belongs.
+    URLValidator()(address)
+    if len(address) > Entry.URL_MAX_LENGTH:
+        raise ValidationError(_("That address is too long."), code="url_too_long")
+
     entry, created = Entry.objects.update_or_create(
         owner=owner,
         url=address,

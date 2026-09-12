@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 17:59+0000\n"
+"POT-Creation-Date: 2026-09-12 18:03+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -110,10 +110,12 @@ msgid "This confirmation link is not valid. It may have expired."
 msgstr "Ta potrditvena povezava ni veljavna. Morda je potekla."
 
 #: src/hrcek/accounts/forms.py
+#: src/hrcek/accounts/templates/accounts/account.html
 msgid "Display name"
 msgstr "Prikazno ime"
 
 #: src/hrcek/accounts/forms.py
+#: src/hrcek/accounts/templates/accounts/account.html
 msgid "Optional. You can sign in with this instead of your email."
 msgstr "Neobvezno. S tem se lahko prijavite namesto z e-poštnim naslovom."
 
@@ -130,6 +132,7 @@ msgid "The two passwords do not match."
 msgstr "Gesli se ne ujemata."
 
 #: src/hrcek/accounts/forms.py
+#: src/hrcek/accounts/templates/accounts/account.html
 msgid "Email address"
 msgstr "E-poštni naslov"
 
@@ -269,6 +272,18 @@ msgstr "povabilo"
 msgid "invitations"
 msgstr "povabila"
 
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Your account"
+msgstr "Vaš račun"
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Save display name"
+msgstr "Shrani prikazno ime"
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Sign out"
+msgstr "Odjava"
+
 #: src/hrcek/accounts/templates/accounts/base.html
 msgid "Hrček"
 msgstr "Hrček"
@@ -359,14 +374,6 @@ msgid ""
 msgstr ""
 "Če ima ta naslov lahko račun tukaj, je sporočilo že na poti. Sledite "
 "povezavi v njem, da zaključite."
-
-#: src/hrcek/accounts/templates/accounts/welcome.html
-msgid "Your account is ready"
-msgstr "Vaš račun je pripravljen"
-
-#: src/hrcek/accounts/templates/accounts/welcome.html
-msgid "You are signed in. There is nothing else to see yet."
-msgstr "Prijavljeni ste. Zaenkrat ni še ničesar drugega za videti."
 
 #: src/hrcek/accounts/templates/emails/email_confirmation.html
 #: src/hrcek/accounts/templates/emails/email_confirmation.subject.txt
@@ -498,6 +505,10 @@ msgstr "Vnesite samo domeno, brez znaka \"@\"."
 #: src/hrcek/accounts/validators.py
 msgid "Enter a valid domain, for example example.com."
 msgstr "Vnesite veljavno domeno, na primer example.com."
+
+#: src/hrcek/accounts/views.py
+msgid "Your display name has been updated."
+msgstr "Prikazno ime je posodobljeno."
 
 #: src/hrcek/accounts/views.py
 msgid "Ask whoever invited you to send a new invitation."

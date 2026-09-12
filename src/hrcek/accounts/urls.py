@@ -7,7 +7,8 @@ from hrcek.accounts.forms import HrcekPasswordResetForm
 app_name = "accounts"
 
 urlpatterns = [
-    path("welcome/", views.welcome, name="welcome"),
+    path("me/", views.account, name="account"),
+    path("me/display-name/", views.display_name, name="display_name"),
     path("signup/", views.signup, name="signup"),
     path("confirm/<str:token>/", views.confirm, name="confirm"),
     path(

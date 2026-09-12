@@ -1,0 +1,20 @@
+{% extends "accounts/base.html" %}{% load i18n %}
+{% block heading %}{% trans "Your account" %}{% endblock %}
+{% block content %}
+  {% if messages %}
+    <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  <h2>{% trans "Display name" %}</h2>
+  <p>{% trans "Optional. You can sign in with this instead of your email." %}</p>
+  <form method="post" action="{% url 'accounts:display_name' %}">
+    {% csrf_token %}
+    {{ display_name_form.as_p }}
+    <button type="submit">{% trans "Save display name" %}</button>
+  </form>
+
+  <h2>{% trans "Email address" %}</h2>
+  <p>{{ user.email }}</p>
+
+  <p><a href="{% url 'accounts:logout' %}">{% trans "Sign out" %}</a></p>
+{% endblock %}

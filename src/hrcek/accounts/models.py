@@ -30,6 +30,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
 
     email = models.EmailField(_("email address"), max_length=254, unique=True)
+    # Set while a change awaits confirmation from the new address.
+    # `email` is not touched until then, so the old address keeps
+    # working, which is the whole point of the pending field.
+    # DJ001 is wrong here for the same reason as display_name: NULL means
+    # "no change pending", and an empty string would be a second falsy
+    # value meaning the same thing.
+    pending_email = models.EmailField(  # noqa: DJ001
+        _("pending email address"), max_length=254, null=True, blank=True
+    )
     # null=True is deliberate and DJ001 is wrong here: NULL means "no
     # display name", and SQL treats NULLs in a unique index as distinct,
     # which is exactly what lets many users have none while set names

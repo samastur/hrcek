@@ -37,3 +37,11 @@ CONFIRMATION_INVALID = register(
     400,
     _("This confirmation link is not valid. It may have expired."),
 )
+EMAIL_CHANGE_INVALID = register(
+    "HRC-ACCT-0005",
+    400,
+    _("This email change link is not valid. It may have expired."),
+)
+EMAIL_ALREADY_IN_USE = register(
+    "HRC-ACCT-0006", 409, _("That email address is already in use.")
+)

@@ -26,3 +26,28 @@ def read_confirmation_token(token: str) -> User | None:
         # Covers tampering and expiry alike: SignatureExpired subclasses it.
         return None
     return User.objects.filter(pk=payload.get("user")).first()
+
+
+EMAIL_CHANGE_SALT = "hrcek.accounts.email-change"
+
+
+def make_email_change_token(user: User, new_email: str) -> str:
+    """Sign the target address into the token, not just the user id.
+
+    Without it, a link issued for one pending address would apply
+    whatever the pending address happened to be by the time it was used.
+    """
+    return signing.dumps({"user": user.pk, "email": new_email}, salt=EMAIL_CHANGE_SALT)
+
+
+def read_email_change_token(token: str) -> tuple[User, str] | None:
+    max_age = settings.HRCEK_EMAIL_CONFIRMATION_EXPIRY_HOURS * 3600
+    try:
+        payload = signing.loads(token, salt=EMAIL_CHANGE_SALT, max_age=max_age)
+    except signing.BadSignature:
+        return None
+    user = User.objects.filter(pk=payload.get("user")).first()
+    email = payload.get("email")
+    if user is None or not email:
+        return None
+    return user, email

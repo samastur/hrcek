@@ -5,4 +5,6 @@ EMAIL_NAMES = (
     "email_confirmation",
     "signup_existing_account",
     "password_reset",
+    "email_change",
+    "email_change_notice",
 )

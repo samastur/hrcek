@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 from django.conf import settings
 from django.contrib import messages
@@ -17,18 +17,26 @@ from django.views.decorators.http import require_http_methods
 from hrcek.accounts.allowlist import is_signup_allowed
 from hrcek.accounts.errors import (
     CONFIRMATION_INVALID,
+    EMAIL_ALREADY_IN_USE,
+    EMAIL_CHANGE_INVALID,
     INVITATION_INVALID,
     SIGNUP_NOT_ALLOWED,
 )
 from hrcek.accounts.forms import (
     ConfirmedUserAuthenticationForm,
     DisplayNameForm,
+    EmailChangeForm,
     InvitationAcceptForm,
     SignupForm,
 )
 from hrcek.accounts.mail import absolute_url, send_email
 from hrcek.accounts.models import Invitation, User
-from hrcek.accounts.tokens import make_confirmation_token, read_confirmation_token
+from hrcek.accounts.tokens import (
+    make_confirmation_token,
+    make_email_change_token,
+    read_confirmation_token,
+    read_email_change_token,
+)
 from hrcek.core.errors import ErrorCode
 
 
@@ -55,8 +63,11 @@ def render_account(request: HttpRequest, **overrides: Any) -> HttpResponse:
     the person sees a single page while each view keeps one
     responsibility.
     """
+    # login_required guarantees a real User; the annotation does not.
+    user = cast("User", request.user)
     context: dict[str, Any] = {
-        "display_name_form": DisplayNameForm(instance=request.user),
+        "display_name_form": DisplayNameForm(instance=user),
+        "email_change_form": EmailChangeForm(user),
     }
     context.update(overrides)
     return render(request, "accounts/account.html", context)
@@ -65,7 +76,7 @@ def render_account(request: HttpRequest, **overrides: Any) -> HttpResponse:
 @require_http_methods(["POST"])
 @login_required
 def display_name(request: HttpRequest) -> HttpResponse:
-    form = DisplayNameForm(request.POST, instance=request.user)
+    form = DisplayNameForm(request.POST, instance=cast("User", request.user))
     if not form.is_valid():
         return render_account(request, display_name_form=form)
     form.save()
@@ -173,3 +184,88 @@ landing = LoginView.as_view(
     authentication_form=ConfirmedUserAuthenticationForm,
     redirect_authenticated_user=True,
 )
+
+
+@require_http_methods(["POST"])
+@login_required
+def email_change(request: HttpRequest) -> HttpResponse:
+    user = cast("User", request.user)
+    form = EmailChangeForm(user, request.POST)
+    if not form.is_valid():
+        return render_account(request, email_change_form=form)
+
+    new_email = form.cleaned_data["new_email"]
+    user.pending_email = new_email
+    user.save(update_fields=["pending_email"])
+
+    send_email(
+        "email_change",
+        new_email,
+        {
+            "confirm_url": absolute_url(
+                reverse(
+                    "accounts:email_change_confirm",
+                    args=[make_email_change_token(user, new_email)],
+                )
+            ),
+            "expires_hours": settings.HRCEK_EMAIL_CONFIRMATION_EXPIRY_HOURS,
+        },
+    )
+    # To the address being left behind: if this was not them, this is how
+    # they find out, while that address still works.
+    send_email(
+        "email_change_notice",
+        user.email,
+        {
+            "new_email": new_email,
+            "account_url": absolute_url(reverse("accounts:account")),
+        },
+    )
+    messages.success(
+        request,
+        _(
+            "Check %(email)s for a confirmation link. Until you follow it, "
+            "your current address keeps working."
+        )
+        % {"email": new_email},
+    )
+    return redirect("accounts:account")
+
+
+def email_change_confirm(request: HttpRequest, token: str) -> HttpResponse:
+    # No login required: the link arrives in the new inbox, which may be
+    # open on another device, and the signed token is the authorisation.
+    result = read_email_change_token(token)
+    if result is None:
+        return _error_page(
+            request,
+            EMAIL_CHANGE_INVALID,
+            _("Ask for the change again from your account page."),
+        )
+
+    user, new_email = result
+    if (user.pending_email or "").lower() != new_email.lower():
+        # Cancelled, already applied, or superseded by a later request.
+        return _error_page(
+            request,
+            EMAIL_CHANGE_INVALID,
+            _("Ask for the change again from your account page."),
+        )
+    if User.objects.filter(email__iexact=new_email).exclude(pk=user.pk).exists():
+        return _error_page(request, EMAIL_ALREADY_IN_USE)
+
+    user.email = new_email
+    user.pending_email = None
+    user.email_verified_at = timezone.now()
+    user.save(update_fields=["email", "pending_email", "email_verified_at"])
+    return render(request, "accounts/email_change_done.html", {"email": new_email})
+
+
+@require_http_methods(["POST"])
+@login_required
+def email_change_cancel(request: HttpRequest) -> HttpResponse:
+    user = cast("User", request.user)
+    user.pending_email = None
+    user.save(update_fields=["pending_email"])
+    messages.success(request, _("The pending email change has been cancelled."))
+    return redirect("accounts:account")

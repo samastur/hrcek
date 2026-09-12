@@ -1,0 +1,6 @@
+{% extends "accounts/base.html" %}{% load i18n %}
+{% block heading %}{% trans "Your email address has been changed" %}{% endblock %}
+{% block content %}
+  <p>{% blocktrans %}You now sign in with {{ email }}.{% endblocktrans %}</p>
+  <p><a href="{% url 'accounts:account' %}">{% trans "Go to your account" %}</a></p>
+{% endblock %}

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 18:14+0000\n"
+"POT-Creation-Date: 2026-09-12 21:54+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -222,7 +222,7 @@ msgstr ""
 msgid "users"
 msgstr ""
 
-#: src/hrcek/accounts/models.py
+#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
 msgid "name"
 msgstr ""
 
@@ -685,6 +685,50 @@ msgstr ""
 
 #: src/hrcek/core/errors.py
 msgid "The requested resource does not exist."
+msgstr ""
+
+#: src/hrcek/entries/apps.py
+msgid "Entries"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "owner"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "tag"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "tags"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "address"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "title"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "notes"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "saved at"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "changed at"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "entry"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "entries"
 msgstr ""
 
 #: src/hrcek/settings/base.py

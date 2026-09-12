@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 18:14+0000\n"
+"POT-Creation-Date: 2026-09-12 21:54+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -230,7 +230,7 @@ msgstr "uporabnik"
 msgid "users"
 msgstr "uporabniki"
 
-#: src/hrcek/accounts/models.py
+#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
 msgid "name"
 msgstr "ime"
 
@@ -713,6 +713,50 @@ msgstr "Poslani podatki niso veljavni."
 #: src/hrcek/core/errors.py
 msgid "The requested resource does not exist."
 msgstr "Zahtevani vir ne obstaja."
+
+#: src/hrcek/entries/apps.py
+msgid "Entries"
+msgstr "Vnosi"
+
+#: src/hrcek/entries/models.py
+msgid "owner"
+msgstr "lastnik"
+
+#: src/hrcek/entries/models.py
+msgid "tag"
+msgstr "oznaka"
+
+#: src/hrcek/entries/models.py
+msgid "tags"
+msgstr "oznake"
+
+#: src/hrcek/entries/models.py
+msgid "address"
+msgstr "naslov"
+
+#: src/hrcek/entries/models.py
+msgid "title"
+msgstr "naslov vnosa"
+
+#: src/hrcek/entries/models.py
+msgid "notes"
+msgstr "zapiski"
+
+#: src/hrcek/entries/models.py
+msgid "saved at"
+msgstr "shranjeno ob"
+
+#: src/hrcek/entries/models.py
+msgid "changed at"
+msgstr "spremenjeno ob"
+
+#: src/hrcek/entries/models.py
+msgid "entry"
+msgstr "vnos"
+
+#: src/hrcek/entries/models.py
+msgid "entries"
+msgstr "vnosi"
 
 #: src/hrcek/settings/base.py
 msgid "English"

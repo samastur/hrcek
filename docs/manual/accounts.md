@@ -40,6 +40,48 @@ Two rules:
 
 You can leave it empty, and any number of people can.
 
+## Managing your account
+
+Once you are signed in, `/accounts/me/` is where everything about your
+account lives.
+
+**Display name.** Change it or clear it whenever you like. The rules are
+the same as when you first set one: no `@`, and capitals do not make it
+different from somebody else's.
+
+**Email address.** Changing it asks for your current password, then
+sends a confirmation link to the *new* address.
+
+Three things are worth knowing:
+
+- **Your old address keeps working until you follow that link.** You can
+  still sign in, and still reset your password, with the address you
+  have always used. Nothing changes until you confirm.
+- **A notice goes to your old address** as soon as a change is asked
+  for. If you did not ask for it, somebody else is trying to move your
+  account — sign in and cancel it while your old address still works.
+- Asking again replaces the previous request, and the earlier link stops
+  working.
+
+There is a cancel button next to the pending address for as long as one
+is waiting.
+
+**Password.** There is a link to change it. You will be asked for your
+current password, and you stay signed in afterwards.
+
+## API tokens
+
+A token lets a script or another program act as you without a browser
+and without your password.
+
+Create one from your account page and give it a name you will recognise
+later. **The token is shown once and never again** — copy it before you
+leave the page. Only a fingerprint of it is stored, so nobody, including
+whoever runs this Hrček, can look it up for you afterwards.
+
+Delete a token and it stops working immediately, which is what to do if
+you think one has leaked. Deleting cannot be undone; make a new one.
+
 ## Signing in
 
 Use either your email address or your display name, with your password.

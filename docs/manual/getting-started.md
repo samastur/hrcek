@@ -6,8 +6,11 @@ address; the examples below assume `http://localhost:8000`.
 
 ## Checking that it is running
 
-Open `http://localhost:8000/api/health` in a browser. A healthy service
-answers:
+Open `http://localhost:8000/` in a browser. You should see a sign-in
+form.
+
+If you want to check the service itself rather than sign in, open
+`http://localhost:8000/api/health`. A healthy service answers:
 
 ```json
 {

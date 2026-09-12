@@ -79,6 +79,60 @@ cannot read anything or act as the victim. Requiring a CSRF token to
 sign in would mean handing every client a cookie round-trip first, and
 scripts should use bearer tokens rather than session login anyway.
 
+## The pages
+
+`/` is the sign-in page: `LoginView` with `redirect_authenticated_user`,
+so anyone already signed in is sent to `/accounts/me/`. It links to the
+password reset and deliberately not to signup, which would advertise a
+form that rejects most visitors.
+
+**A gap that was closed here.** Django's `AuthenticationForm` checks only
+`is_active`, so the web form used to admit unconfirmed accounts that the
+API refused with `HRC-AUTH-0002`.
+`ConfirmedUserAuthenticationForm` overrides `confirm_login_allowed()` so
+both doors agree. Anyone adding a third way in needs to apply the same
+check: email confirmation is deliberately *not* enforced in the
+authentication backend, because a backend can only answer yes or no and
+that would make "unconfirmed" indistinguishable from "wrong password".
+
+**The account hub.** One page, but each form posts to its own URL rather
+than to a single handler branching on a hidden action field. A failing
+view re-renders the hub with its own form bound, through
+`render_account(request, **overrides)`. One page for the person, one
+responsibility per view.
+
+## Changing the email address
+
+`User.pending_email` holds the requested address while it waits.
+`email` is untouched until confirmation, so **the old address keeps
+working** for sign-in and password reset throughout — that is the entire
+reason the field exists.
+
+Three guards, none of them decoration:
+
+1. The current password is required, so a borrowed session cannot move
+   the account.
+2. Confirmation comes from the new inbox.
+3. A notice goes to the old address the moment a change is requested,
+   which is how the real owner finds out while that address still works.
+
+Removing any of the three is a security change, not a simplification.
+
+The signed token carries the **target address** as well as the user id.
+Without that, a link issued for one pending address would apply whatever
+the pending address happened to be by the time it was used, so asking
+again would not kill the earlier link. Confirming re-checks that the
+pending address still matches the token and that it is still free.
+
+Confirming requires no session: the link arrives in the new inbox, quite
+possibly on another device, and holding it is precisely what the flow is
+establishing.
+
+`HRC-ACCT-0006` appears in two places with two statuses, which is
+intentional: 409 on the confirm route, where the failure is terminal,
+and inline at 200 on the form, where the person can simply type a
+different address.
+
 ## Tokens
 
 Three kinds, all single-purpose:

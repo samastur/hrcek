@@ -10,6 +10,7 @@
 | `src/hrcek/urls.py` | Mounts the API at `/api/` |
 | `src/hrcek/core/` | Cross-cutting app: errors, logging, telemetry |
 | `src/hrcek/accounts/` | Identity: users, sign-in, invitations, email, account pages |
+| `src/hrcek/entries/` | What Hrček stores: entries and tags |
 | `locale/` | Translation catalogues; `.po` and `.mo` are committed |
 | `tests/` | Mirrors `src/hrcek/` |
 

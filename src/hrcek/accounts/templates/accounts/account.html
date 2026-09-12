@@ -28,5 +28,8 @@
     <button type="submit">{% trans "Change my email address" %}</button>
   </form>
 
+  <h2>{% trans "Password" %}</h2>
+  <p><a href="{% url 'accounts:password_change' %}">{% trans "Change your password" %}</a></p>
+
   <p><a href="{% url 'accounts:logout' %}">{% trans "Sign out" %}</a></p>
 {% endblock %}

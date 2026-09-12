@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 07:23+0000\n"
+"POT-Creation-Date: 2026-09-12 21:57+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -711,10 +711,6 @@ msgstr "Zahtevani vir ne obstaja."
 msgid "Hrček"
 msgstr "Hrček"
 
-#: src/hrcek/core/templates/base.html
-msgid "Main"
-msgstr "Glavni meni"
-
 #: src/hrcek/core/templates/base.html src/hrcek/entries/apps.py
 msgid "Entries"
 msgstr "Vnosi"
@@ -722,14 +718,6 @@ msgstr "Vnosi"
 #: src/hrcek/core/templates/base.html
 msgid "Sign out"
 msgstr "Odjava"
-
-#: src/hrcek/entries/forms.py src/hrcek/entries/templates/entries/list.html
-msgid "Tags"
-msgstr "Oznake"
-
-#: src/hrcek/entries/forms.py
-msgid "Separated by commas."
-msgstr "Ločene z vejicami."
 
 #: src/hrcek/entries/models.py
 msgid "owner"
@@ -771,46 +759,13 @@ msgstr "vnos"
 msgid "entries"
 msgstr "vnosi"
 
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-msgid "Delete this entry?"
-msgstr "Izbrišem ta vnos?"
-
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-msgid "This cannot be undone."
-msgstr "Tega ni mogoče razveljaviti."
-
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-msgid "Yes, delete it"
-msgstr "Da, izbriši"
-
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-msgid "Keep it"
-msgstr "Obdrži"
-
-#: src/hrcek/entries/templates/entries/form.html
-msgid "Edit entry"
-msgstr "Uredi vnos"
-
-#: src/hrcek/entries/templates/entries/form.html
-#: src/hrcek/entries/templates/entries/list.html
-msgid "Save something"
-msgstr "Shrani nekaj"
-
-#: src/hrcek/entries/templates/entries/form.html
-msgid "Save"
-msgstr "Shrani"
-
-#: src/hrcek/entries/templates/entries/form.html
-msgid "Delete this entry"
-msgstr "Izbriši ta vnos"
-
-#: src/hrcek/entries/templates/entries/form.html
-msgid "Back to your entries"
-msgstr "Nazaj na vaše vnose"
-
 #: src/hrcek/entries/templates/entries/list.html
 msgid "Your entries"
 msgstr "Vaši vnosi"
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Save something"
+msgstr "Shrani nekaj"
 
 #: src/hrcek/entries/templates/entries/list.html
 msgid "All entries"
@@ -825,10 +780,6 @@ msgid "Nothing saved yet."
 msgstr "Zaenkrat še ni nič shranjenega."
 
 #: src/hrcek/entries/templates/entries/list.html
-msgid "Pages"
-msgstr "Strani"
-
-#: src/hrcek/entries/templates/entries/list.html
 msgid "Newer"
 msgstr "Novejši"
 
@@ -840,14 +791,6 @@ msgstr "Stran %(current)s od %(total)s"
 #: src/hrcek/entries/templates/entries/list.html
 msgid "Older"
 msgstr "Starejši"
-
-#: src/hrcek/entries/views.py
-msgid "Saved."
-msgstr "Shranjeno."
-
-#: src/hrcek/entries/views.py
-msgid "Deleted."
-msgstr "Izbrisano."
 
 #: src/hrcek/settings/base.py
 msgid "English"

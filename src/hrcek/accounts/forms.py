@@ -3,13 +3,18 @@ from __future__ import annotations
 from typing import Any
 
 from django import forms
-from django.contrib.auth.forms import BaseUserCreationForm, PasswordResetForm
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    BaseUserCreationForm,
+    PasswordResetForm,
+)
 from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.password_validation import validate_password
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from hrcek.accounts.errors import DISPLAY_NAME_TAKEN
+from hrcek.accounts.errors import DISPLAY_NAME_TAKEN, EMAIL_NOT_CONFIRMED
 from hrcek.accounts.models import User
 from hrcek.accounts.validators import validate_display_name
 
@@ -112,3 +117,21 @@ class HrcekPasswordResetForm(PasswordResetForm):
             )
         )
         send_email("password_reset", to_email, {"reset_url": reset_url})
+
+
+class ConfirmedUserAuthenticationForm(AuthenticationForm):
+    """Refuse an unconfirmed account, as the API login already does.
+
+    Django's own form checks only is_active, so without this the web form
+    and the API disagree about who may sign in — and the web form is the
+    more permissive of the two.
+    """
+
+    def confirm_login_allowed(self, user: AbstractBaseUser) -> None:
+        # The signature is Django's, so it is typed loosely; in this
+        # project AUTH_USER_MODEL is always hrcek's own User.
+        super().confirm_login_allowed(user)
+        if isinstance(user, User) and not user.is_email_confirmed:
+            raise forms.ValidationError(
+                str(EMAIL_NOT_CONFIRMED.message), code=EMAIL_NOT_CONFIRMED.code
+            )

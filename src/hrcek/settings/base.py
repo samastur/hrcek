@@ -61,9 +61,9 @@ MIDDLEWARE = [
 
 API_DOCS_ENABLED = env_bool("HRCEK_API_DOCS", default=True)
 
-LOGIN_URL = "accounts:login"
+LOGIN_URL = "landing"
 LOGIN_REDIRECT_URL = "accounts:welcome"
-LOGOUT_REDIRECT_URL = "accounts:login"
+LOGOUT_REDIRECT_URL = "landing"
 
 ROOT_URLCONF = "hrcek.urls"
 WSGI_APPLICATION = "hrcek.wsgi.application"

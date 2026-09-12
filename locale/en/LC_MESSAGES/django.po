@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 21:54+0000\n"
+"POT-Creation-Date: 2026-09-13 07:21+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -296,6 +296,7 @@ msgid "invitations"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/core/templates/base.html
 msgid "Your account"
 msgstr ""
 
@@ -349,14 +350,6 @@ msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/account.html
 msgid "Create a token"
-msgstr ""
-
-#: src/hrcek/accounts/templates/accounts/account.html
-msgid "Sign out"
-msgstr ""
-
-#: src/hrcek/accounts/templates/accounts/base.html
-msgid "Hrček"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/email_change_done.html
@@ -687,8 +680,20 @@ msgstr ""
 msgid "The requested resource does not exist."
 msgstr ""
 
-#: src/hrcek/entries/apps.py
+#: src/hrcek/core/templates/base.html
+msgid "Hrček"
+msgstr ""
+
+#: src/hrcek/core/templates/base.html
+msgid "Main"
+msgstr ""
+
+#: src/hrcek/core/templates/base.html src/hrcek/entries/apps.py
 msgid "Entries"
+msgstr ""
+
+#: src/hrcek/core/templates/base.html
+msgid "Sign out"
 msgstr ""
 
 #: src/hrcek/entries/models.py
@@ -729,6 +734,47 @@ msgstr ""
 
 #: src/hrcek/entries/models.py
 msgid "entries"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Your entries"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Save something"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Tags"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "All entries"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Edit"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Nothing saved yet."
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Pages"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Newer"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+#, python-format
+msgid "Page %(current)s of %(total)s"
+msgstr ""
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Older"
 msgstr ""
 
 #: src/hrcek/settings/base.py

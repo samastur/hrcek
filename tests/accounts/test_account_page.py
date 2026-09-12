@@ -74,22 +74,23 @@ def test_an_at_sign_is_refused(client, person):
     assert person.display_name == "Nina"
 
 
-def test_signing_in_lands_on_the_account_page(client, person):
+def test_signing_in_lands_on_the_entry_list(client, person):
     """The destination, named rather than inferred from a setting.
 
     test_landing.py can only assert against LOGIN_REDIRECT_URL, because
-    the account page does not exist at that layer. Here it does.
+    it cannot depend on a page from a later layer. Here we can name it:
+    signing in should land on your entries, not your settings.
     """
     response = client.post("/", {"username": "nina@example.com", "password": PASSWORD})
     assert response.status_code == 302
-    assert response["Location"] == reverse("accounts:account")
+    assert response["Location"] == reverse("entries:list")
 
 
-def test_a_signed_in_visitor_at_the_root_goes_to_their_account(client, person):
+def test_a_signed_in_visitor_at_the_root_goes_to_their_entries(client, person):
     client.force_login(person)
     response = client.get("/")
     assert response.status_code == 302
-    assert response["Location"] == reverse("accounts:account")
+    assert response["Location"] == reverse("entries:list")
 
 
 def test_the_welcome_page_is_gone():

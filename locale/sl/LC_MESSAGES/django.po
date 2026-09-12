@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 21:54+0000\n"
+"POT-Creation-Date: 2026-09-13 07:21+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -304,6 +304,7 @@ msgid "invitations"
 msgstr "povabila"
 
 #: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/core/templates/base.html
 msgid "Your account"
 msgstr "Vaš račun"
 
@@ -360,14 +361,6 @@ msgstr "Zaenkrat nimate nobenega žetona."
 #: src/hrcek/accounts/templates/accounts/account.html
 msgid "Create a token"
 msgstr "Ustvari žeton"
-
-#: src/hrcek/accounts/templates/accounts/account.html
-msgid "Sign out"
-msgstr "Odjava"
-
-#: src/hrcek/accounts/templates/accounts/base.html
-msgid "Hrček"
-msgstr "Hrček"
 
 #: src/hrcek/accounts/templates/accounts/email_change_done.html
 msgid "Your email address has been changed"
@@ -714,9 +707,21 @@ msgstr "Poslani podatki niso veljavni."
 msgid "The requested resource does not exist."
 msgstr "Zahtevani vir ne obstaja."
 
-#: src/hrcek/entries/apps.py
+#: src/hrcek/core/templates/base.html
+msgid "Hrček"
+msgstr "Hrček"
+
+#: src/hrcek/core/templates/base.html
+msgid "Main"
+msgstr "Glavni meni"
+
+#: src/hrcek/core/templates/base.html src/hrcek/entries/apps.py
 msgid "Entries"
 msgstr "Vnosi"
+
+#: src/hrcek/core/templates/base.html
+msgid "Sign out"
+msgstr "Odjava"
 
 #: src/hrcek/entries/models.py
 msgid "owner"
@@ -757,6 +762,47 @@ msgstr "vnos"
 #: src/hrcek/entries/models.py
 msgid "entries"
 msgstr "vnosi"
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Your entries"
+msgstr "Vaši vnosi"
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Save something"
+msgstr "Shrani nekaj"
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Tags"
+msgstr "Oznake"
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "All entries"
+msgstr "Vsi vnosi"
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Edit"
+msgstr "Uredi"
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Nothing saved yet."
+msgstr "Zaenkrat še ni nič shranjenega."
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Pages"
+msgstr "Strani"
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Newer"
+msgstr "Novejši"
+
+#: src/hrcek/entries/templates/entries/list.html
+#, python-format
+msgid "Page %(current)s of %(total)s"
+msgstr "Stran %(current)s od %(total)s"
+
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Older"
+msgstr "Starejši"
 
 #: src/hrcek/settings/base.py
 msgid "English"

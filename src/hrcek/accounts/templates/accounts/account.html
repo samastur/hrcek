@@ -1,4 +1,4 @@
-{% extends "accounts/base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n %}
 {% block heading %}{% trans "Your account" %}{% endblock %}
 {% block content %}
   {% if messages %}
@@ -62,5 +62,4 @@
     <button type="submit">{% trans "Create a token" %}</button>
   </form>
 
-  <p><a href="{% url 'accounts:logout' %}">{% trans "Sign out" %}</a></p>
 {% endblock %}

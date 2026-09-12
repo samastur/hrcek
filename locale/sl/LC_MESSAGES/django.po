@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 07:31+0000\n"
+"POT-Creation-Date: 2026-09-13 10:20+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -722,6 +722,10 @@ msgstr "Vnosi"
 #: src/hrcek/core/templates/base.html
 msgid "Sign out"
 msgstr "Odjava"
+
+#: src/hrcek/entries/errors.py
+msgid "Too many entries in one request."
+msgstr "Preveč vnosov v enem zahtevku."
 
 #: src/hrcek/entries/forms.py src/hrcek/entries/templates/entries/list.html
 msgid "Tags"

@@ -63,6 +63,7 @@ MIDDLEWARE = [
 API_DOCS_ENABLED = env_bool("HRCEK_API_DOCS", default=True)
 
 ENTRIES_PER_PAGE = env_int("HRCEK_ENTRIES_PER_PAGE", 25)
+HRCEK_MAX_BATCH = env_int("HRCEK_MAX_BATCH", 200)
 
 LOGIN_URL = "landing"
 LOGIN_REDIRECT_URL = "entries:list"

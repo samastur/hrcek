@@ -1,9 +1,13 @@
 from io import StringIO
 
+import pytest
 from django.conf import settings
 from django.core.management import call_command
 
 
+# The checks reach the database: JSONField asks the backend whether it
+# supports JSON before it will pass.
+@pytest.mark.django_db
 def test_django_system_checks_pass():
     stderr = StringIO()
     call_command("check", stderr=stderr)

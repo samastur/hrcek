@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 10:59+0000\n"
+"POT-Creation-Date: 2026-09-13 12:07+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -226,7 +226,7 @@ msgstr ""
 msgid "name"
 msgstr ""
 
-#: src/hrcek/accounts/models.py
+#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
 msgid "created at"
 msgstr ""
 
@@ -770,6 +770,50 @@ msgstr ""
 
 #: src/hrcek/entries/models.py
 msgid "entries"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "text"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "number"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "choice"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "kind"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "options"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "field"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "fields"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "text value"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "number value"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "field value"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "field values"
 msgstr ""
 
 #: src/hrcek/entries/services.py

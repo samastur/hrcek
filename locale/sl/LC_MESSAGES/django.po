@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 10:59+0000\n"
+"POT-Creation-Date: 2026-09-13 12:07+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -234,7 +234,7 @@ msgstr "uporabniki"
 msgid "name"
 msgstr "ime"
 
-#: src/hrcek/accounts/models.py
+#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
 msgid "created at"
 msgstr "ustvarjeno ob"
 
@@ -800,6 +800,50 @@ msgstr "vnos"
 #: src/hrcek/entries/models.py
 msgid "entries"
 msgstr "vnosi"
+
+#: src/hrcek/entries/models.py
+msgid "text"
+msgstr "besedilo"
+
+#: src/hrcek/entries/models.py
+msgid "number"
+msgstr "število"
+
+#: src/hrcek/entries/models.py
+msgid "choice"
+msgstr "izbira"
+
+#: src/hrcek/entries/models.py
+msgid "kind"
+msgstr "vrsta"
+
+#: src/hrcek/entries/models.py
+msgid "options"
+msgstr "možnosti"
+
+#: src/hrcek/entries/models.py
+msgid "field"
+msgstr "polje"
+
+#: src/hrcek/entries/models.py
+msgid "fields"
+msgstr "polja"
+
+#: src/hrcek/entries/models.py
+msgid "text value"
+msgstr "besedilna vrednost"
+
+#: src/hrcek/entries/models.py
+msgid "number value"
+msgstr "številska vrednost"
+
+#: src/hrcek/entries/models.py
+msgid "field value"
+msgstr "vrednost polja"
+
+#: src/hrcek/entries/models.py
+msgid "field values"
+msgstr "vrednosti polj"
 
 #: src/hrcek/entries/services.py
 msgid "That address is too long."

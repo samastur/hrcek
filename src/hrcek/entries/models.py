@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import ClassVar
+from decimal import Decimal
+from typing import Any, ClassVar
 from urllib.parse import urlsplit, urlunsplit
 
 from django.conf import settings
@@ -132,3 +133,118 @@ class Entry(models.Model):
                 parts.fragment,
             )
         )
+
+
+class FieldDefinition(models.Model):
+    """A field somebody has decided their entries should carry.
+
+    Every account starts with Price and Priority, but nothing marks them
+    as special: they can be renamed or deleted like any other.
+    """
+
+    TEXT = "text"
+    NUMBER = "number"
+    CHOICE = "choice"
+
+    KINDS: ClassVar[list[tuple[str, Any]]] = [
+        (TEXT, _("text")),
+        (NUMBER, _("number")),
+        (CHOICE, _("choice")),
+    ]
+
+    # A choice field needs options, and there is no interface for editing
+    # them. It exists for the seeded priority and nothing else.
+    CREATABLE_KINDS = (TEXT, NUMBER)
+
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="field_definitions",
+        verbose_name=_("owner"),
+    )
+    name = models.CharField(_("name"), max_length=50)
+    kind = models.CharField(_("kind"), max_length=10, choices=KINDS, default=TEXT)
+    options = models.JSONField(_("options"), default=list, blank=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("field")
+        verbose_name_plural = _("fields")
+        ordering = ("name",)
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                "owner", Lower("name"), name="unique_field_per_owner_ci"
+            )
+        ]
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class FieldValue(models.Model):
+    """What one entry holds for one field.
+
+    Values live in a column matching their type rather than in one text
+    column, so that numbers sort and compare as numbers.
+    """
+
+    entry = models.ForeignKey(
+        Entry,
+        on_delete=models.CASCADE,
+        related_name="field_values",
+        verbose_name=_("entry"),
+    )
+    definition = models.ForeignKey(
+        FieldDefinition,
+        on_delete=models.CASCADE,
+        related_name="values",
+        verbose_name=_("field"),
+    )
+    value_text = models.TextField(_("text value"), blank=True)
+    value_number = models.DecimalField(
+        _("number value"), max_digits=20, decimal_places=6, null=True, blank=True
+    )
+
+    class Meta:
+        verbose_name = _("field value")
+        verbose_name_plural = _("field values")
+        ordering = ("definition__name",)
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                fields=["entry", "definition"], name="unique_value_per_field_per_entry"
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.definition}: {self.value}"
+
+    @staticmethod
+    def format_number(number: Decimal) -> str:
+        """Render a stored number the way it was most likely typed.
+
+        The column keeps six decimal places, so 129 comes back as
+        129.000000. `normalize` strips the zeros but turns round numbers
+        into exponent form — 1000 becomes 1E+3 — so those are quantized
+        back to an integer.
+        """
+        trimmed = number.normalize()
+        if trimmed == trimmed.to_integral_value():
+            trimmed = trimmed.quantize(Decimal(1))
+        return str(trimmed)
+
+    @property
+    def value(self) -> str:
+        if self.definition.kind == FieldDefinition.NUMBER:
+            if self.value_number is None:
+                return ""
+            return self.format_number(self.value_number)
+        return self.value_text
+
+    @value.setter
+    def value(self, raw: str) -> None:
+        if self.definition.kind == FieldDefinition.NUMBER:
+            self.value_number = Decimal(raw) if raw else None
+            self.value_text = ""
+        else:
+            self.value_text = raw
+            self.value_number = None

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from hrcek.entries.models import Entry, Tag
+from hrcek.entries.models import Entry, FieldDefinition, FieldValue, Tag
 
 
 class EntryAdmin(admin.ModelAdmin):
@@ -16,5 +16,18 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ("name",)
 
 
+class FieldDefinitionAdmin(admin.ModelAdmin):
+    list_display = ("name", "owner", "kind")
+    list_filter = ("owner", "kind")
+    search_fields = ("name",)
+
+
+class FieldValueAdmin(admin.ModelAdmin):
+    list_display = ("entry", "definition", "value")
+    list_filter = ("definition",)
+
+
 admin.site.register(Entry, EntryAdmin)
+admin.site.register(FieldDefinition, FieldDefinitionAdmin)
+admin.site.register(FieldValue, FieldValueAdmin)
 admin.site.register(Tag, TagAdmin)

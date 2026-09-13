@@ -19,7 +19,9 @@ from hrcek.entries.services import save_entry
 @login_required
 def entry_list(request: HttpRequest) -> HttpResponse:
     owner = cast("User", request.user)
-    entries = Entry.objects.filter(owner=owner).prefetch_related("tags")
+    entries = Entry.objects.filter(owner=owner).prefetch_related(
+        "tags", "field_values__definition"
+    )
 
     tag = request.GET.get("tag", "").strip()
     if tag:
@@ -41,9 +43,9 @@ def entry_list(request: HttpRequest) -> HttpResponse:
 def entry_create(request: HttpRequest) -> HttpResponse:
     owner = cast("User", request.user)
     if request.method != "POST":
-        return render(request, "entries/form.html", {"form": EntryForm()})
+        return render(request, "entries/form.html", {"form": EntryForm(owner)})
 
-    form = EntryForm(request.POST)
+    form = EntryForm(owner, request.POST)
     if not form.is_valid():
         return render(request, "entries/form.html", {"form": form})
 
@@ -54,6 +56,7 @@ def entry_create(request: HttpRequest) -> HttpResponse:
         title=form.cleaned_data["title"],
         notes=form.cleaned_data["notes"],
         tag_names=form.tag_names(),
+        fields=form.field_values(),
     )
     messages.success(request, _("Saved."))
     return redirect("entries:list")
@@ -68,10 +71,10 @@ def entry_edit(request: HttpRequest, pk: int) -> HttpResponse:
         return render(
             request,
             "entries/form.html",
-            {"form": EntryForm(instance=entry), "entry": entry},
+            {"form": EntryForm(owner, instance=entry), "entry": entry},
         )
 
-    form = EntryForm(request.POST, instance=entry)
+    form = EntryForm(owner, request.POST, instance=entry)
     if not form.is_valid():
         return render(request, "entries/form.html", {"form": form, "entry": entry})
 
@@ -81,6 +84,7 @@ def entry_edit(request: HttpRequest, pk: int) -> HttpResponse:
         title=form.cleaned_data["title"],
         notes=form.cleaned_data["notes"],
         tag_names=form.tag_names(),
+        fields=form.field_values(),
     )
     messages.success(request, _("Saved."))
     return redirect("entries:list")

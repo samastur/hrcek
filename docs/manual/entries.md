@@ -49,6 +49,6 @@ undone** — there is no trash to recover from.
 
 ## Entries and scripts
 
-If you use Hrček from a script, see the API section of the developer
-documentation. A script can save one entry or a batch of them, and
-saving works the same way: an address you already hold is updated.
+If you use Hrček from a script, see [the API guide](../dev/api.md). A
+script can save one entry or a batch of them, and saving works the same
+way: an address you already hold is updated.

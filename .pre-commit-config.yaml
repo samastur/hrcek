@@ -45,6 +45,13 @@ repos:
         files: ^src/hrcek/accounts/(emails|templates/emails)/
         pass_filenames: false
 
+      - id: openapi-current
+        name: openapi (schema matches the API)
+        entry: uv run python manage.py export_openapi --check
+        language: system
+        files: ^src/hrcek/.*(api|schemas)\.py$|^docs/api/openapi\.json$
+        pass_filenames: false
+
       - id: translations-extracted
         name: translations (catalogues match the source)
         entry: scripts/check_translations.sh extract

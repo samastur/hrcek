@@ -63,6 +63,9 @@ plugin and cannot see `tag.entries`.
 
 ## The API
 
+[The API guide](api.md) is the client-facing contract. What follows is
+why it is shaped that way.
+
 ```
 POST /api/entries/          one entry; 201 created, 200 updated
 POST /api/entries/batch/    up to HRCEK_MAX_BATCH; 200 or 207

@@ -42,6 +42,46 @@ Click a tag to see only the entries carrying it.
 `diving` and the tag disappears. This keeps the list from filling up
 with typos; it also means a tag is not a place to keep something.
 
+## Fields
+
+Beyond an address, a title and notes, you can record whatever else
+matters to you. Those extras are called fields, and they are yours:
+nobody else sees them, and nobody else's appear on your form.
+
+You start with two:
+
+- **Price**, which takes a number
+- **Priority**, which is one of `high`, `medium` or `low`
+
+Neither is special. Rename them, delete them, or leave them be. "Your
+fields" on the entry list is where you do it.
+
+### Adding one
+
+A field has a name and a kind. The kind is either **text**, which takes
+anything, or **number**, which takes only a number — so that a price of
+"about fifty" is caught when you type it, rather than found later.
+
+**The kind cannot be changed afterwards.** A number field full of
+numbers cannot become a text field without deciding what happens to
+every value, so Hrček does not offer it. If you picked the wrong kind,
+delete the field and add it again.
+
+Priority is the one field you cannot recreate: its list of three
+choices is set when your account is made, and the form for adding a
+field does not offer lists. Delete it and it is gone for good. Renaming
+it is safe — it keeps its choices.
+
+### Filling one in
+
+Every field you have appears on the entry form. Leave one blank and that
+entry simply has no value for it; they are all optional.
+
+### Deleting one
+
+Deleting a field **deletes its value from every entry**, and cannot be
+undone. The page tells you how many entries that is before you confirm.
+
 ## Editing and deleting
 
 Every entry has an "Edit" link. Deleting asks first, and **cannot be

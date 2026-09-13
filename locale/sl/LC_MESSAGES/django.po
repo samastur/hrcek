@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 10:31+0000\n"
+"POT-Creation-Date: 2026-09-13 10:59+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -706,6 +706,32 @@ msgstr "Poslani podatki niso veljavni."
 #: src/hrcek/core/errors.py
 msgid "The requested resource does not exist."
 msgstr "Zahtevani vir ne obstaja."
+
+#: src/hrcek/core/management/commands/export_openapi.py
+#, python-format
+msgid ""
+"The OpenAPI schema is out of date: %(reason)s. Run: uv run python manage.py "
+"export_openapi"
+msgstr ""
+"Shema OpenAPI ni posodobljena: %(reason)s. Zaženite: uv run python manage.py "
+"export_openapi"
+
+#: src/hrcek/core/management/commands/export_openapi.py
+msgid "The OpenAPI schema is up to date."
+msgstr "Shema OpenAPI je posodobljena."
+
+#: src/hrcek/core/management/commands/export_openapi.py
+#, python-format
+msgid "Wrote %(path)s"
+msgstr "Zapisano v %(path)s"
+
+#: src/hrcek/core/openapi.py
+msgid "it has not been exported yet"
+msgstr "še ni bila izvožena"
+
+#: src/hrcek/core/openapi.py
+msgid "the API has changed since it was exported"
+msgstr "API se je od izvoza spremenil"
 
 #: src/hrcek/core/templates/base.html
 msgid "Hrček"

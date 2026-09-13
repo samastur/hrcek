@@ -5,7 +5,10 @@
     <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
   {% endif %}
 
-  <p><a href="{% url 'entries:create' %}">{% trans "Save something" %}</a></p>
+  <ul class="inline">
+    <li><a href="{% url 'entries:create' %}">{% trans "Save something" %}</a></li>
+    <li><a href="{% url 'entries:fields' %}">{% trans "Your fields" %}</a></li>
+  </ul>
 
   {% if tags %}
     <nav aria-label="{% trans "Tags" %}">

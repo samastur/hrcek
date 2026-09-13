@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 12:07+0000\n"
+"POT-Creation-Date: 2026-09-13 12:13+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -351,6 +351,7 @@ msgid "Last used"
 msgstr "Nazadnje uporabljeno"
 
 #: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/entries/templates/entries/fields.html
 msgid "Delete"
 msgstr "Izbriši"
 
@@ -761,6 +762,10 @@ msgstr "Oznake"
 msgid "Separated by commas."
 msgstr "Ločene z vejicami."
 
+#: src/hrcek/entries/forms.py
+msgid "You already have a field with that name."
+msgstr "Polje s tem imenom že imate."
+
 #: src/hrcek/entries/models.py
 msgid "owner"
 msgstr "lastnik"
@@ -854,16 +859,96 @@ msgid "Delete this entry?"
 msgstr "Izbrišem ta vnos?"
 
 #: src/hrcek/entries/templates/entries/confirm_delete.html
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
 msgid "This cannot be undone."
 msgstr "Tega ni mogoče razveljaviti."
 
 #: src/hrcek/entries/templates/entries/confirm_delete.html
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
 msgid "Yes, delete it"
 msgstr "Da, izbriši"
 
 #: src/hrcek/entries/templates/entries/confirm_delete.html
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
 msgid "Keep it"
 msgstr "Obdrži"
+
+#
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
+msgid "Delete this field?"
+msgstr "Izbrišem to polje?"
+
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
+#, python-format
+msgid ""
+"%(counter)s entry has a value for this field, and it will be deleted too."
+msgid_plural ""
+"%(counter)s entries have a value for this field, and those values will be "
+"deleted too."
+msgstr[0] ""
+"%(counter)s vnos ima vrednost za to polje in ta vrednost bo izbrisana."
+msgstr[1] ""
+"%(counter)s vnosa imata vrednost za to polje in ti vrednosti bosta izbrisani."
+msgstr[2] ""
+"%(counter)s vnosi imajo vrednost za to polje in te vrednosti bodo izbrisane."
+msgstr[3] ""
+"%(counter)s vnosov ima vrednost za to polje in te vrednosti bodo izbrisane."
+
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
+msgid "No entry has a value for this field."
+msgstr "Noben vnos nima vrednosti za to polje."
+
+#: src/hrcek/entries/templates/entries/field_form.html
+msgid "Rename this field"
+msgstr "Preimenovanje polja"
+
+#
+#: src/hrcek/entries/templates/entries/field_form.html
+msgid "Save the name"
+msgstr "Shrani ime"
+
+#
+#: src/hrcek/entries/templates/entries/field_form.html
+msgid "Back to your fields"
+msgstr "Nazaj na vaša polja"
+
+#
+#: src/hrcek/entries/templates/entries/fields.html
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Your fields"
+msgstr "Vaša polja"
+
+#: src/hrcek/entries/templates/entries/fields.html
+msgid ""
+"Fields are the extra things you want to record about an entry, beyond its "
+"address, title and notes."
+msgstr ""
+"Polja so dodatne stvari, ki jih želite zabeležiti o vnosu, poleg naslova, "
+"naziva in zapiskov."
+
+#
+#: src/hrcek/entries/templates/entries/fields.html
+msgid "Rename"
+msgstr "Preimenuj"
+
+#
+#: src/hrcek/entries/templates/entries/fields.html
+msgid "You have no fields."
+msgstr "Nimate polj."
+
+#
+#: src/hrcek/entries/templates/entries/fields.html
+msgid "Add a field"
+msgstr "Dodajanje polja"
+
+#: src/hrcek/entries/templates/entries/fields.html
+msgid "Add the field"
+msgstr "Dodaj polje"
+
+#: src/hrcek/entries/templates/entries/fields.html
+#: src/hrcek/entries/templates/entries/form.html
+msgid "Back to your entries"
+msgstr "Nazaj na vaše vnose"
 
 #: src/hrcek/entries/templates/entries/form.html
 msgid "Edit entry"
@@ -881,10 +966,6 @@ msgstr "Shrani"
 #: src/hrcek/entries/templates/entries/form.html
 msgid "Delete this entry"
 msgstr "Izbriši ta vnos"
-
-#: src/hrcek/entries/templates/entries/form.html
-msgid "Back to your entries"
-msgstr "Nazaj na vaše vnose"
 
 #: src/hrcek/entries/templates/entries/list.html
 msgid "Your entries"
@@ -926,6 +1007,20 @@ msgstr "Shranjeno."
 #: src/hrcek/entries/views.py
 msgid "Deleted."
 msgstr "Izbrisano."
+
+#
+#: src/hrcek/entries/views.py
+msgid "Field added."
+msgstr "Polje dodano."
+
+#: src/hrcek/entries/views.py
+msgid "Field renamed."
+msgstr "Polje preimenovano."
+
+#
+#: src/hrcek/entries/views.py
+msgid "Field deleted."
+msgstr "Polje izbrisano."
 
 #: src/hrcek/settings/base.py
 msgid "English"

@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% load i18n %}
+{% block heading %}{% trans "Delete this field?" %}{% endblock %}
+{% block content %}
+  <p>{{ definition.name }}</p>
+  {% if value_count %}
+    <p>{% blocktrans count counter=value_count %}{{ counter }} entry has a value for this field, and it will be deleted too.{% plural %}{{ counter }} entries have a value for this field, and those values will be deleted too.{% endblocktrans %}</p>
+  {% else %}
+    <p>{% trans "No entry has a value for this field." %}</p>
+  {% endif %}
+  <p>{% trans "This cannot be undone." %}</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">{% trans "Yes, delete it" %}</button>
+  </form>
+  <p><a href="{% url 'entries:fields' %}">{% trans "Keep it" %}</a></p>
+{% endblock %}

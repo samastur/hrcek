@@ -1,11 +1,10 @@
-from html.parser import HTMLParser
-
 import pytest
 from django.urls import reverse
 from django.utils import timezone
 
 from hrcek.accounts.models import User
 from hrcek.entries.models import Entry, Tag
+from tests.entries.helpers import _structure
 
 pytestmark = pytest.mark.django_db
 
@@ -111,41 +110,6 @@ def test_an_unknown_tag_yields_nothing_rather_than_everything(client, nina):
 def test_signing_in_lands_on_the_entry_list(client, nina):
     response = client.post("/", {"username": "nina@example.com", "password": PASSWORD})
     assert response["Location"] == reverse("entries:list")
-
-
-class _Structure(HTMLParser):
-    """Record the open-element stack at each element of interest.
-
-    Structural assertions rather than string matching: a list is a list
-    because of where the elements sit, not because the source happens to
-    contain "<li>".
-    """
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.stack: list[str] = []
-        self.anchors: list[tuple[str, list[str]]] = []
-        self.articles: list[list[str]] = []
-
-    def handle_starttag(self, tag, attrs):
-        void = {"br", "img", "meta", "input", "link", "hr"}
-        if tag not in void:
-            self.stack.append(tag)
-        if tag == "a":
-            self.anchors.append((dict(attrs).get("href", ""), list(self.stack)))
-        if tag == "article":
-            self.articles.append(list(self.stack))
-
-    def handle_endtag(self, tag):
-        if tag in self.stack:
-            while self.stack and self.stack.pop() != tag:
-                pass
-
-
-def _structure(response) -> _Structure:
-    parser = _Structure()
-    parser.feed(response.content.decode())
-    return parser
 
 
 def test_the_tag_filter_is_marked_up_as_a_list(client, nina):

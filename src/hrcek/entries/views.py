@@ -11,8 +11,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 
 from hrcek.accounts.models import User
-from hrcek.entries.forms import EntryForm
-from hrcek.entries.models import Entry, Tag
+from hrcek.entries.forms import EntryForm, FieldDefinitionForm
+from hrcek.entries.models import Entry, FieldDefinition, FieldValue, Tag
 from hrcek.entries.services import save_entry
 
 
@@ -99,3 +99,67 @@ def entry_delete(request: HttpRequest, pk: int) -> HttpResponse:
     Tag.prune_orphans(owner)
     messages.success(request, _("Deleted."))
     return redirect("entries:list")
+
+
+@login_required
+def field_list(request: HttpRequest) -> HttpResponse:
+    owner = cast("User", request.user)
+    if request.method == "POST":
+        form = FieldDefinitionForm(owner, request.POST)
+        if form.is_valid():
+            definition = form.save(commit=False)
+            definition.owner = owner
+            definition.save()
+            messages.success(request, _("Field added."))
+            return redirect("entries:fields")
+    else:
+        form = FieldDefinitionForm(owner)
+
+    return render(
+        request,
+        "entries/fields.html",
+        {"form": form, "fields": FieldDefinition.objects.filter(owner=owner)},
+    )
+
+
+@login_required
+def field_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    owner = cast("User", request.user)
+    definition = get_object_or_404(FieldDefinition, pk=pk, owner=owner)
+
+    if request.method == "POST":
+        form = FieldDefinitionForm(owner, request.POST, instance=definition)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("Field renamed."))
+            return redirect("entries:fields")
+    else:
+        form = FieldDefinitionForm(owner, instance=definition)
+
+    return render(
+        request,
+        "entries/field_form.html",
+        {"form": form, "definition": definition},
+    )
+
+
+@login_required
+def field_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    owner = cast("User", request.user)
+    definition = get_object_or_404(FieldDefinition, pk=pk, owner=owner)
+
+    if request.method != "POST":
+        return render(
+            request,
+            "entries/field_confirm_delete.html",
+            {
+                "definition": definition,
+                # The count is what makes the consequence real to
+                # somebody about to press the button.
+                "value_count": FieldValue.objects.filter(definition=definition).count(),
+            },
+        )
+
+    definition.delete()
+    messages.success(request, _("Field deleted."))
+    return redirect("entries:fields")

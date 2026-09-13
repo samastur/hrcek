@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load i18n %}
+{% block heading %}{% trans "Your fields" %}{% endblock %}
+{% block content %}
+  {% if messages %}
+    <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  <p>{% trans "Fields are the extra things you want to record about an entry, beyond its address, title and notes." %}</p>
+
+  {% if fields %}
+    <ul class="stacked">
+      {% for each in fields %}
+        <li>
+          {{ each.name }} <span class="kind">({{ each.get_kind_display }})</span>
+          <a href="{% url 'entries:field_edit' each.pk %}">{% trans "Rename" %}</a>
+          <a href="{% url 'entries:field_delete' each.pk %}">{% trans "Delete" %}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% trans "You have no fields." %}</p>
+  {% endif %}
+
+  <h2>{% trans "Add a field" %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% trans "Add the field" %}</button>
+  </form>
+
+  <p><a href="{% url 'entries:list' %}">{% trans "Back to your entries" %}</a></p>
+{% endblock %}

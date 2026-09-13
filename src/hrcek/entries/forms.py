@@ -67,7 +67,9 @@ class EntryForm(forms.ModelForm):
             try:
                 validate_field_value(definition, raw)
             except DjangoValidationError as exc:
-                self.add_error(key, exc)
+                # The service keys its message by the field's name, which
+                # is not this form's input name, so pass the text along.
+                self.add_error(key, list(exc.messages))
         return cleaned
 
     def tag_names(self) -> list[str]:

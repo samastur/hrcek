@@ -13,6 +13,7 @@ EXPECTED_PATHS = {
     "/api/auth/me",
     "/api/entries/",
     "/api/entries/batch/",
+    "/api/entries/by-url/",
 }
 
 

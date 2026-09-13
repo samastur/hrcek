@@ -64,14 +64,20 @@ def validate_field_value(definition: FieldDefinition, raw: str) -> str:
         try:
             Decimal(raw)
         except InvalidOperation as exc:
+            # Keyed by the field's name, so the API can say which one was
+            # wrong without parsing the message.
             raise ValidationError(
-                _("%(field)s takes a number.") % {"field": definition.name},
+                {definition.name: [_("This field takes a number.")]},
                 code="not_a_number",
             ) from exc
     elif definition.kind == FieldDefinition.CHOICE and raw not in definition.options:
         raise ValidationError(
-            _("%(field)s must be one of: %(options)s.")
-            % {"field": definition.name, "options": ", ".join(definition.options)},
+            {
+                definition.name: [
+                    _("This field must be one of: %(options)s.")
+                    % {"options": ", ".join(definition.options)}
+                ]
+            },
             code="not_an_option",
         )
     return raw

@@ -11,8 +11,9 @@ parts you have to babysit.
 Early. Accounts work — invitations, gated self-signup, email
 confirmation, password reset, and API authentication by session or
 bearer token. People can manage their own display name, email address,
-password and API tokens, and save entries with tags from the web or the
-API. Images, custom fields and shared collections are still to come.
+password and API tokens, and save entries with tags and their own
+custom fields from the web or the API. Images and shared collections are
+still to come.
 
 ## Documentation
 

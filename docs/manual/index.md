@@ -10,5 +10,5 @@ can get back to them later.
 - [When something goes wrong](troubleshooting.md)
 
 This manual describes what Hrček does today. It is still early: you can
-have an account and save things to it. Images, custom fields and shared
-collections are still to come.
+have an account, save things to it, and record your own fields against
+them. Images and shared collections are still to come.

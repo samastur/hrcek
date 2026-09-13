@@ -61,6 +61,80 @@ every typo lives in the tag list forever. It is written as
 than a reverse accessor, because `ty` does not run the django-stubs
 plugin and cannot see `tag.entries`.
 
+## Custom fields
+
+`FieldDefinition` is a field somebody has decided their entries should
+carry; `FieldValue` is what one entry holds for one of them. Both belong
+to an owner, like everything else here.
+
+**Values live in a column matching their type.** `value_text` and
+`value_number`, not one text column, so a number sorts and compares as a
+number when something eventually wants to. `FieldValue.value` is a
+property reading and writing whichever column the definition's kind
+calls for, so nothing outside the model has to know which it is.
+
+`format_number` renders a stored number the way it was most likely
+typed. The column keeps six decimal places, so 129 comes back as
+129.000000; `Decimal.normalize` strips the zeros but turns round numbers
+into exponent form — 1000 becomes `1E+3` — so those are quantized back
+to an integer. There is a test for each case.
+
+### Seeding
+
+Every account starts with **Price** (number) and **Priority** (choice:
+high, medium, low). A `post_save` receiver seeds new accounts and a data
+migration covered the ones that already existed. Both are idempotent, so
+running either again changes nothing.
+
+They are **ordinary rows**: no flag marks them as built in, and they can
+be renamed or deleted like any other. This is deliberate — a special
+case would have to be defended everywhere a field is read.
+
+Their names are **data, not interface**, and are therefore not
+translated. A name that changed with the interface language would be two
+different fields to the API, and there would be no sensible answer to
+what happens when somebody renames one and then switches language.
+
+### Why `choice` cannot be created
+
+The kind exists in the model for the seeded priority and is not offered
+by the form. A choice field needs options, and there is no interface for
+editing them; offering the kind without that would produce a field that
+can hold nothing.
+
+Delete priority and it is gone for good. The manual says so plainly.
+
+### Why the kind is fixed after creation
+
+An existing value cannot always be reread as another type. Changing
+`number` to `text` is harmless, the other direction is not, and a form
+that silently drops values on save is worse than one that does not offer
+the change at all. `FieldDefinitionForm` removes the control when it is
+editing an existing row.
+
+### set_field_values is a patch
+
+`services.set_field_values(entry, mapping)` sets the names the mapping
+carries and leaves every other field alone. An empty string removes a
+value, and that is the only way to remove one.
+
+This is the single place the API is not uniform — everything else about
+an entry is replaced on save. The reason is in [the API
+guide](api.md#fields-is-patched-not-replaced), and it is worth repeating
+here: a client that predates fields must not be able to destroy them.
+Do not "fix" the inconsistency.
+
+Validation runs over the **whole** mapping before anything is written,
+so a bad value in the second field cannot leave the first one changed.
+A name nobody owns raises `HRC-FIELD-0001` rather than being dropped: a
+typo should be reported, and silently ignoring it would let a client
+believe it had saved something.
+
+Errors from `validate_field_value` are keyed by the field's name —
+`ValidationError({definition.name: [...]})` — so the API can say which
+field was wrong without parsing the message. `_details()` in `api.py`
+turns that into `details.fields`, using `url` for the address.
+
 ## The API
 
 [The API guide](api.md) is the client-facing contract. What follows is
@@ -70,11 +144,24 @@ why it is shaped that way.
 POST /api/entries/          one entry; 201 created, 200 updated
 POST /api/entries/batch/    up to HRCEK_MAX_BATCH; 200 or 207
 GET  /api/entries/          your entries, paginated
+GET  /api/entries/by-url/   one entry by its address, or 404
 ```
 
 Everything on `EntryIn` except `url` has a default, so a client can post
-a bare link. That matters more as later phases add fields: a client that
-knows nothing about them must still work.
+a bare link. A client that knows nothing about a later addition must
+keep working, which is also why `fields` is patched rather than
+replaced.
+
+**`by-url` must stay above any `/{id}/` route.** There is no
+detail-by-id route today; whoever adds one has to declare it after
+`by-url`, or Ninja will read `by-url` as an id. The comment in `api.py`
+says so at the point it matters.
+
+It exists because posting is an upsert: without it a client cannot ask
+what an address currently says before writing over it, and fetching the
+whole list to filter locally is the wrong shape once somebody holds
+thousands of entries. It normalises through `Entry.normalise_url`, so
+the lookup and the save agree on what counts as the same address.
 
 **The batch contract.** One result per row, in submission order, each
 `created`, `updated` or `error`. The call answers **200 when every row

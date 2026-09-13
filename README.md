@@ -18,6 +18,7 @@ API. Images, custom fields and shared collections are still to come.
 
 - [User manual](docs/manual/index.md)
 - [Developer documentation](docs/dev/index.md)
+- [API guide](docs/dev/api.md) — for building a client
 - [Working agreement](CLAUDE.md)
 
 ## Quick start

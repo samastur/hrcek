@@ -17,13 +17,24 @@ from ninja import Router, Status
 from ninja.pagination import paginate
 
 from hrcek.accounts.models import User
-from hrcek.core.errors import VALIDATION_ERROR, HrcekError
+from hrcek.core.errors import NOT_FOUND, VALIDATION_ERROR, HrcekError
 from hrcek.entries.errors import BATCH_TOO_LARGE
 from hrcek.entries.models import Entry
 from hrcek.entries.schemas import BatchOut, EntryIn, EntryOut
 from hrcek.entries.services import save_entry
 
 router = Router(tags=["entries"])
+
+
+def _details(exc: ValidationError) -> dict[str, object]:
+    """The offending fields, keyed by name.
+
+    A URL problem is reported under "url"; a field value under the
+    field's own name, which the service put there.
+    """
+    if hasattr(exc, "error_dict"):
+        return {"fields": exc.message_dict}
+    return {"fields": {"url": list(exc.messages)}}
 
 
 @router.post("/", response={200: EntryOut, 201: EntryOut}, operation_id="create_entry")
@@ -36,11 +47,10 @@ def create_entry(request: HttpRequest, payload: EntryIn) -> Status[Entry]:
             title=payload.title,
             notes=payload.notes,
             tag_names=payload.tags,
+            fields=payload.fields,
         )
     except ValidationError as exc:
-        raise HrcekError(
-            VALIDATION_ERROR, {"fields": {"url": list(exc.messages)}}
-        ) from exc
+        raise HrcekError(VALIDATION_ERROR, _details(exc)) from exc
     # 201 for a new entry, 200 for one that already existed: the status
     # says which happened without the client comparing ids.
     return Status(201 if created else 200, entry)
@@ -50,7 +60,36 @@ def create_entry(request: HttpRequest, payload: EntryIn) -> Status[Entry]:
 @paginate
 def list_entries(request: HttpRequest) -> QuerySet[Entry]:
     owner = cast("User", request.user)
-    return Entry.objects.filter(owner=owner).prefetch_related("tags")
+    return Entry.objects.filter(owner=owner).prefetch_related(
+        "tags", "field_values__definition"
+    )
+
+
+@router.get("/by-url/", response=EntryOut, operation_id="get_entry_by_url")
+def get_entry_by_url(request: HttpRequest, url: str) -> Entry:
+    """Answer the entry held at *url*, so a client can compare.
+
+    Posting is an upsert, which leaves a client no way to ask what an
+    address currently says before writing over it. Listing and filtering
+    client-side is the wrong shape once somebody holds thousands of
+    entries.
+
+    Declared before any /{id}/ route: whoever adds one must keep it
+    below this, or "by-url" will be read as an id.
+    """
+    owner = cast("User", request.user)
+    # The same normalisation the upsert uses, so the lookup and the save
+    # agree on what counts as the same address.
+    entry = (
+        Entry.objects.filter(owner=owner, url=Entry.normalise_url(url))
+        .prefetch_related("tags", "field_values__definition")
+        .first()
+    )
+    if entry is None:
+        # 404 rather than 403 for somebody else's address: a 403 would
+        # confirm that somebody holds it.
+        raise HrcekError(NOT_FOUND, {"url": url})
+    return entry
 
 
 @router.post(
@@ -81,7 +120,23 @@ def create_entries(
                     title=item.title,
                     notes=item.notes,
                     tag_names=item.tags,
+                    fields=item.fields,
                 )
+        except HrcekError as exc:
+            # An unknown field name, say: one row's mistake, reported as
+            # that row's error rather than refusing the whole request.
+            any_failed = True
+            results.append(
+                {
+                    "index": index,
+                    "status": "error",
+                    "error": {
+                        "code": exc.error_code.code,
+                        "message": str(exc.error_code.message),
+                        "details": exc.details,
+                    },
+                }
+            )
         except ValidationError as exc:
             any_failed = True
             results.append(
@@ -91,7 +146,7 @@ def create_entries(
                     "error": {
                         "code": VALIDATION_ERROR.code,
                         "message": str(VALIDATION_ERROR.message),
-                        "details": {"url": list(exc.messages)},
+                        "details": _details(exc),
                     },
                 }
             )

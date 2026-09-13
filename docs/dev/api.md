@@ -54,7 +54,7 @@ Every failure has the same shape and a truthful status code:
 ```json
 {"error": {"code": "HRC-CORE-0002",
            "message": "The submitted data is not valid.",
-           "details": {"url": ["Enter a valid URL."]}}}
+           "details": {"fields": {"url": ["Enter a valid URL."]}}}}
 ```
 
 `code` identifies the condition and never changes meaning. `message` is
@@ -78,13 +78,14 @@ curl -X POST https://hrcek.example.com/api/entries/ \
   -d '{"url": "https://example.com/watch",
        "title": "A watch",
        "notes": "38mm, sapphire",
-       "tags": ["watches", "diving"]}'
+       "tags": ["watches", "diving"],
+       "fields": {"price": "129.00", "priority": "high"}}'
 ```
 
-Only `url` is required. `title`, `notes` and `tags` all default to
-empty, so a minimal client can post a bare link and nothing else. Later
-versions will add fields; they will all have defaults too, so a client
-that does not know about them keeps working.
+Only `url` is required. Everything else defaults to empty, so a minimal
+client can post a bare link and nothing else. Anything added in a later
+version will have a default too, so a client that does not know about it
+keeps working.
 
 **201** when the entry was created:
 
@@ -94,8 +95,9 @@ that does not know about them keeps working.
  "title": "A watch",
  "notes": "38mm, sapphire",
  "tags": ["diving", "watches"],
- "created_at": "2026-09-13T11:01:21.385Z",
- "updated_at": "2026-09-13T11:01:21.385Z"}
+ "fields": {"Price": "129", "Priority": "high"},
+ "created_at": "2026-09-13T12:28:12.937Z",
+ "updated_at": "2026-09-13T12:28:12.937Z"}
 ```
 
 **200** when an entry for that address already existed and was updated.
@@ -113,22 +115,127 @@ defaults, so they are cleared. Posting this:
 {"url": "https://example.com/watch", "title": "A watch, revisited"}
 ```
 
-over the entry above leaves `notes` empty and `tags` empty:
+over the entry above leaves `notes` empty and `tags` empty — but note
+that the field values survive:
 
 ```json
 {"id": 1, "url": "https://example.com/watch",
  "title": "A watch, revisited", "notes": "", "tags": [],
- "created_at": "2026-09-13T11:01:21.385Z",
- "updated_at": "2026-09-13T11:01:21.388Z"}
+ "fields": {"Price": "129", "Priority": "high"},
+ "created_at": "2026-09-13T12:28:12.937Z",
+ "updated_at": "2026-09-13T12:28:12.953Z"}
 ```
 
-If your client means to change one field, read the entry first and send
-the whole thing back. There is no PATCH.
+If your client means to change one attribute, read the entry first —
+[`by-url`](#reading-one-entry-by-its-address) is there for exactly
+that — and send the whole thing back. There is no PATCH.
+
+**`fields` is the one exception**, and the next section says why.
 
 Addresses are matched almost exactly: surrounding whitespace is
 ignored and the scheme and host are lowercased, and nothing else. A
 trailing slash, a `www.`, or a tracking parameter makes it a different
 address.
+
+## Fields
+
+Every account has fields of its own: extra things to record about an
+entry, beyond its address, title and notes. A new account starts with
+**Price**, which takes a number, and **Priority**, which takes `high`,
+`medium` or `low`. Both can be renamed or deleted by their owner, and
+more can be added, so **do not hard-code them** — read what came back
+on an entry, or ask a person what they called theirs.
+
+```json
+{"url": "https://example.com/watch",
+ "fields": {"price": "129.00", "priority": "high"}}
+```
+
+Names match without regard to case, so `price`, `Price` and `PRICE` are
+the same field.
+
+**Values come back as strings, always.** You never have to guess whether
+a price arrives as `129` or `"129"`. On the way in a JSON number is
+accepted too, because refusing `129.00` written as a number would be
+pedantic. A number comes back the way it was most likely typed —
+`"129.00"` becomes `"129"`, `"38.50"` becomes `"38.5"`.
+
+The key on the way out is the field's name as its owner spells it, not
+as you sent it: send `"price"` and `"Price"` comes back.
+
+### `fields` is patched, not replaced
+
+This is the one place this API is not uniform, and it is deliberate.
+
+**The names you send are set. Every field you do not name keeps what it
+had.** So this:
+
+```json
+{"url": "https://example.com/watch", "fields": {"priority": "low"}}
+```
+
+changes the priority and leaves the price alone:
+
+```json
+{"id": 1, "url": "https://example.com/watch",
+ "title": "", "notes": "", "tags": [],
+ "fields": {"Price": "129", "Priority": "low"},
+ "created_at": "2026-09-13T12:28:12.937Z",
+ "updated_at": "2026-09-13T12:28:12.966Z"}
+```
+
+Sending `"fields": {}`, or leaving `fields` out entirely, therefore
+changes nothing.
+
+**To clear a value, name it with an empty string:**
+
+```json
+{"url": "https://example.com/watch", "fields": {"price": ""}}
+```
+
+```json
+{"id": 1, "url": "https://example.com/watch",
+ "title": "", "notes": "", "tags": [],
+ "fields": {"Priority": "low"},
+ "created_at": "2026-09-13T12:28:12.937Z",
+ "updated_at": "2026-09-13T12:28:12.979Z"}
+```
+
+The reason for the exception is that a client need not know about fields
+at all. If leaving `fields` out cleared them, an importer written before
+they existed would wipe somebody's prices every time it re-ran. Losing
+data should never be the default; clearing is worth saying out loud.
+
+### When a field is wrong
+
+A name nobody has is **422** with `HRC-FIELD-0001`, not a silent drop,
+because it is almost always a typo:
+
+```json
+{"error": {"code": "HRC-FIELD-0001",
+           "message": "There is no field with that name.",
+           "details": {"field": "colour"}}}
+```
+
+A value the field cannot hold is ordinary validation — **422** with
+`HRC-CORE-0002`, and `details.fields` keyed by the field's name:
+
+```json
+{"error": {"code": "HRC-CORE-0002",
+           "message": "The submitted data is not valid.",
+           "details": {"fields": {"Price": ["This field takes a number."]}}}}
+```
+
+```json
+{"error": {"code": "HRC-CORE-0002",
+           "message": "The submitted data is not valid.",
+           "details": {"fields":
+             {"Priority":
+               ["This field must be one of: high, medium, low."]}}}}
+```
+
+Nothing is saved in either case — not the entry, and not the fields that
+were fine.
 
 ## Saving many entries at once
 
@@ -140,7 +247,9 @@ them**.
 curl -X POST https://hrcek.example.com/api/entries/batch/ \
   -H "Authorization: Bearer $HRCEK_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '[{"url": "https://example.com/a"}, {"url": "not a url"}]'
+  -d '[{"url": "https://example.com/a", "fields": {"price": "10"}},
+       {"url": "not a url"},
+       {"url": "https://example.com/b", "fields": {"colour": "red"}}]'
 ```
 
 ```json
@@ -149,7 +258,11 @@ curl -X POST https://hrcek.example.com/api/entries/batch/ \
   {"index": 1, "status": "error", "id": null,
    "error": {"code": "HRC-CORE-0002",
              "message": "The submitted data is not valid.",
-             "details": {"url": ["Enter a valid URL."]}}}
+             "details": {"fields": {"url": ["Enter a valid URL."]}}}},
+  {"index": 2, "status": "error", "id": null,
+   "error": {"code": "HRC-FIELD-0001",
+             "message": "There is no field with that name.",
+             "details": {"field": "colour"}}}
 ]}
 ```
 
@@ -176,11 +289,12 @@ would be worse than none.
 `GET /api/entries/` returns your own entries, newest first, paginated.
 
 ```json
-{"items": [{"id": 1, "url": "https://example.com/watch",
-            "title": "A watch, revisited", "notes": "", "tags": [],
-            "created_at": "2026-09-13T11:01:21.385Z",
-            "updated_at": "2026-09-13T11:01:21.388Z"}],
- "count": 1}
+{"items": [{"id": 2, "url": "https://example.com/a",
+            "title": "", "notes": "", "tags": [],
+            "fields": {"Price": "10"},
+            "created_at": "2026-09-13T12:28:26.331Z",
+            "updated_at": "2026-09-13T12:28:26.331Z"}],
+ "count": 2}
 ```
 
 `count` is the total across all pages. Use `?limit=` and `?offset=` to
@@ -188,6 +302,46 @@ page through it.
 
 You only ever see your own entries. Two people may hold the same
 address; their entries are unrelated.
+
+### Reading one entry by its address
+
+`GET /api/entries/by-url/` answers the entry you hold at an address, so
+your client can look before it writes.
+
+```bash
+curl -G https://hrcek.example.com/api/entries/by-url/ \
+  -H "Authorization: Bearer $HRCEK_TOKEN" \
+  --data-urlencode "url=https://example.com/watch"
+```
+
+```json
+{"id": 1, "url": "https://example.com/watch",
+ "title": "", "notes": "", "tags": [],
+ "fields": {"Priority": "low"},
+ "created_at": "2026-09-13T12:28:12.937Z",
+ "updated_at": "2026-09-13T12:28:12.979Z"}
+```
+
+**404** if you do not hold that address:
+
+```json
+{"error": {"code": "HRC-CORE-0003",
+           "message": "The requested resource does not exist.",
+           "details": {"url": "https://example.com/nothing"}}}
+```
+
+Somebody else holding it answers 404 too, not 403: a 403 would tell you
+that somebody does.
+
+This is the call to make before deciding whether to save. Posting is an
+upsert, so without it a client cannot tell a new address from one it is
+about to write over, and cannot read what an entry says in order to
+merge into it. Fetching the whole list and filtering locally is the
+wrong shape once somebody holds thousands of entries.
+
+The address is matched by the same rule the save uses — whitespace
+trimmed, scheme and host lowercased — so the two always agree on what
+counts as the same address.
 
 ## The other endpoints
 

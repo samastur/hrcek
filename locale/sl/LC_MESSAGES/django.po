@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 12:21+0000\n"
+"POT-Creation-Date: 2026-09-13 12:30+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -859,15 +859,15 @@ msgstr "vrednosti polj"
 msgid "That address is too long."
 msgstr "Ta naslov je predolg."
 
+#
 #: src/hrcek/entries/services.py
-#, python-format
-msgid "%(field)s takes a number."
-msgstr "%(field)s sprejme število."
+msgid "This field takes a number."
+msgstr "To polje sprejme število."
 
 #: src/hrcek/entries/services.py
 #, python-format
-msgid "%(field)s must be one of: %(options)s."
-msgstr "%(field)s mora biti eno od: %(options)s."
+msgid "This field must be one of: %(options)s."
+msgstr "To polje mora biti eno od: %(options)s."
 
 #: src/hrcek/entries/templates/entries/confirm_delete.html
 msgid "Delete this entry?"

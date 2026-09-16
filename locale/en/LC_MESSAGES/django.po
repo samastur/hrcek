@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 11:17+0000\n"
+"POT-Creation-Date: 2026-09-16 13:01+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -255,7 +255,7 @@ msgstr ""
 msgid "note"
 msgstr ""
 
-#: src/hrcek/accounts/models.py
+#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
 msgid "added at"
 msgstr ""
 
@@ -745,6 +745,18 @@ msgstr ""
 msgid "There is no field with that name."
 msgstr ""
 
+#: src/hrcek/entries/errors.py
+msgid "That file is not an image Hrček can read."
+msgstr ""
+
+#: src/hrcek/entries/errors.py
+msgid "That image is too large."
+msgstr ""
+
+#: src/hrcek/entries/errors.py
+msgid "That image could not be read; it may be damaged."
+msgstr ""
+
 #: src/hrcek/entries/forms.py src/hrcek/entries/templates/entries/list.html
 msgid "Tags"
 msgstr ""
@@ -795,6 +807,46 @@ msgstr ""
 
 #: src/hrcek/entries/models.py
 msgid "entries"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "original"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "original type"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "display copy"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "width"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "height"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "checksum"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "size in bytes"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "source address"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "image"
+msgstr ""
+
+#: src/hrcek/entries/models.py
+msgid "images"
 msgstr ""
 
 #: src/hrcek/entries/models.py

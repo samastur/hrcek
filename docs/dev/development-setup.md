@@ -42,6 +42,7 @@ file cannot surprise a deployment.
 | `HRCEK_DEBUG` | `false` | Django debug mode |
 | `HRCEK_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Comma-separated |
 | `HRCEK_DB_PATH` | `db.sqlite3` | SQLite file location |
+| `HRCEK_MEDIA_PATH` | `media/` | Where rendered image copies are cached; disposable |
 | `HRCEK_DEBUG_SQL` | `false` | Log every query |
 | `HRCEK_API_DOCS` | `true` | Serve `/api/docs`; forced off in production |
 | `HRCEK_BASE_URL` | `http://localhost:8000` | Absolute links in email are built from this |

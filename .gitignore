@@ -226,3 +226,6 @@ REVIEW_GUIDE.md
 
 # Rendered email previews (manage.py preview_emails)
 build/
+
+# Cached image renditions; rebuilt from the database on demand
+media/

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from decimal import Decimal
+from pathlib import Path
 from typing import Any, ClassVar
 from urllib.parse import urlsplit, urlunsplit
 
@@ -8,6 +9,8 @@ from django.conf import settings
 from django.db import models
 from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
+
+from hrcek.entries import imaging
 
 
 class Tag(models.Model):
@@ -133,6 +136,100 @@ class Entry(models.Model):
                 parts.fragment,
             )
         )
+
+
+class EntryImage(models.Model):
+    """The picture belonging to one entry.
+
+    Its own table rather than columns on `Entry`: SQLite keeps a row's
+    blobs inline, so listing entries would drag every image off disk for
+    no reason. Nothing joins this table unless a page actually wants a
+    picture.
+
+    Two copies are kept. `original` is exactly what arrived and is never
+    served — it is the source from which any future rendition is made.
+    `display` is re-encoded, capped, and stripped of metadata; that is
+    what a browser receives.
+    """
+
+    entry = models.OneToOneField(
+        "entries.Entry",
+        on_delete=models.CASCADE,
+        related_name="image",
+        verbose_name=_("entry"),
+    )
+    original = models.BinaryField(_("original"), editable=False)
+    original_content_type = models.CharField(_("original type"), max_length=60)
+    display = models.BinaryField(_("display copy"), editable=False)
+    width = models.PositiveIntegerField(_("width"))
+    height = models.PositiveIntegerField(_("height"))
+    checksum = models.CharField(_("checksum"), max_length=64)
+    byte_size = models.PositiveIntegerField(_("size in bytes"))
+    # Empty when the person uploaded the file themselves.
+    source_url = models.URLField(_("source address"), max_length=2000, blank=True)
+    created_at = models.DateTimeField(_("added at"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("image")
+        verbose_name_plural = _("images")
+
+    def __str__(self) -> str:
+        return f"{self.entry.display_title} ({self.width}x{self.height})"
+
+    @classmethod
+    def attach(cls, entry: Entry, data: bytes, *, source_url: str = "") -> EntryImage:
+        """Validate `data` and make it this entry's one image.
+
+        Replaces whatever was there: an entry has at most one picture.
+        """
+        prepared = imaging.prepare(data)
+        image, _created = cls.objects.update_or_create(
+            entry=entry,
+            defaults={
+                "original": prepared.original,
+                "original_content_type": prepared.original_content_type,
+                "display": prepared.display,
+                "width": prepared.width,
+                "height": prepared.height,
+                "checksum": prepared.checksum,
+                "byte_size": prepared.byte_size,
+                "source_url": source_url,
+            },
+        )
+        image.rendition(imaging.DISPLAY_FORMAT)
+        return image
+
+    def cached_path(self, fmt: str) -> Path:
+        """Where this rendition lives on disk.
+
+        Content-addressed: the same bytes always land in the same place,
+        and a replaced image never collides with the one before it.
+        """
+        root = Path(settings.MEDIA_ROOT)
+        return root / "images" / self.checksum[:2] / f"{self.checksum}.{fmt}"
+
+    def rendition(self, fmt: str) -> bytes:
+        """The bytes to serve, writing the disk cache if it is missing.
+
+        The cache is disposable. Delete the directory and the next
+        request rebuilds it from the database.
+        """
+        path = self.cached_path(fmt)
+        if path.exists():
+            return path.read_bytes()
+
+        if fmt == imaging.DISPLAY_FORMAT:
+            data = bytes(self.display)
+        else:
+            data = imaging.render(bytes(self.original), fmt=fmt)
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        # Written beside the target and moved into place, so a reader
+        # never sees a half-written file.
+        temporary = path.with_suffix(f".{fmt}.part")
+        temporary.write_bytes(data)
+        temporary.replace(path)
+        return data
 
 
 class FieldDefinition(models.Model):

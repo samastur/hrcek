@@ -3,8 +3,15 @@
   {% if entry %}{% trans "Edit entry" %}{% else %}{% trans "Save something" %}{% endif %}
 {% endblock %}
 {% block content %}
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
+    {% if entry.image %}
+      <p>
+        <img src="{% url 'entries:image' entry.pk %}"
+             alt="" width="{{ entry.image.width }}" height="{{ entry.image.height }}"
+             class="max-w-full h-auto rounded-md border border-edge">
+      </p>
+    {% endif %}
     {{ form.as_p }}
     <button type="submit">{% trans "Save" %}</button>
   </form>

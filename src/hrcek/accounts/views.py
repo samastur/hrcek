@@ -69,6 +69,20 @@ def render_account(request: HttpRequest, **overrides: Any) -> HttpResponse:
     context: dict[str, Any] = {
         "display_name_form": DisplayNameForm(instance=user),
         "email_change_form": EmailChangeForm(user),
+    }
+    context.update(overrides)
+    return render(request, "accounts/account.html", context)
+
+
+@login_required
+def clients(request: HttpRequest) -> HttpResponse:
+    return render_clients(request)
+
+
+def render_clients(request: HttpRequest, **overrides: Any) -> HttpResponse:
+    """Render the clients page; same substitution pattern as the hub."""
+    user = cast("User", request.user)
+    context: dict[str, Any] = {
         # Queried directly rather than through the reverse accessor:
         # ty does not run the django-stubs plugin, so it cannot see
         # related_name attributes.
@@ -76,7 +90,7 @@ def render_account(request: HttpRequest, **overrides: Any) -> HttpResponse:
         "token_form": TokenForm(),
     }
     context.update(overrides)
-    return render(request, "accounts/account.html", context)
+    return render(request, "accounts/clients.html", context)
 
 
 @require_http_methods(["POST"])
@@ -282,7 +296,7 @@ def email_change_cancel(request: HttpRequest) -> HttpResponse:
 def token_create(request: HttpRequest) -> HttpResponse:
     form = TokenForm(request.POST)
     if not form.is_valid():
-        return render_account(request, token_form=form)
+        return render_clients(request, token_form=form)
 
     user = cast("User", request.user)
     _token, raw = ApiToken.issue(user, name=form.cleaned_data["name"])
@@ -292,7 +306,7 @@ def token_create(request: HttpRequest) -> HttpResponse:
         _("Copy this token now, it will not be shown again: %(token)s")
         % {"token": raw},
     )
-    return redirect("accounts:account")
+    return redirect("accounts:clients")
 
 
 @require_http_methods(["POST"])
@@ -303,4 +317,4 @@ def token_delete(request: HttpRequest, pk: int) -> HttpResponse:
     token = get_object_or_404(ApiToken, pk=pk, user=request.user)
     token.delete()
     messages.success(request, _("The token has been deleted."))
-    return redirect("accounts:account")
+    return redirect("accounts:clients")

@@ -34,6 +34,28 @@
       <h1 class="text-2xl font-bold tracking-tight mb-6">{% block heading %}{% trans "Hrček" %}{% endblock %}</h1>
       {% block content %}{% endblock %}
     </main>
+    <footer class="mt-16 border-t border-edge pt-4">
+      <nav aria-label="{% trans "Language" %}">
+        <form method="post" action="{% url 'set_language' %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          {% get_current_language as current_language %}
+          {% get_available_languages as available_languages %}
+          {% get_language_info_list for available_languages as languages %}
+          <ul class="row text-sm">
+            {% for language in languages %}
+              <li>
+                {% if language.code == current_language %}
+                  <span aria-current="true">{{ language.name_local|capfirst }}</span>
+                {% else %}
+                  <button type="submit" name="language" value="{{ language.code }}" class="bg-transparent p-0 text-sm font-normal text-muted hover:text-accent">{{ language.name_local|capfirst }}</button>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </form>
+      </nav>
+    </footer>
   </div>
 </body>
 </html>

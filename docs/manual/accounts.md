@@ -69,13 +69,15 @@ is waiting.
 **Password.** There is a link to change it. You will be asked for your
 current password, and you stay signed in afterwards.
 
-## API tokens
+## Clients and API tokens
 
-A token lets a script or another program act as you without a browser
-and without your password.
+A client is a script or another program that acts as you without a
+browser and without your password. Each client authenticates with an
+API token.
 
-Create one from your account page and give it a name you will recognise
-later. **The token is shown once and never again** — copy it before you
+Tokens live on their own page: from your account page, follow *Manage
+clients and their authorizations*. Create one there and give it a name
+you will recognise later. **The token is shown once and never again** — copy it before you
 leave the page. Only a fingerprint of it is stored, so nobody, including
 whoever runs this Hrček, can look it up for you afterwards.
 

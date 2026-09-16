@@ -31,35 +31,7 @@
   <h2>{% trans "Password" %}</h2>
   <p><a href="{% url 'accounts:password_change' %}">{% trans "Change your password" %}</a></p>
 
-  <h2>{% trans "API tokens" %}</h2>
-  <p>{% trans "For scripts and other clients that sign in without a browser." %}</p>
-  {% if tokens %}
-    <table>
-      <tr>
-        <th>{% trans "Name" %}</th><th>{% trans "Created" %}</th>
-        <th>{% trans "Last used" %}</th><th></th>
-      </tr>
-      {% for token in tokens %}
-        <tr>
-          <td>{{ token.name }}</td>
-          <td>{{ token.created_at|date:"SHORT_DATE_FORMAT" }}</td>
-          <td>{{ token.last_used_at|date:"SHORT_DATE_FORMAT"|default:"—" }}</td>
-          <td>
-            <form method="post" action="{% url 'accounts:token_delete' token.pk %}">
-              {% csrf_token %}
-              <button type="submit" class="danger">{% trans "Delete" %}</button>
-            </form>
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
-  {% else %}
-    <p>{% trans "You have no tokens yet." %}</p>
-  {% endif %}
-  <form method="post" action="{% url 'accounts:token_create' %}">
-    {% csrf_token %}
-    {{ token_form.as_p }}
-    <button type="submit">{% trans "Create a token" %}</button>
-  </form>
+  <h2>{% trans "Clients" %}</h2>
+  <p><a href="{% url 'accounts:clients' %}">{% trans "Manage clients and their authorizations" %}</a></p>
 
 {% endblock %}

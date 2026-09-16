@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 12:30+0000\n"
+"POT-Creation-Date: 2026-09-16 11:17+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -247,7 +247,7 @@ msgid "API token"
 msgstr ""
 
 #: src/hrcek/accounts/models.py
-#: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/accounts/templates/accounts/clients.html
 msgid "API tokens"
 msgstr ""
 
@@ -325,32 +325,49 @@ msgid "Change your password"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/account.html
-msgid "For scripts and other clients that sign in without a browser."
+#: src/hrcek/accounts/templates/accounts/clients.html
+msgid "Clients"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/account.html
+msgid "Manage clients and their authorizations"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/clients.html
+msgid ""
+"Clients are scripts and other programs that act as you without a browser. "
+"Each one authenticates with its own API token."
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/clients.html
 msgid "Name"
 msgstr ""
 
-#: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/accounts/templates/accounts/clients.html
 msgid "Created"
 msgstr ""
 
-#: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/accounts/templates/accounts/clients.html
 msgid "Last used"
 msgstr ""
 
-#: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/accounts/templates/accounts/clients.html
 #: src/hrcek/entries/templates/entries/fields.html
 msgid "Delete"
 msgstr ""
 
-#: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/accounts/templates/accounts/clients.html
 msgid "You have no tokens yet."
 msgstr ""
 
-#: src/hrcek/accounts/templates/accounts/account.html
+#: src/hrcek/accounts/templates/accounts/clients.html
 msgid "Create a token"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/clients.html
+#: src/hrcek/accounts/templates/accounts/password_change.html
+#: src/hrcek/accounts/templates/accounts/password_change_done.html
+msgid "Back to your account"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/email_change_done.html
@@ -396,11 +413,6 @@ msgstr ""
 #: src/hrcek/accounts/templates/accounts/password_change.html
 #: src/hrcek/accounts/templates/accounts/password_reset_confirm.html
 msgid "Save my new password"
-msgstr ""
-
-#: src/hrcek/accounts/templates/accounts/password_change.html
-#: src/hrcek/accounts/templates/accounts/password_change_done.html
-msgid "Back to your account"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/password_change_done.html
@@ -719,6 +731,10 @@ msgstr ""
 
 #: src/hrcek/core/templates/base.html
 msgid "Sign out"
+msgstr ""
+
+#: src/hrcek/core/templates/base.html
+msgid "Language"
 msgstr ""
 
 #: src/hrcek/entries/errors.py

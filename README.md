@@ -12,7 +12,7 @@ parts you have to babysit.
 
 **NOTE: This is intended to be a usable experiment. Its author plans
 to use it, but it is also a learning project for tools and processes
-with corresponding lack of guarantees one should expect.**
+with corresponding lack of any guarantees.**
 
 ## Status
 

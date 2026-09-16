@@ -42,6 +42,28 @@ Click a tag to see only the entries carrying it.
 `diving` and the tag disappears. This keeps the list from filling up
 with typos; it also means a tag is not a place to keep something.
 
+## Pictures
+
+An entry can have one picture. On the form for saving or editing an
+entry you can either choose a file from your device or paste the
+address of a picture on the web — one or the other, not both. Hrček
+keeps its own copy, so the picture stays even if the original page
+takes it down.
+
+The picture appears with the entry in your list. To swap it, add
+another; to get rid of it, tick **Remove the picture** and save.
+Changing an entry's title or notes never disturbs its picture.
+
+Pictures are private, like everything else here: they are shown to you
+and to nobody else, and the address of one is no use to anyone who is
+not signed in as you.
+
+PNG, JPEG, WebP, AVIF and GIF are accepted, up to 10 MB. If a file is
+not really a picture, or an address will not load, Hrček says so on
+the form and saves nothing. Some addresses are refused on purpose —
+ones pointing back at the machine Hrček runs on, or into your home
+network — because a bookmark tool has no business fetching from there.
+
 ## Fields
 
 Beyond an address, a title and notes, you can record whatever else

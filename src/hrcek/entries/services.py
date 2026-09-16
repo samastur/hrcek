@@ -17,8 +17,15 @@ from django.utils.translation import gettext_lazy as _
 
 from hrcek.accounts.models import User
 from hrcek.core.errors import HrcekError
+from hrcek.entries import fetching
 from hrcek.entries.errors import UNKNOWN_FIELD
-from hrcek.entries.models import Entry, FieldDefinition, FieldValue, Tag
+from hrcek.entries.models import (
+    Entry,
+    EntryImage,
+    FieldDefinition,
+    FieldValue,
+    Tag,
+)
 
 
 # Six keyword-only arguments, one per thing an entry holds. Bundling
@@ -32,6 +39,7 @@ def save_entry(  # noqa: PLR0913
     notes: str = "",
     tag_names: list[str] | None = None,
     fields: dict[str, Any] | None = None,
+    image_url: str | None = None,
 ) -> tuple[Entry, bool]:
     """Create or update this owner's entry for *url*.
 
@@ -55,6 +63,11 @@ def save_entry(  # noqa: PLR0913
     # See docs/dev/entries.md for why this one attribute differs.
     if fields:
         set_field_values(entry, fields)
+    if image_url:
+        # Fetching runs inside the transaction on purpose: if the
+        # address turns out to point somewhere we will not go, the
+        # entry is not left half-saved with no picture and no warning.
+        EntryImage.attach(entry, fetching.fetch(image_url), source_url=image_url)
     return entry, created
 
 

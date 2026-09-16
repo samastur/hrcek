@@ -343,6 +343,86 @@ The address is matched by the same rule the save uses — whitespace
 trimmed, scheme and host lowercased — so the two always agree on what
 counts as the same address.
 
+## Pictures
+
+An entry may carry one picture. Every entry in a reply describes it,
+or says `null`:
+
+```json
+{"image": {"url": "/entries/1/image/", "width": 1280, "height": 960}}
+```
+
+The bytes never appear in JSON. `url` is an address to fetch, and it
+answers only to the account that owns the entry, so send your
+credentials with it as you would anywhere else.
+
+### Giving an address
+
+Add `image_url` to any entry you post, including inside a batch.
+Hrček fetches it, keeps the original, and builds the copy it serves.
+
+```bash
+curl -X POST https://hrcek.example.com/api/entries/ \
+  -H "Authorization: Bearer $HRCEK_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/watch",
+       "image_url": "https://example.com/watch.jpg"}'
+```
+
+Like `fields`, and unlike every other attribute, **leaving `image_url`
+out changes nothing** — a client that predates pictures cannot strip
+one by saving an entry. There is no way to remove a picture by posting
+an entry; use the DELETE below.
+
+Hrček will not fetch from just anywhere. Addresses that resolve to a
+private, loopback or link-local network, to cloud metadata, or to
+carrier-grade NAT are refused, as are non-http schemes, and the rules
+are re-applied to every redirect. See
+[images](images.md#fetching-from-an-address).
+
+### POST /api/entries/{pk}/image
+
+Upload a picture, replacing whatever the entry had. Multipart, not
+JSON: base64 would inflate every upload by a third for nothing.
+
+```bash
+curl -X POST https://hrcek.example.com/api/entries/1/image \
+  -H "Authorization: Bearer $HRCEK_TOKEN" \
+  -F "file=@watch.jpg"
+```
+
+The entry comes back, with its new `image`. **404** if the entry is
+not yours — never 403, which would tell you it exists.
+
+### DELETE /api/entries/{pk}/image
+
+Remove the picture. **204** with no body when it is gone, **404** when
+there was none to remove.
+
+```bash
+curl -X DELETE https://hrcek.example.com/api/entries/1/image \
+  -H "Authorization: Bearer $HRCEK_TOKEN"
+```
+
+### When a picture is refused
+
+PNG, JPEG, WebP, AVIF and GIF are accepted, up to 10 MB. Whether
+something is an image is decided by decoding it, so a `Content-Type`
+header or a filename changes nothing, and SVG is refused outright — it
+is a document that can carry script.
+
+| Code | Why |
+|---|---|
+| `HRC-IMAGE-0001` | Not an image Hrček can read |
+| `HRC-IMAGE-0002` | Larger than the limit |
+| `HRC-IMAGE-0003` | Damaged, truncated, or too many pixels |
+| `HRC-IMAGE-0004` | The address is not http or https |
+| `HRC-IMAGE-0005` | The address points somewhere Hrček will not go |
+| `HRC-IMAGE-0006` | The fetch failed |
+
+All of them are 422, in the usual envelope. Full text in
+[error codes](error-codes.md).
+
 ## The other endpoints
 
 `GET /api/health` needs no credentials and reports that the service is

@@ -102,3 +102,47 @@ caller hands the bytes to `imaging.prepare`, which trusts the
 
 `tests/entries/test_fetching.py` is the security boundary for all of
 this. Read it before changing anything here.
+
+## Serving
+
+`GET /entries/<pk>/image/` (`entries:image`) is the only way a picture
+reaches a browser. It goes through Django rather than off the web
+server's disk, because a family's pictures are not public and an
+unguessable filename is not access control. The lookup is scoped to the
+owner, so another account's entry is a **404, never a 403** — a 403
+would confirm that the entry exists.
+
+The response negotiates its format. A browser whose `Accept` header
+mentions `image/avif` gets the stored display copy; anything else gets
+WebP, rendered from the archived original on first request and cached
+from then on. `Vary: Accept` goes out with every response so a cache
+never crosses the two.
+
+Caching is `private, max-age=0, must-revalidate` with an `ETag` of the
+checksum and format, so a shared cache never holds one person's
+picture, and an unchanged image comes back as a 304 instead of bytes.
+
+The body is sent whole rather than streamed: a display copy is a couple
+of hundred kilobytes, and a streaming response keeps a file descriptor
+open until something consumes it.
+
+## The entry list
+
+The list joins the image table (`select_related("image")`) so the page
+does not ask once per entry, and immediately defers both blob columns.
+The page needs only the width and height — to give every `<img>` real
+dimensions, so the list does not jump about as pictures arrive — and
+pulling two pictures per row to render a tag would undo the reason the
+blobs live in their own table. `test_the_list_query_leaves_the_blobs_in_the_table`
+holds that line.
+
+## On the form
+
+The entry form takes either a file or an address, never both, and
+offers a checkbox to remove the picture. The bytes are validated in
+`EntryForm.clean`, so a refusal comes back as a sentence beside the
+input with the rest of the form still filled in — the error code goes
+to the logs and to API clients, never onto the page.
+
+Saying nothing about the picture leaves it alone. Editing a title
+cannot quietly drop one.

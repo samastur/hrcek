@@ -7,6 +7,8 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.translation import gettext_lazy as _
 
 from hrcek.accounts.models import User
+from hrcek.core.errors import HrcekError
+from hrcek.entries import fetching, imaging
 from hrcek.entries.models import Entry, FieldDefinition, FieldValue, Tag
 from hrcek.entries.services import validate_field_value
 
@@ -17,6 +19,21 @@ class EntryForm(forms.ModelForm):
         required=False,
         help_text=_("Separated by commas."),
     )
+    image_file = forms.ImageField(
+        label=_("Picture"),
+        required=False,
+        help_text=_("A picture from this device."),
+    )
+    image_url = forms.URLField(
+        label=_("Picture address"),
+        required=False,
+        max_length=Entry.URL_MAX_LENGTH,
+        help_text=_("Or the address of a picture on the web."),
+    )
+    remove_image = forms.BooleanField(
+        label=_("Remove the picture"),
+        required=False,
+    )
 
     class Meta:
         model = Entry
@@ -24,6 +41,9 @@ class EntryForm(forms.ModelForm):
 
     def __init__(self, owner: User, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
+        # Set by clean(): the bytes to attach, and where they came from.
+        self.picture: bytes | None = None
+        self.picture_source = ""
         if self.instance.pk:
             self.initial["tags"] = ", ".join(t.name for t in self.instance.tags.all())
 
@@ -59,6 +79,7 @@ class EntryForm(forms.ModelForm):
 
     def clean(self) -> dict[str, Any]:
         cleaned = super().clean() or {}
+        self._clean_picture(cleaned)
         for definition in self.definitions:
             key = f"field_{definition.pk}"
             raw = (cleaned.get(key) or "").strip()
@@ -71,6 +92,45 @@ class EntryForm(forms.ModelForm):
                 # is not this form's input name, so pass the text along.
                 self.add_error(key, list(exc.messages))
         return cleaned
+
+    def _clean_picture(self, cleaned: dict[str, Any]) -> None:
+        """Settle where the picture comes from, and read it.
+
+        The bytes are validated here rather than in the view, so a bad
+        picture comes back as a message beside the input like any other
+        mistake, with the rest of the form still filled in.
+        """
+        uploaded = cleaned.get("image_file")
+        address = (cleaned.get("image_url") or "").strip()
+
+        if uploaded and address:
+            self.add_error(
+                "image_url",
+                _("Give a file or an address, not both."),
+            )
+            return
+
+        if not uploaded and not address:
+            self.picture = None
+            return
+
+        try:
+            if uploaded:
+                # ImageField has already read the file to check it.
+                uploaded.seek(0)
+                data = uploaded.read()
+            else:
+                data = fetching.fetch(address)
+            imaging.prepare(data)
+        except HrcekError as exc:
+            # The person sees the sentence, never the code; the code is
+            # for clients, and is already in the logs.
+            field = "image_file" if uploaded else "image_url"
+            self.add_error(field, str(exc.error_code.message))
+            return
+
+        self.picture = data
+        self.picture_source = "" if uploaded else address
 
     def tag_names(self) -> list[str]:
         return Tag.parse_names(self.cleaned_data.get("tags", ""))

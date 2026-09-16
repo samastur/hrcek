@@ -6,21 +6,29 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseNotModified
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 
 from hrcek.accounts.models import User
+from hrcek.entries import imaging
 from hrcek.entries.forms import EntryForm, FieldDefinitionForm
-from hrcek.entries.models import Entry, FieldDefinition, FieldValue, Tag
+from hrcek.entries.models import Entry, EntryImage, FieldDefinition, FieldValue, Tag
 from hrcek.entries.services import save_entry
 
 
 @login_required
 def entry_list(request: HttpRequest) -> HttpResponse:
     owner = cast("User", request.user)
-    entries = Entry.objects.filter(owner=owner).prefetch_related(
-        "tags", "field_values__definition"
+    entries = (
+        Entry.objects.filter(owner=owner)
+        .prefetch_related("tags", "field_values__definition")
+        # The image is joined so the page does not ask once per entry,
+        # but its blobs are left in the table: the list needs only the
+        # dimensions, and pulling two pictures per row to render an
+        # <img> tag would defeat the point of storing them apart.
+        .select_related("image")
+        .defer("image__original", "image__display")
     )
 
     tag = request.GET.get("tag", "").strip()
@@ -45,12 +53,12 @@ def entry_create(request: HttpRequest) -> HttpResponse:
     if request.method != "POST":
         return render(request, "entries/form.html", {"form": EntryForm(owner)})
 
-    form = EntryForm(owner, request.POST)
+    form = EntryForm(owner, request.POST, request.FILES)
     if not form.is_valid():
         return render(request, "entries/form.html", {"form": form})
 
     # A URL already held is an update, not a duplicate.
-    save_entry(
+    entry, _created = save_entry(
         owner,
         url=form.cleaned_data["url"],
         title=form.cleaned_data["title"],
@@ -58,6 +66,7 @@ def entry_create(request: HttpRequest) -> HttpResponse:
         tag_names=form.tag_names(),
         fields=form.field_values(),
     )
+    _apply_picture(entry, form)
     messages.success(request, _("Saved."))
     return redirect("entries:list")
 
@@ -74,11 +83,11 @@ def entry_edit(request: HttpRequest, pk: int) -> HttpResponse:
             {"form": EntryForm(owner, instance=entry), "entry": entry},
         )
 
-    form = EntryForm(owner, request.POST, instance=entry)
+    form = EntryForm(owner, request.POST, request.FILES, instance=entry)
     if not form.is_valid():
         return render(request, "entries/form.html", {"form": form, "entry": entry})
 
-    save_entry(
+    entry, _created = save_entry(
         owner,
         url=form.cleaned_data["url"],
         title=form.cleaned_data["title"],
@@ -86,6 +95,7 @@ def entry_edit(request: HttpRequest, pk: int) -> HttpResponse:
         tag_names=form.tag_names(),
         fields=form.field_values(),
     )
+    _apply_picture(entry, form)
     messages.success(request, _("Saved."))
     return redirect("entries:list")
 
@@ -167,3 +177,51 @@ def field_delete(request: HttpRequest, pk: int) -> HttpResponse:
     definition.delete()
     messages.success(request, _("Field deleted."))
     return redirect("entries:fields")
+
+
+def _apply_picture(entry: Entry, form: EntryForm) -> None:
+    """Attach, replace or remove the entry's picture.
+
+    Saying nothing about the picture leaves it alone, so editing a
+    title cannot quietly drop one.
+    """
+    if form.cleaned_data.get("remove_image"):
+        EntryImage.objects.filter(entry=entry).delete()
+        return
+    if form.picture is not None:
+        EntryImage.attach(entry, form.picture, source_url=form.picture_source)
+
+
+@login_required
+def entry_image(request: HttpRequest, pk: int) -> HttpResponse:
+    """The picture for one entry, for its owner only.
+
+    Served by Django rather than off the web server's disk: a family's
+    pictures are not public, and an unguessable filename is not access
+    control. The scope on `owner` makes somebody else's entry a 404,
+    never a 403, which would confirm that it exists.
+    """
+    owner = cast("User", request.user)
+    image = get_object_or_404(EntryImage, entry__pk=pk, entry__owner=owner)
+
+    # AVIF is small but not universal; anything that does not ask for it
+    # gets WebP, rendered from the archived original on first request.
+    accept = request.headers.get("accept", "")
+    fmt = imaging.DISPLAY_FORMAT if "image/avif" in accept else imaging.FALLBACK_FORMAT
+
+    etag = f'"{image.checksum}-{fmt}"'
+    if request.headers.get("if-none-match") == etag:
+        return HttpResponseNotModified()
+
+    # Sent whole rather than streamed: a display copy is a couple of
+    # hundred kilobytes, and a streaming response holds an open file
+    # descriptor until somebody consumes it.
+    response = HttpResponse(
+        image.rendition(fmt),
+        content_type=imaging.CONTENT_TYPES[fmt],
+    )
+    response.headers["ETag"] = etag
+    response.headers["Vary"] = "Accept"
+    # Private: a shared cache must never hold one person's picture.
+    response.headers["Cache-Control"] = "private, max-age=0, must-revalidate"
+    return response

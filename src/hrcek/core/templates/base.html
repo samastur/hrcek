@@ -6,6 +6,8 @@
   <meta name="color-scheme" content="light dark">
   <title>{% block title %}{% trans "Hrček" %}{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/hrcek.css' %}">
+  <link rel="icon" href="{% static 'img/favicon-32.png' %}" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
 </head>
 <body class="bg-surface text-ink font-sans leading-relaxed min-h-screen">
   <div class="mx-auto max-w-xl px-4 py-10">
@@ -16,12 +18,19 @@
           <ul class="row text-sm">
             <li><a class="text-muted hover:text-accent" href="{% url 'entries:list' %}">{% trans "Entries" %}</a></li>
             <li><a class="text-muted hover:text-accent" href="{% url 'accounts:account' %}">{% trans "Your account" %}</a></li>
-            <li><a class="text-muted hover:text-accent" href="{% url 'accounts:logout' %}">{% trans "Sign out" %}</a></li>
+            <li>
+              {# Django's LogoutView only accepts POST, so this is a form. #}
+              <form method="post" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="bg-transparent p-0 text-sm font-normal text-muted hover:text-accent">{% trans "Sign out" %}</button>
+              </form>
+            </li>
           </ul>
         </nav>
       {% endif %}
     </header>
     <main>
+      {% block prelude %}{% endblock %}
       <h1 class="text-2xl font-bold tracking-tight mb-6">{% block heading %}{% trans "Hrček" %}{% endblock %}</h1>
       {% block content %}{% endblock %}
     </main>

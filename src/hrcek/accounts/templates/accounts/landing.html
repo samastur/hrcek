@@ -1,5 +1,9 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% block heading %}{% trans "Sign in" %}{% endblock %}
+{% block prelude %}
+  <img src="{% static 'img/hrcek.png' %}" alt="" width="160" height="160"
+       class="mx-auto mb-8 rounded-full border border-edge bg-white p-2">
+{% endblock %}
 {% block content %}
   <form method="post">
     {% csrf_token %}

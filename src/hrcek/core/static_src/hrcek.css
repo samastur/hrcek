@@ -1,0 +1,267 @@
+/* Hrček stylesheet source. Compiled with the Tailwind standalone CLI;
+   see docs/dev/styling.md. The compiled file is committed at
+   src/hrcek/core/static/css/hrcek.css — never edit that one. */
+
+@import "tailwindcss";
+
+@source "../templates";
+@source "../../accounts/templates";
+@source "../../entries/templates";
+
+/* ------------------------------------------------------------------ */
+/* Design tokens. Restyling Hrček starts (and usually ends) here.     */
+/* Each color exists in a light and a dark variant; the dark block    */
+/* below overrides the same custom properties, so pages follow the    */
+/* system theme without any per-element dark styling.                 */
+/* ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Light theme */
+  --surface: #faf8f5;      /* page background */
+  --raised: #ffffff;       /* inputs, panels */
+  --edge: #e4dfd5;         /* borders, separators */
+  --ink: #292521;          /* body text */
+  --muted: #6e6659;        /* secondary text */
+  --accent: #8a4c22;       /* links, buttons */
+  --accent-ink: #ffffff;   /* text on accent */
+  --danger: #b3261c;       /* errors, destructive buttons */
+  --danger-ink: #ffffff;   /* text on danger */
+
+  accent-color: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: #171512;
+    --raised: #211e1a;
+    --edge: #3b352c;
+    --ink: #e9e4dc;
+    --muted: #a49b8c;
+    --accent: #d9986a;
+    --accent-ink: #2b1607;
+    --danger: #ef8983;
+    --danger-ink: #2b0f0d;
+  }
+}
+
+/* Expose the tokens to Tailwind so templates can say bg-surface,
+   text-muted, border-edge and so on. */
+@theme inline {
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-edge: var(--edge);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-danger: var(--danger);
+  --color-danger-ink: var(--danger-ink);
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ------------------------------------------------------------------ */
+/* Markup Django generates (form.as_p, errorlist, messages) cannot    */
+/* carry utility classes, so it is styled once here.                  */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  main a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    text-underline-offset: 3px;
+  }
+  main a:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  main h2 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-block: calc(var(--spacing) * 8) calc(var(--spacing) * 2);
+  }
+
+  main p {
+    margin-block: calc(var(--spacing) * 3);
+  }
+}
+
+@layer components {
+  form p {
+    margin-block: calc(var(--spacing) * 4);
+  }
+
+  form label {
+    display: block;
+    font-weight: 600;
+    font-size: var(--text-sm);
+    margin-block-end: calc(var(--spacing) * 1);
+  }
+
+  form input:not([type="checkbox"], [type="radio"]),
+  form textarea,
+  form select {
+    width: 100%;
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+    font-size: var(--text-base);
+    background-color: var(--color-raised);
+    color: var(--color-ink);
+    border: 1px solid var(--color-edge);
+    border-radius: var(--radius-md);
+  }
+
+  form input:focus-visible,
+  form textarea:focus-visible,
+  form select:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+
+  form .helptext {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin-block-start: calc(var(--spacing) * 1);
+  }
+
+  button {
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-accent-ink);
+    background-color: var(--color-accent);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: color-mix(in oklab, var(--color-accent) 88%, var(--color-ink));
+  }
+
+  button.danger {
+    color: var(--color-danger-ink);
+    background-color: var(--color-danger);
+  }
+  button.danger:hover {
+    background-color: color-mix(in oklab, var(--color-danger) 88%, var(--color-ink));
+  }
+
+  /* Lists that read as a row rather than a stack. Still lists: the
+     markup carries the structure, the styling only changes how it
+     looks. */
+  ul.row {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: calc(var(--spacing) * 3);
+  }
+
+  ul.stacked {
+    list-style: none;
+    padding: 0;
+  }
+  ul.stacked > li + li {
+    margin-block-start: calc(var(--spacing) * 4);
+  }
+
+  /* The entries themselves: separated by hairlines, not boxes. */
+  ul.entries {
+    list-style: none;
+    padding: 0;
+    margin-block: calc(var(--spacing) * 8);
+  }
+
+  main nav {
+    margin-block: calc(var(--spacing) * 6);
+  }
+  ul.entries > li + li {
+    margin-block-start: calc(var(--spacing) * 6);
+    padding-block-start: calc(var(--spacing) * 6);
+    border-block-start: 1px solid var(--color-edge);
+  }
+  ul.entries article h2 {
+    font-size: var(--text-lg);
+    margin-block: 0;
+  }
+  ul.entries article dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: calc(var(--spacing) * 4);
+    row-gap: calc(var(--spacing) * 1);
+    margin-block: calc(var(--spacing) * 3);
+    font-size: var(--text-sm);
+  }
+  ul.entries article dt {
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+
+  .tag {
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    border: 1px solid var(--color-edge);
+    border-radius: calc(infinity * 1px);
+    padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 2);
+  }
+
+  .kind {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .code {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  main table {
+    width: 100%;
+    font-size: var(--text-sm);
+    border-collapse: collapse;
+  }
+  main th {
+    text-align: start;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  main th,
+  main td {
+    padding-block: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--spacing) * 3);
+    border-block-end: 1px solid var(--color-edge);
+  }
+  main td form {
+    display: inline;
+  }
+  main td button {
+    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+    font-size: var(--text-sm);
+  }
+
+  .errorlist {
+    list-style: none;
+    padding: 0;
+    margin-block: calc(var(--spacing) * 2);
+    font-size: var(--text-sm);
+    color: var(--color-danger);
+  }
+
+  ul.messages {
+    list-style: none;
+    padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
+    margin-block: calc(var(--spacing) * 4);
+    border: 1px solid var(--color-edge);
+    border-inline-start: 3px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    background-color: var(--color-raised);
+    font-size: var(--text-sm);
+  }
+}

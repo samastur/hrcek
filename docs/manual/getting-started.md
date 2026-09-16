@@ -24,6 +24,12 @@ If you want to check the service itself rather than sign in, open
 If the page does not load at all, Hrček is not running. Ask whoever
 looks after it to start the service.
 
+## Appearance
+
+Hrček follows your device's appearance setting: it is light when your
+system is light and dark when your system is dark. There is nothing to
+configure in Hrček itself.
+
 ## Getting an account
 
 You need an account before Hrček is much use. Either somebody invites

@@ -10,6 +10,7 @@ process, no queue.
 - [The API](api.md) — for anyone building a client
 - [Entries](entries.md) — what Hrček stores
 - [Accounts](accounts.md) — identity, sign-in, invitations, email
+- [Styling](styling.md) — Tailwind, design tokens, light and dark
 - [Error codes](error-codes.md) — the registry and how to extend it
 - [Internationalisation](i18n.md) — translating strings
 - [Debugging and telemetry](debugging-and-telemetry.md) — logs, the

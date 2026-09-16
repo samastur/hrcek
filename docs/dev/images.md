@@ -146,3 +146,30 @@ to the logs and to API clients, never onto the page.
 
 Saying nothing about the picture leaves it alone. Editing a title
 cannot quietly drop one.
+
+## Through the API
+
+Reading an entry describes its picture or says `null`; the bytes never
+appear in JSON. `EntryOut.resolve_image` builds `{url, width, height}`,
+where the URL is the access-controlled serving view.
+
+Writing splits by source, because the two have different shapes:
+
+| What | Where |
+|---|---|
+| An address | `image_url` on `EntryIn`, so it works in a batch too |
+| An upload | `POST /api/entries/{pk}/image`, multipart |
+| Removal | `DELETE /api/entries/{pk}/image` |
+
+`image_url` is a patch, like `fields` and unlike every other attribute
+on `EntryIn`: omitting it leaves any existing picture alone, so a
+client written before pictures existed cannot strip one by saving an
+entry it read. Removal is therefore explicit, never an empty string.
+
+The fetch happens inside `save_entry`'s transaction. If the address
+turns out to point somewhere we will not go, the entry is not left
+saved with no picture and no explanation — the whole call fails with
+the address's own code.
+
+Both endpoints sit **below** `/by-url/` in `api.py`, as that route's
+docstring requires: declared above it, `by-url` would be read as an id.

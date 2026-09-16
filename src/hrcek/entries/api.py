@@ -13,13 +13,15 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import QuerySet
 from django.http import HttpRequest
+from django.shortcuts import get_object_or_404
 from ninja import Router, Status
+from ninja.files import UploadedFile
 from ninja.pagination import paginate
 
 from hrcek.accounts.models import User
 from hrcek.core.errors import NOT_FOUND, VALIDATION_ERROR, HrcekError
 from hrcek.entries.errors import BATCH_TOO_LARGE
-from hrcek.entries.models import Entry
+from hrcek.entries.models import Entry, EntryImage
 from hrcek.entries.schemas import BatchOut, EntryIn, EntryOut
 from hrcek.entries.services import save_entry
 
@@ -48,6 +50,7 @@ def create_entry(request: HttpRequest, payload: EntryIn) -> Status[Entry]:
             notes=payload.notes,
             tag_names=payload.tags,
             fields=payload.fields,
+            image_url=payload.image_url,
         )
     except ValidationError as exc:
         raise HrcekError(VALIDATION_ERROR, _details(exc)) from exc
@@ -121,6 +124,7 @@ def create_entries(
                     notes=item.notes,
                     tag_names=item.tags,
                     fields=item.fields,
+                    image_url=item.image_url,
                 )
         except HrcekError as exc:
             # An unknown field name, say: one row's mistake, reported as
@@ -162,3 +166,35 @@ def create_entries(
     # 207 when any row failed: a flat 200 would hide the failure from a
     # client that only checks the status.
     return Status(207 if any_failed else 200, {"results": results})
+
+
+# Declared after /by-url/, as that route's docstring requires: a path
+# segment here would otherwise be read as an id.
+@router.post(
+    "/{int:pk}/image",
+    response=EntryOut,
+    operation_id="upload_entry_image",
+)
+def upload_entry_image(request: HttpRequest, pk: int, file: UploadedFile) -> Entry:
+    """Attach an uploaded picture, replacing any the entry had.
+
+    Multipart rather than JSON: base64 in a body would inflate every
+    upload by a third for no gain.
+    """
+    owner = cast("User", request.user)
+    entry = get_object_or_404(Entry, pk=pk, owner=owner)
+    EntryImage.attach(entry, file.read())
+    return entry
+
+
+@router.delete(
+    "/{int:pk}/image",
+    response={204: None},
+    operation_id="delete_entry_image",
+)
+def delete_entry_image(request: HttpRequest, pk: int) -> Status[None]:
+    owner = cast("User", request.user)
+    # Scoped to the owner, so somebody else's id is simply not found.
+    image = get_object_or_404(EntryImage, entry__pk=pk, entry__owner=owner)
+    image.delete()
+    return Status(204, None)

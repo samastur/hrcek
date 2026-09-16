@@ -3,9 +3,10 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+from django.urls import reverse
 from ninja import Field, Schema
 
-from hrcek.entries.models import Entry, FieldValue
+from hrcek.entries.models import Entry, EntryImage, FieldValue
 
 
 class EntryIn(Schema):
@@ -25,6 +26,24 @@ class EntryIn(Schema):
     # predates custom fields cannot destroy values it knows nothing
     # about. Clearing one is an explicit "": {"price": ""}.
     fields: dict[str, Any] | None = None
+    # Fetched and attached when given. Absent leaves any existing
+    # picture alone, like `fields` and unlike everything else here: a
+    # client that predates images must not strip them. Removing one is
+    # DELETE /entries/{id}/image, never an empty string.
+    image_url: str | None = None
+
+
+class ImageOut(Schema):
+    """What a client needs to show the picture, and nothing more.
+
+    Neither copy of the bytes appears here. The original is archival
+    and never leaves the server; the display copy is fetched from
+    `url`, which is access-controlled.
+    """
+
+    url: str
+    width: int
+    height: int
 
 
 class EntryOut(Schema):
@@ -34,8 +53,20 @@ class EntryOut(Schema):
     notes: str
     tags: list[str]
     fields: dict[str, str]
+    image: ImageOut | None
     created_at: datetime
     updated_at: datetime
+
+    @staticmethod
+    def resolve_image(obj: Entry) -> ImageOut | None:
+        image = EntryImage.objects.filter(entry=obj).first()
+        if image is None:
+            return None
+        return ImageOut(
+            url=reverse("entries:image", args=[obj.pk]),
+            width=image.width,
+            height=image.height,
+        )
 
     @staticmethod
     def resolve_tags(obj: Entry) -> list[str]:

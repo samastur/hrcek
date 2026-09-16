@@ -95,6 +95,17 @@
             ],
             "title": "Fields"
           },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url"
+          },
           "notes": {
             "default": "",
             "title": "Notes",
@@ -141,6 +152,16 @@
             "title": "Id",
             "type": "integer"
           },
+          "image": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ImageOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "notes": {
             "title": "Notes",
             "type": "string"
@@ -173,6 +194,7 @@
           "notes",
           "tags",
           "fields",
+          "image",
           "created_at",
           "updated_at"
         ],
@@ -205,6 +227,30 @@
           "message"
         ],
         "title": "HealthOut",
+        "type": "object"
+      },
+      "ImageOut": {
+        "description": "What a client needs to show the picture, and nothing more.\n\nNeither copy of the bytes appears here. The original is archival\nand never leaves the server; the display copy is fetched from\n`url`, which is access-controlled.",
+        "properties": {
+          "height": {
+            "title": "Height",
+            "type": "integer"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "width": {
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "url",
+          "width",
+          "height"
+        ],
+        "title": "ImageOut",
         "type": "object"
       },
       "Input": {
@@ -585,6 +631,99 @@
           }
         ],
         "summary": "Get Entry By Url",
+        "tags": [
+          "entries"
+        ]
+      }
+    },
+    "/api/entries/{pk}/image": {
+      "delete": {
+        "operationId": "delete_entry_image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pk",
+            "required": true,
+            "schema": {
+              "title": "Pk",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "ApiTokenAuth": []
+          },
+          {
+            "SessionAuth": []
+          }
+        ],
+        "summary": "Delete Entry Image",
+        "tags": [
+          "entries"
+        ]
+      },
+      "post": {
+        "description": "Attach an uploaded picture, replacing any the entry had.\n\nMultipart rather than JSON: base64 in a body would inflate every\nupload by a third for no gain.",
+        "operationId": "upload_entry_image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pk",
+            "required": true,
+            "schema": {
+              "title": "Pk",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "file": {
+                    "format": "binary",
+                    "title": "File",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "title": "FileParams",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntryOut"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiTokenAuth": []
+          },
+          {
+            "SessionAuth": []
+          }
+        ],
+        "summary": "Upload Entry Image",
         "tags": [
           "entries"
         ]

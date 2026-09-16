@@ -147,6 +147,11 @@ MAILERS: dict[str, dict[str, Any]] = {
 
 STATIC_URL = "static/"
 
+# Where rendered image copies are cached. The database holds the real
+# thing; everything under here can be deleted and will be written again
+# on the next request. See docs/dev/images.md.
+MEDIA_ROOT = Path(env_str("HRCEK_MEDIA_PATH", str(BASE_DIR / "media")))
+
 DEBUG_SQL = env_bool("HRCEK_DEBUG_SQL", default=False)
 
 LOGGING = {

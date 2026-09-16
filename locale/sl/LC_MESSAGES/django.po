@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 11:17+0000\n"
+"POT-Creation-Date: 2026-09-16 13:01+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -263,7 +263,7 @@ msgstr "API-žetoni"
 msgid "note"
 msgstr "opomba"
 
-#: src/hrcek/accounts/models.py
+#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
 msgid "added at"
 msgstr "dodano ob"
 
@@ -777,6 +777,18 @@ msgstr "Preveč vnosov v enem zahtevku."
 msgid "There is no field with that name."
 msgstr "Polja s tem imenom ni."
 
+#: src/hrcek/entries/errors.py
+msgid "That file is not an image Hrček can read."
+msgstr "Ta datoteka ni slika, ki bi jo Hrček znal prebrati."
+
+#: src/hrcek/entries/errors.py
+msgid "That image is too large."
+msgstr "Ta slika je prevelika."
+
+#: src/hrcek/entries/errors.py
+msgid "That image could not be read; it may be damaged."
+msgstr "Te slike ni bilo mogoče prebrati; morda je poškodovana."
+
 #: src/hrcek/entries/forms.py src/hrcek/entries/templates/entries/list.html
 msgid "Tags"
 msgstr "Oznake"
@@ -828,6 +840,46 @@ msgstr "vnos"
 #: src/hrcek/entries/models.py
 msgid "entries"
 msgstr "vnosi"
+
+#: src/hrcek/entries/models.py
+msgid "original"
+msgstr "izvirnik"
+
+#: src/hrcek/entries/models.py
+msgid "original type"
+msgstr "vrsta izvirnika"
+
+#: src/hrcek/entries/models.py
+msgid "display copy"
+msgstr "prikazna kopija"
+
+#: src/hrcek/entries/models.py
+msgid "width"
+msgstr "širina"
+
+#: src/hrcek/entries/models.py
+msgid "height"
+msgstr "višina"
+
+#: src/hrcek/entries/models.py
+msgid "checksum"
+msgstr "kontrolna vsota"
+
+#: src/hrcek/entries/models.py
+msgid "size in bytes"
+msgstr "velikost v bajtih"
+
+#: src/hrcek/entries/models.py
+msgid "source address"
+msgstr "izvorni naslov"
+
+#: src/hrcek/entries/models.py
+msgid "image"
+msgstr "slika"
+
+#: src/hrcek/entries/models.py
+msgid "images"
+msgstr "slike"
 
 #: src/hrcek/entries/models.py
 msgid "text"

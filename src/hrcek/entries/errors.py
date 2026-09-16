@@ -15,3 +15,12 @@ IMAGE_TOO_LARGE = register("HRC-IMAGE-0002", 422, _("That image is too large."))
 IMAGE_UNREADABLE = register(
     "HRC-IMAGE-0003", 422, _("That image could not be read; it may be damaged.")
 )
+IMAGE_ADDRESS_INVALID = register(
+    "HRC-IMAGE-0004", 422, _("That is not a web address Hrček can fetch.")
+)
+IMAGE_ADDRESS_FORBIDDEN = register(
+    "HRC-IMAGE-0005", 422, _("That address points somewhere Hrček will not go.")
+)
+IMAGE_FETCH_FAILED = register(
+    "HRC-IMAGE-0006", 422, _("That image could not be fetched.")
+)

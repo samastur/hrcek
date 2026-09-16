@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 13:01+0000\n"
+"POT-Creation-Date: 2026-09-16 13:09+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -788,6 +788,18 @@ msgstr "Ta slika je prevelika."
 #: src/hrcek/entries/errors.py
 msgid "That image could not be read; it may be damaged."
 msgstr "Te slike ni bilo mogoče prebrati; morda je poškodovana."
+
+#: src/hrcek/entries/errors.py
+msgid "That is not a web address Hrček can fetch."
+msgstr "To ni spletni naslov, ki bi ga Hrček lahko prenesel."
+
+#: src/hrcek/entries/errors.py
+msgid "That address points somewhere Hrček will not go."
+msgstr "Ta naslov kaže nekam, kamor Hrček ne gre."
+
+#: src/hrcek/entries/errors.py
+msgid "That image could not be fetched."
+msgstr "Te slike ni bilo mogoče prenesti."
 
 #: src/hrcek/entries/forms.py src/hrcek/entries/templates/entries/list.html
 msgid "Tags"

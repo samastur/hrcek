@@ -60,6 +60,9 @@ must never contain anything private.
 | `HRC-IMAGE-0001` | 422 | The bytes are not a raster image Pillow can decode, or are in a format we do not accept. SVG is refused on purpose. |
 | `HRC-IMAGE-0002` | 422 | The image is larger than the byte limit. `details.limit_bytes` carries the limit. |
 | `HRC-IMAGE-0003` | 422 | The image decoded as a known format but could not be read — truncated, damaged, or too many pixels. `details.limit_pixels` appears in the last case. |
+| `HRC-IMAGE-0004` | 422 | The address is not http or https, has no host, or a redirect tried to leave those schemes. `details.scheme` carries what was asked for. |
+| `HRC-IMAGE-0005` | 422 | The address resolves somewhere Hrček refuses to go: loopback, a private or link-local network, cloud metadata, or carrier-grade NAT. `details.address` is the resolved address. |
+| `HRC-IMAGE-0006` | 422 | The fetch failed: the host did not resolve, the connection broke, the answer was not 200, or there were too many redirects. `details` carries `status`, `host` or `redirects`. |
 
 ## Response shape
 

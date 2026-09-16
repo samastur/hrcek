@@ -1,8 +1,8 @@
 # Images
 
-An entry may carry one picture. This page covers how it is stored and
-rendered; the sections on fetching, serving and the API arrive with
-those layers.
+An entry may carry one picture, either uploaded or fetched from an
+address. This page covers how it is stored, rendered and fetched; the
+sections on serving and the API arrive with those layers.
 
 ## Two copies, two jobs
 
@@ -60,3 +60,45 @@ reader never sees a half-written file.
 returns the cached file when there is one and rebuilds it when there is
 not. Asking for a format other than AVIF re-encodes from the original,
 which is how an older browser gets WebP.
+
+## Fetching from an address
+
+`src/hrcek/entries/fetching.py` is the one place Hrček makes an
+outbound request on somebody else's instruction. That is server-side
+request forgery waiting to happen, and it is why the original entries
+design put images last: a pasted address can name the machine Hrček
+runs on, a printer on the home network, or a cloud metadata endpoint
+that hands credentials to anything that asks.
+
+The rules, all of them enforced on every redirect hop:
+
+1. **http and https only.** A redirect may not leave those schemes —
+   checked after resolving the target, because a relative redirect can
+   otherwise produce a `file://` address.
+2. **Every resolved address must be public.** Not just the one that
+   would be used: a host answering with one public and one private
+   address is refused outright, because the connection could land on
+   either. Refused ranges are loopback, private, link-local,
+   unique-local, multicast, reserved, unspecified, carrier-grade NAT,
+   and IPv4-mapped IPv6 addresses wrapping any of those — which is how
+   `::ffff:127.0.0.1` would otherwise slip through.
+3. **The connection goes to the checked address, not the name.** The
+   socket is opened to the address that passed the check and handed to
+   the HTTP connection already made. Letting `http.client` connect by
+   name would resolve a second time, and a DNS answer that changes in
+   between is exactly the attack the checking exists to stop. The name
+   is still used for the `Host` header and for TLS, so certificate
+   validation is unaffected.
+4. **Bounded.** At most three redirects, five seconds, and reading
+   stops the moment the body passes `MAX_BYTES` — a declared
+   `Content-Length` over the cap is refused before any body is read.
+
+There is **no domain allowlist**: any public host is fair game. The
+defence is about where an address points, not who owns it.
+
+Nothing in this module decides whether what came back is an image. The
+caller hands the bytes to `imaging.prepare`, which trusts the
+`Content-Type` header no more than it trusts a filename.
+
+`tests/entries/test_fetching.py` is the security boundary for all of
+this. Read it before changing anything here.

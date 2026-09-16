@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from django.core import mail
 from django.urls import reverse
@@ -44,6 +46,21 @@ def test_a_disallowed_address_is_refused_with_its_code(client):
     assert mail.outbox == []
 
 
+def _scrubbed(response) -> bytes:
+    """The page minus its CSRF masks.
+
+    Django salts the rendered CSRF token differently on every response,
+    so the footer's language form makes byte-identical pages impossible.
+    The mask differs between any two requests, regardless of whether an
+    account exists, so it is noise to this comparison, not a signal.
+    """
+    return re.sub(
+        rb'name="csrfmiddlewaretoken" value="[^"]*"',
+        b'name="csrfmiddlewaretoken" value="scrubbed"',
+        response.content,
+    )
+
+
 def test_an_existing_address_is_indistinguishable(client, open_domain):
     # Otherwise the signup form tells any stranger who has an account.
     fresh = _signup(client, email="new@example.com")
@@ -52,7 +69,7 @@ def test_an_existing_address_is_indistinguishable(client, open_domain):
     existing = _signup(client, email="taken@example.com")
 
     assert existing.status_code == fresh.status_code
-    assert existing.content == fresh.content
+    assert _scrubbed(existing) == _scrubbed(fresh)
 
 
 def test_an_existing_address_gets_a_warning_email(client, open_domain):

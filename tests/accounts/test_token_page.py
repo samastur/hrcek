@@ -41,13 +41,23 @@ def _raw_from(body: str) -> str:
 def test_the_page_lists_your_tokens(client, person):
     ApiToken.issue(person, name="laptop")
     client.force_login(person)
-    assert "laptop" in client.get(reverse("accounts:account")).content.decode()
+    assert "laptop" in client.get(reverse("accounts:clients")).content.decode()
+
+
+def test_the_account_page_links_to_the_clients_page(client, person):
+    client.force_login(person)
+    body = client.get(reverse("accounts:account")).content.decode()
+    assert f'href="{reverse("accounts:clients")}"' in body
+
+
+def test_the_clients_page_needs_a_session(client):
+    assert client.get(reverse("accounts:clients")).status_code == 302
 
 
 def test_it_does_not_list_anybody_elses(client, person, other):
     ApiToken.issue(other, name="not-yours")
     client.force_login(person)
-    body = client.get(reverse("accounts:account")).content.decode()
+    body = client.get(reverse("accounts:clients")).content.decode()
     assert "not-yours" not in body
 
 
@@ -58,7 +68,7 @@ def test_creating_shows_the_raw_token_once(client, person):
     )
     assert ApiToken.TOKEN_PREFIX in response.content.decode()
     # Second look: the raw value is gone for good.
-    later = client.get(reverse("accounts:account")).content.decode()
+    later = client.get(reverse("accounts:clients")).content.decode()
     assert ApiToken.TOKEN_PREFIX not in later
 
 

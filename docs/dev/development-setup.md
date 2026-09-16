@@ -7,6 +7,9 @@
   - macOS: `brew install gettext`
   - Debian/Ubuntu: `sudo apt-get install gettext`
 - [prek](https://github.com/j178/prek) — runs the git hooks
+- [Tailwind CSS standalone CLI](https://tailwindcss.com/blog/standalone-cli)
+  — only needed when changing styles; see [styling](styling.md)
+  - macOS: `brew install tailwindcss`
 
 ## First run
 

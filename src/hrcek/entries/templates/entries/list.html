@@ -2,17 +2,17 @@
 {% block heading %}{% trans "Your entries" %}{% endblock %}
 {% block content %}
   {% if messages %}
-    <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
+    <ul class="messages">{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
   {% endif %}
 
-  <ul class="inline">
+  <ul class="row">
     <li><a href="{% url 'entries:create' %}">{% trans "Save something" %}</a></li>
     <li><a href="{% url 'entries:fields' %}">{% trans "Your fields" %}</a></li>
   </ul>
 
   {% if tags %}
     <nav aria-label="{% trans "Tags" %}">
-      <ul class="inline">
+      <ul class="row">
         {% for each in tags %}
           <li><a href="?tag={{ each.name|urlencode }}">{{ each.name }}</a></li>
         {% endfor %}
@@ -24,7 +24,7 @@
   {% endif %}
 
   {% if page %}
-    <ul class="stacked">
+    <ul class="entries">
       {% for entry in page %}
         <li>
           <article>
@@ -39,7 +39,7 @@
               </dl>
             {% endif %}
             {% if entry.tags.all %}
-              <ul class="inline">
+              <ul class="row">
                 {% for each in entry.tags.all %}
                   <li class="tag">{{ each.name }}</li>
                 {% endfor %}
@@ -56,7 +56,7 @@
 
   {% if page.has_other_pages %}
     <nav aria-label="{% trans "Pages" %}">
-      <ul class="inline">
+      <ul class="row">
         {% if page.has_previous %}
           <li><a href="?page={{ page.previous_page_number }}{% if tag %}&tag={{ tag|urlencode }}{% endif %}">{% trans "Newer" %}</a></li>
         {% endif %}

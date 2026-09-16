@@ -1,7 +1,8 @@
 default_install_hook_types: [pre-commit, pre-push]
-# Compiled catalogues are binary and machine-generated; whitespace and
-# newline fixers must not touch them.
-exclude: '\.mo$'
+# Compiled catalogues and the compiled stylesheet are machine-generated;
+# whitespace and newline fixers must not touch them, or every rebuild
+# would re-trip the hooks.
+exclude: '\.mo$|^src/hrcek/core/static/css/hrcek\.css$'
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks

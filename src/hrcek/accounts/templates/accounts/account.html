@@ -2,7 +2,7 @@
 {% block heading %}{% trans "Your account" %}{% endblock %}
 {% block content %}
   {% if messages %}
-    <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
+    <ul class="messages">{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
   {% endif %}
 
   <h2>{% trans "Display name" %}</h2>
@@ -47,7 +47,7 @@
           <td>
             <form method="post" action="{% url 'accounts:token_delete' token.pk %}">
               {% csrf_token %}
-              <button type="submit">{% trans "Delete" %}</button>
+              <button type="submit" class="danger">{% trans "Delete" %}</button>
             </form>
           </td>
         </tr>

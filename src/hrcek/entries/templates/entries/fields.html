@@ -2,7 +2,7 @@
 {% block heading %}{% trans "Your fields" %}{% endblock %}
 {% block content %}
   {% if messages %}
-    <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
+    <ul class="messages">{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
   {% endif %}
 
   <p>{% trans "Fields are the extra things you want to record about an entry, beyond its address, title and notes." %}</p>

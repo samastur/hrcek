@@ -1,39 +1,30 @@
-{% load i18n %}<!doctype html>
+{% load i18n static %}<!doctype html>
 <html lang="{{ LANGUAGE_CODE|default:'en' }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>{% block title %}{% trans "Hrček" %}{% endblock %}</title>
-  <style>
-    body { font-family: system-ui, sans-serif; max-width: 32rem;
-           margin: 3rem auto; padding: 0 1rem; line-height: 1.5; }
-    label { display: block; margin-top: 1rem; font-weight: 600; }
-    input { width: 100%; padding: .5rem; font-size: 1rem; }
-    button { margin-top: 1.5rem; padding: .6rem 1.2rem; font-size: 1rem; }
-    .errorlist { color: #b91c1c; padding-left: 1rem; }
-    .code { color: #71717a; font-family: monospace; font-size: .875rem; }
-    nav { margin-bottom: 2rem; font-size: .875rem; }
-    /* Lists that read as a row rather than a stack. Still lists: the
-       markup carries the structure, the styling only changes how it
-       looks. */
-    ul.inline { list-style: none; padding: 0; margin: 0;
-                display: flex; flex-wrap: wrap; gap: .75rem; }
-    ul.stacked { list-style: none; padding: 0; }
-    ul.stacked > li + li { margin-top: 2rem; }
-    .tag { font-size: .875rem; color: #3f3f46; }
-  </style>
+  <link rel="stylesheet" href="{% static 'css/hrcek.css' %}">
 </head>
-<body>
-  {% if user.is_authenticated %}
-    <nav aria-label="{% trans "Main" %}">
-      <ul class="inline">
-        <li><a href="{% url 'entries:list' %}">{% trans "Entries" %}</a></li>
-        <li><a href="{% url 'accounts:account' %}">{% trans "Your account" %}</a></li>
-        <li><a href="{% url 'accounts:logout' %}">{% trans "Sign out" %}</a></li>
-      </ul>
-    </nav>
-  {% endif %}
-  <h1>{% block heading %}{% trans "Hrček" %}{% endblock %}</h1>
-  {% block content %}{% endblock %}
+<body class="bg-surface text-ink font-sans leading-relaxed min-h-screen">
+  <div class="mx-auto max-w-xl px-4 py-10">
+    <header class="mb-10 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+      <a href="/" class="text-lg font-bold tracking-tight">{% trans "Hrček" %}</a>
+      {% if user.is_authenticated %}
+        <nav aria-label="{% trans "Main" %}">
+          <ul class="row text-sm">
+            <li><a class="text-muted hover:text-accent" href="{% url 'entries:list' %}">{% trans "Entries" %}</a></li>
+            <li><a class="text-muted hover:text-accent" href="{% url 'accounts:account' %}">{% trans "Your account" %}</a></li>
+            <li><a class="text-muted hover:text-accent" href="{% url 'accounts:logout' %}">{% trans "Sign out" %}</a></li>
+          </ul>
+        </nav>
+      {% endif %}
+    </header>
+    <main>
+      <h1 class="text-2xl font-bold tracking-tight mb-6">{% block heading %}{% trans "Hrček" %}{% endblock %}</h1>
+      {% block content %}{% endblock %}
+    </main>
+  </div>
 </body>
 </html>

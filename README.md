@@ -1,10 +1,18 @@
 # Hrček
 
+<p align="center">
+  <img src="src/hrcek/core/static/img/hrcek.png" alt="" width="160">
+</p>
+
 Hrček — a tool for saving interesting online content.
 
 A small, self-hosted service for storing references to things you find
 on the web. Built for family-scale use: SQLite, one process, no moving
 parts you have to babysit.
+
+**NOTE: This is intended to be a usable experiment. Its author plans
+to use it, but it is also a learning project for tools and processes
+with corresponding lack of guarantees one should expect.**
 
 ## Status
 

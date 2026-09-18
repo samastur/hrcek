@@ -49,6 +49,7 @@ must never contain anything private.
 | `HRC-AUTH-0003` | 401 | The endpoint needs a session or a bearer token and got neither. |
 | `HRC-AUTH-0004` | 401 | The bearer token is unknown, revoked, expired, or belongs to a disabled account. |
 | `HRC-AUTH-0005` | 403 | A session-authenticated unsafe request arrived without a valid CSRF token. |
+| `HRC-AUTH-0006` | 403 | A bearer token tried to create another token. Only a signed-in session may mint one, so that revoking a leaked token actually ends the access. |
 | `HRC-ACCT-0001` | 403 | The address is neither individually allowed nor on an allowed domain. |
 | `HRC-ACCT-0002` | 400 | The invitation link is unknown, expired, revoked or already used. |
 | `HRC-ACCT-0003` | 400 | The confirmation link is expired, tampered with, or refers to a deleted user. |

@@ -19,6 +19,11 @@ INVALID_API_TOKEN = register(
 CSRF_FAILED = register(
     "HRC-AUTH-0005", 403, _("The request could not be verified. Try again.")
 )
+SESSION_REQUIRED = register(
+    "HRC-AUTH-0006",
+    403,
+    _("Creating a token needs a signed-in session, not another token."),
+)
 INVITATION_INVALID = register(
     "HRC-ACCT-0002",
     400,

@@ -47,6 +47,10 @@ class ApiTokenAuth(HttpBearer):
 
         api_token.touch()
         request.user = api_token.user
+        # Remembered so an endpoint can refuse to act on a token's word
+        # alone: minting tokens is the one thing a token may not do.
+        # HttpRequest carries no such field, hence the silenced check.
+        request.authenticated_by_token = True  # ty: ignore[unresolved-attribute]
         return api_token.user
 
 

@@ -310,6 +310,75 @@
         "title": "PagedEntryOut",
         "type": "object"
       },
+      "TokenCreateIn": {
+        "description": "A name, and optionally a date it should stop working.",
+        "properties": {
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "TokenCreateIn",
+        "type": "object"
+      },
+      "TokenOut": {
+        "description": "The only time the raw token exists outside the client.\n\nOnly a hash is stored, so a client that loses this value has to\nmake another token; nobody can look it up, including whoever runs\nthis Hrček.",
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "token",
+          "created_at",
+          "expires_at"
+        ],
+        "title": "TokenOut",
+        "type": "object"
+      },
       "UserOut": {
         "properties": {
           "display_name": {
@@ -435,6 +504,47 @@
           }
         ],
         "summary": "Me",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/tokens": {
+      "post": {
+        "description": "Make a bearer token for a script or another client.\n\nSession-authenticated only. A token that could mint tokens would\nmake revoking a leaked one pointless: the holder would simply issue\na replacement, and the original could be revoked without ending\ntheir access.",
+        "operationId": "create_api_token",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenCreateIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenOut"
+                }
+              }
+            },
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "ApiTokenAuth": []
+          },
+          {
+            "SessionAuth": []
+          }
+        ],
+        "summary": "Create Api Token",
         "tags": [
           "auth"
         ]

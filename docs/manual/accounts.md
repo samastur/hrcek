@@ -77,9 +77,14 @@ API token.
 
 Tokens live on their own page: from your account page, follow *Manage
 clients and their authorizations*. Create one there and give it a name
-you will recognise later. **The token is shown once and never again** — copy it before you
-leave the page. Only a fingerprint of it is stored, so nobody, including
-whoever runs this Hrček, can look it up for you afterwards.
+you will recognise later. **The token is shown once and never again** —
+copy it before you leave the page. Only a fingerprint of it is stored,
+so nobody, including whoever runs this Hrček, can look it up for you
+afterwards.
+
+A program signed in as you can also make a token for itself, which
+saves pasting one in by hand when it is set up. That is a detail for
+whoever writes it; the developer documentation covers it.
 
 Delete a token and it stops working immediately, which is what to do if
 you think one has leaked. Deleting cannot be undone; make a new one.

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 13:22+0000\n"
+"POT-Creation-Date: 2026-09-18 05:50+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -67,6 +67,19 @@ msgstr "Hrček"
 msgid "Administration"
 msgstr "Skrbništvo"
 
+#
+#: src/hrcek/accounts/api.py
+msgid "Give the token a name."
+msgstr "Poimenujte žeton."
+
+#: src/hrcek/accounts/api.py
+msgid "That name is too long."
+msgstr "To ime je predolgo."
+
+#: src/hrcek/accounts/api.py
+msgid "That expiry has already passed."
+msgstr "Ta datum poteka je že mimo."
+
 #: src/hrcek/accounts/apps.py
 msgid "Accounts"
 msgstr "Računi"
@@ -90,6 +103,10 @@ msgstr "Ta API-žeton ni veljaven ali je potekel."
 #: src/hrcek/accounts/errors.py
 msgid "The request could not be verified. Try again."
 msgstr "Zahteve ni bilo mogoče preveriti. Poskusite znova."
+
+#: src/hrcek/accounts/errors.py
+msgid "Creating a token needs a signed-in session, not another token."
+msgstr "Za ustvarjanje žetona je potrebna prijavljena seja, ne drug žeton."
 
 #: src/hrcek/accounts/errors.py
 msgid "This invitation link is not valid. It may have expired or been used."

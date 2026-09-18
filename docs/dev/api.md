@@ -26,9 +26,10 @@ reworded. Branch on `code`, never on `message`.
 Every endpoint requires credentials except `GET /api/health` and
 `POST /api/auth/login`.
 
-**Use a bearer token.** Create one on your account page at
-`/accounts/me/`; it is shown once, so copy it then. Tokens look like
-`hrcek_` followed by random characters.
+**Use a bearer token.** Create one from the clients page at
+`/accounts/me/clients/`, or with the call below; it is shown once, so
+copy it then. Tokens look like `hrcek_` followed by random
+characters.
 
 ```bash
 curl -H "Authorization: Bearer hrcek_8Xr2mQ7pLk4vNs1TzYbW..." \
@@ -46,6 +47,53 @@ Without credentials:
 {"error": {"code": "HRC-AUTH-0003",
            "message": "You must sign in to do that.", "details": {}}}
 ```
+
+### POST /api/auth/tokens
+
+Create a token. `name` is required — it is how you will recognise this
+client months from now. `expires_at` is optional; leave it out and the
+token does not expire.
+
+```bash
+curl -X POST https://hrcek.example.com/api/auth/tokens \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{"name": "backup script", "expires_at": "2027-01-01T00:00:00Z"}'
+```
+
+**201** with the token:
+
+```json
+{"id": 4, "name": "backup script",
+ "token": "hrcek_8Xr2mQ7pLk4vNs1TzYbW...",
+ "created_at": "2026-09-18T09:12:44.201Z",
+ "expires_at": "2027-01-01T00:00:00Z"}
+```
+
+Every call makes a new token; nothing is reused. **`token` appears in
+this reply and nowhere else** — only a hash of it is stored, so if you
+lose the value, nobody can look it up for you, including whoever runs
+this Hrček. Make another one instead.
+
+**This call needs a session, not a token.** Signing in with
+`POST /api/auth/login` and keeping the cookie is the way to reach it
+from a script. A token that could mint tokens would make revoking a
+leaked one pointless — the holder would simply issue a replacement —
+so presenting a bearer token here is refused:
+
+```json
+{"error": {
+  "code": "HRC-AUTH-0006",
+  "message": "Creating a token needs a signed-in session, not another token.",
+  "details": {}
+}}
+```
+
+A missing, blank or over-long name, or an expiry already in the past,
+comes back as **422** `HRC-CORE-0002` with the offending field named in
+`details.fields`.
+
+To remove a token, use the clients page at `/accounts/me/clients/`.
 
 ## Errors
 

@@ -108,6 +108,8 @@ class ApiToken(models.Model):
     # Not a secret: a public marker so secret scanners can spot the
     # tokens that follow it.
     TOKEN_PREFIX = "hrcek_"  # noqa: S105
+    # Named, so the API's check and the column cannot drift apart.
+    NAME_MAX_LENGTH = 50
     # Writing last_used_at on every request would turn reads into SQLite
     # writes for no benefit; a minute's resolution is plenty.
     TOUCH_INTERVAL = timedelta(minutes=1)
@@ -118,7 +120,7 @@ class ApiToken(models.Model):
         related_name="api_tokens",
         verbose_name=_("user"),
     )
-    name = models.CharField(_("name"), max_length=50)
+    name = models.CharField(_("name"), max_length=NAME_MAX_LENGTH)
     token_hash = models.CharField(max_length=64, unique=True, editable=False)
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     last_used_at = models.DateTimeField(

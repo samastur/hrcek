@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 13:22+0000\n"
+"POT-Creation-Date: 2026-09-18 05:50+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,18 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
+#: src/hrcek/accounts/api.py
+msgid "Give the token a name."
+msgstr ""
+
+#: src/hrcek/accounts/api.py
+msgid "That name is too long."
+msgstr ""
+
+#: src/hrcek/accounts/api.py
+msgid "That expiry has already passed."
+msgstr ""
+
 #: src/hrcek/accounts/apps.py
 msgid "Accounts"
 msgstr ""
@@ -86,6 +98,10 @@ msgstr ""
 
 #: src/hrcek/accounts/errors.py
 msgid "The request could not be verified. Try again."
+msgstr ""
+
+#: src/hrcek/accounts/errors.py
+msgid "Creating a token needs a signed-in session, not another token."
 msgstr ""
 
 #: src/hrcek/accounts/errors.py

@@ -1,14 +1,26 @@
 from __future__ import annotations
 
+import secrets
 from typing import Any, ClassVar
 
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Lower
+from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 from hrcek.entries.models import Entry
+
+
+def _new_secret() -> str:
+    """The unguessable part of an unlisted collection's address.
+
+    A callable default, so adding the column gives every existing row
+    its own value instead of asking for one to share.
+    """
+    return secrets.token_urlsafe(16)
 
 
 class Collection(models.Model):
@@ -28,6 +40,15 @@ class Collection(models.Model):
         (BY_LABEL, _("everything with a label")),
     ]
 
+    PRIVATE = "private"
+    UNLISTED = "unlisted"
+    PUBLIC = "public"
+    VISIBILITIES: ClassVar[list[tuple[str, Any]]] = [
+        (PRIVATE, _("Private")),
+        (UNLISTED, _("Anyone with the link")),
+        (PUBLIC, _("Public")),
+    ]
+
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -44,6 +65,22 @@ class Collection(models.Model):
         blank=True,
         related_name="collections",
         verbose_name=_("label"),
+    )
+    visibility = models.CharField(
+        _("visibility"), max_length=10, choices=VISIBILITIES, default=PRIVATE
+    )
+    slug = models.SlugField(_("address"), max_length=120, blank=True)
+    # Made once and kept for the collection's life, so a link already
+    # shared keeps working across a change of mind about visibility.
+    secret = models.CharField(max_length=32, unique=True, editable=False)
+    show_notes = models.BooleanField(_("show notes"), default=False)
+    show_tags = models.BooleanField(_("show labels"), default=False)
+    show_images = models.BooleanField(_("show pictures"), default=False)
+    visible_fields = models.ManyToManyField(
+        "entries.FieldDefinition",
+        blank=True,
+        related_name="collections",
+        verbose_name=_("visible fields"),
     )
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("changed at"), auto_now=True)
@@ -66,10 +103,48 @@ class Collection(models.Model):
                 ),
                 name="label_set_exactly_when_kind_is_label",
             ),
+            models.UniqueConstraint(
+                fields=["owner", "slug"],
+                condition=~Q(slug=""),
+                name="unique_public_slug_per_owner",
+            ),
         ]
 
     def __str__(self) -> str:
         return self.name
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        if not self.secret:
+            self.secret = secrets.token_urlsafe(16)
+        if self.visibility == self.PUBLIC:
+            self.slug = self._unique_slug()
+        super().save(*args, **kwargs)
+
+    def _unique_slug(self) -> str:
+        """A slug of the name, made unique within this account.
+
+        Regenerated whenever a public collection is saved, so renaming
+        one moves it — which is why the form warns about that.
+        """
+        base = slugify(self.name) or "collection"
+        candidate, suffix = base, 1
+        siblings = Collection.objects.filter(owner=self.owner).exclude(pk=self.pk)
+        while siblings.filter(slug=candidate).exists():
+            suffix += 1
+            candidate = f"{base}-{suffix}"
+        return candidate
+
+    def public_url(self) -> str:
+        return reverse(
+            "shared:public",
+            kwargs={"namespace": self.owner.namespace, "slug": self.slug},
+        )
+
+    def unlisted_url(self) -> str:
+        return reverse("shared:unlisted", kwargs={"secret": self.secret})
+
+    def is_shared(self) -> bool:
+        return self.visibility in (self.UNLISTED, self.PUBLIC)
 
     def entries(self) -> models.QuerySet[Entry]:
         """This collection's entries, newest first.

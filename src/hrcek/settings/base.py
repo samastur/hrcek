@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "hrcek.core",
     "hrcek.accounts",
     "hrcek.entries",
+    "hrcek.collections",
 ]
 
 MIDDLEWARE = [

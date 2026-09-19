@@ -17,6 +17,7 @@
         <nav aria-label="{% trans "Main" %}">
           <ul class="row text-sm">
             <li><a class="text-muted hover:text-accent" href="{% url 'entries:list' %}">{% trans "Entries" %}</a></li>
+            <li><a class="text-muted hover:text-accent" href="{% url 'collections:list' %}">{% trans "Collections" %}</a></li>
             <li><a class="text-muted hover:text-accent" href="{% url 'accounts:account' %}">{% trans "Your account" %}</a></li>
             <li>
               {# Django's LogoutView only accepts POST, so this is a form. #}

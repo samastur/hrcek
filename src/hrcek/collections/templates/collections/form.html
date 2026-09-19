@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% load i18n %}
+{% block heading %}
+  {% if collection %}{% trans "Edit this collection" %}{% else %}{% trans "Make a collection" %}{% endif %}
+{% endblock %}
+{% block content %}
+  {% if collection %}
+    <p>{% blocktrans with kind=collection.get_kind_display %}This collection is {{ kind }}, and that cannot be changed. To hold its entries a different way, make another collection.{% endblocktrans %}</p>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% trans "Save" %}</button>
+  </form>
+
+  {% if collection %}
+    <p><a href="{% url 'collections:delete' collection.pk %}">{% trans "Delete this collection" %}</a></p>
+    <p><a href="{% url 'collections:detail' collection.pk %}">{% trans "Back to the collection" %}</a></p>
+  {% else %}
+    <p><a href="{% url 'collections:list' %}">{% trans "Back to your collections" %}</a></p>
+  {% endif %}
+{% endblock %}

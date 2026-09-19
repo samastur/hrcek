@@ -10,6 +10,7 @@ process, no queue.
 - [The API](api.md) — for anyone building a client
 - [Entries](entries.md) — what Hrček stores
 - [Accounts](accounts.md) — identity, sign-in, invitations, email
+- [Collections](collections.md) — sets of entries, by hand or by label
 - [Images](images.md) — how a picture is stored, capped and cached
 - [Styling](styling.md) — Tailwind, design tokens, light and dark
 - [Error codes](error-codes.md) — the registry and how to extend it

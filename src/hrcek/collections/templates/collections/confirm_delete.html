@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block heading %}{% trans "Delete this collection?" %}{% endblock %}
+{% block content %}
+  <p>{{ collection.name }}</p>
+  <p>{% trans "The collection goes; the entries in it stay. You are deleting the grouping, not the things grouped." %}</p>
+  <p>{% trans "This cannot be undone." %}</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="danger">{% trans "Yes, delete it" %}</button>
+  </form>
+  <p><a href="{% url 'collections:detail' collection.pk %}">{% trans "Keep it" %}</a></p>
+{% endblock %}

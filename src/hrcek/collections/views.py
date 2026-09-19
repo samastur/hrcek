@@ -133,3 +133,47 @@ def collection_remove_entry(
     entry = get_object_or_404(Entry, pk=entry_pk, owner=owner)
     remove_entry(collection, entry)
     return redirect("collections:detail", pk=collection.pk)
+
+
+def _shared_context(collection: Collection) -> dict[str, object]:
+    """What both shared pages need.
+
+    `visible_fields` is a set of ids rather than objects, because the
+    template asks the question once per field per entry.
+    """
+    return {
+        "collection": collection,
+        "entries": collection.entries().prefetch_related(
+            "tags", "field_values__definition"
+        ),
+        "visible_field_ids": set(
+            collection.visible_fields.values_list("pk", flat=True)
+        ),
+    }
+
+
+def unlisted_collection(request: HttpRequest, secret: str) -> HttpResponse:
+    """A collection shared by link.
+
+    The secret is the whole of the access control, so a wrong one is a
+    404 like any other unknown address — and a collection that has
+    stopped being unlisted stops answering here at once.
+    """
+    collection = get_object_or_404(
+        Collection, secret=secret, visibility=Collection.UNLISTED
+    )
+    response = render(request, "collections/shared.html", _shared_context(collection))
+    # A search engine that learned the link would end the point of it.
+    response.headers["X-Robots-Tag"] = "noindex, nofollow"
+    return response
+
+
+def public_collection(request: HttpRequest, namespace: str, slug: str) -> HttpResponse:
+    """A collection anybody may read, at an address anybody may guess."""
+    collection = get_object_or_404(
+        Collection,
+        owner__namespace__iexact=namespace,
+        slug=slug,
+        visibility=Collection.PUBLIC,
+    )
+    return render(request, "collections/shared.html", _shared_context(collection))

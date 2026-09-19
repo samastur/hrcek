@@ -72,7 +72,7 @@ def test_only_your_own_labels_are_offered(signed_in):
     theirs = Tag.objects.create(owner=marko, name="secret-project")
     page = signed_in.get(reverse("collections:create"))
     assert "secret-project" not in page.text
-    assert f'value="{theirs.pk}"' not in page.text
+    assert theirs.name not in page.text
 
 
 def test_the_kind_cannot_be_changed_later(signed_in, nina):

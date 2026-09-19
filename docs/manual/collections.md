@@ -42,3 +42,41 @@ collection following a label orders by when you saved the entry itself
 Deleting a collection deletes only the grouping. Every entry that was
 in it stays exactly where it was, in your entries, with its labels and
 everything else untouched.
+
+## Who can see it
+
+Every collection is one of three things, and you choose which:
+
+**Private.** Only you can see it. There is no address to share. This is
+what every new collection starts as.
+
+**Anyone with the link.** The collection gets an address with a long
+random part in it, which nobody can guess. Anyone you send it to can
+open it — and can pass it on. The link is not a password: treat it as
+"anyone who ends up with this may read it". Search engines are asked
+not to index these pages.
+
+**Public.** Anyone can open it, and search engines may list it. The
+address is made from your public name and the collection's name, like
+`/u/your-name/watches/`.
+
+You need a public name before you can make anything public. Set one on
+your account page. **If you change it later, every public address
+changes with it, and links you have already shared stop working.** The
+same is true of renaming a public collection: its address is made from
+its name.
+
+Changing a collection back to private closes both doors at once. An
+address that used to work stops working immediately.
+
+## What visitors see
+
+The collection's name and description are always shown, and so are the
+address and title of every entry in it. Everything else starts hidden,
+and you turn on what you want: notes, labels, pictures, and each of
+your own fields separately.
+
+**A picture you show can be opened by anyone who can see the page, on
+its own address, outside the page.** That is what publishing a picture
+means. Turn the picture off, or make the collection private, and it
+goes back to being yours alone straight away.

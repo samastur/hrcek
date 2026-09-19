@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 05:50+0000\n"
+"POT-Creation-Date: 2026-09-19 18:40+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -238,11 +238,13 @@ msgstr ""
 msgid "users"
 msgstr ""
 
-#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
+#: src/hrcek/accounts/models.py src/hrcek/collections/models.py
+#: src/hrcek/entries/models.py
 msgid "name"
 msgstr ""
 
-#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
+#: src/hrcek/accounts/models.py src/hrcek/collections/models.py
+#: src/hrcek/entries/models.py
 msgid "created at"
 msgstr ""
 
@@ -271,7 +273,8 @@ msgstr ""
 msgid "note"
 msgstr ""
 
-#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
+#: src/hrcek/accounts/models.py src/hrcek/collections/models.py
+#: src/hrcek/entries/models.py
 msgid "added at"
 msgstr ""
 
@@ -689,6 +692,216 @@ msgstr ""
 msgid "The token has been deleted."
 msgstr ""
 
+#: src/hrcek/collections/errors.py
+msgid "That entry is not yours to collect."
+msgstr ""
+
+#: src/hrcek/collections/errors.py
+msgid "This collection follows a label, so entries cannot be added by hand."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
+msgid "Optional. Anyone who can see this collection sees its description too."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
+msgid ""
+"Choose entries by hand, or let the collection hold everything carrying one "
+"label. This cannot be changed afterwards."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
+msgid "Only needed for a collection that follows a label."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
+msgid "Choose the label this collection follows."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
+msgid "A collection chosen by hand does not follow a label."
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "chosen by hand"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "everything with a label"
+msgstr ""
+
+#: src/hrcek/collections/models.py src/hrcek/entries/models.py
+msgid "owner"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "description"
+msgstr ""
+
+#: src/hrcek/collections/models.py src/hrcek/entries/models.py
+msgid "kind"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "label"
+msgstr ""
+
+#: src/hrcek/collections/models.py src/hrcek/entries/models.py
+msgid "changed at"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "collection"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "collections"
+msgstr ""
+
+#: src/hrcek/collections/models.py src/hrcek/entries/models.py
+msgid "entry"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "collection entry"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "collection entries"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+msgid "Delete this collection?"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+msgid ""
+"The collection goes; the entries in it stay. You are deleting the grouping, "
+"not the things grouped."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
+msgid "This cannot be undone."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
+msgid "Yes, delete it"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
+msgid "Keep it"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Edit"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+#: src/hrcek/collections/templates/collections/list.html
+msgid "Your collections"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+#, python-format
+msgid ""
+"This collection holds every entry labelled %(label)s. Label an entry and it "
+"appears here; remove the label and it goes. There is nothing to add by hand."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Add an entry"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Entry"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Add it"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Every entry you have is already in this collection."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "In this collection"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Take it out"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Nothing in this collection yet."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/form.html
+msgid "Edit this collection"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/form.html
+#: src/hrcek/collections/templates/collections/list.html
+msgid "Make a collection"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/form.html
+#, python-format
+msgid ""
+"This collection is %(kind)s, and that cannot be changed. To hold its entries "
+"a different way, make another collection."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/form.html
+#: src/hrcek/entries/templates/entries/form.html
+msgid "Save"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/form.html
+msgid "Delete this collection"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/form.html
+msgid "Back to the collection"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/form.html
+msgid "Back to your collections"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/list.html
+msgid ""
+"A collection is a set of your entries with a name. You can choose what goes "
+"in it, or let it hold everything carrying one label."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/list.html
+msgid "You have no collections yet."
+msgstr ""
+
+#: src/hrcek/collections/views.py
+msgid "Collection made."
+msgstr ""
+
+#: src/hrcek/collections/views.py src/hrcek/entries/views.py
+msgid "Saved."
+msgstr ""
+
+#: src/hrcek/collections/views.py
+msgid "Collection deleted. Its entries are untouched."
+msgstr ""
+
+#: src/hrcek/collections/views.py
+msgid "That entry cannot be added here."
+msgstr ""
+
 #: src/hrcek/core/api.py
 msgid "Service is running."
 msgstr ""
@@ -743,6 +956,10 @@ msgstr ""
 
 #: src/hrcek/core/templates/base.html src/hrcek/entries/apps.py
 msgid "Entries"
+msgstr ""
+
+#: src/hrcek/core/templates/base.html
+msgid "Collections"
 msgstr ""
 
 #: src/hrcek/core/templates/base.html
@@ -822,10 +1039,6 @@ msgid "You already have a field with that name."
 msgstr ""
 
 #: src/hrcek/entries/models.py
-msgid "owner"
-msgstr ""
-
-#: src/hrcek/entries/models.py
 msgid "tag"
 msgstr ""
 
@@ -847,14 +1060,6 @@ msgstr ""
 
 #: src/hrcek/entries/models.py
 msgid "saved at"
-msgstr ""
-
-#: src/hrcek/entries/models.py
-msgid "changed at"
-msgstr ""
-
-#: src/hrcek/entries/models.py
-msgid "entry"
 msgstr ""
 
 #: src/hrcek/entries/models.py
@@ -914,10 +1119,6 @@ msgid "choice"
 msgstr ""
 
 #: src/hrcek/entries/models.py
-msgid "kind"
-msgstr ""
-
-#: src/hrcek/entries/models.py
 msgid "options"
 msgstr ""
 
@@ -960,21 +1161,6 @@ msgstr ""
 
 #: src/hrcek/entries/templates/entries/confirm_delete.html
 msgid "Delete this entry?"
-msgstr ""
-
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-#: src/hrcek/entries/templates/entries/field_confirm_delete.html
-msgid "This cannot be undone."
-msgstr ""
-
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-#: src/hrcek/entries/templates/entries/field_confirm_delete.html
-msgid "Yes, delete it"
-msgstr ""
-
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-#: src/hrcek/entries/templates/entries/field_confirm_delete.html
-msgid "Keep it"
 msgstr ""
 
 #: src/hrcek/entries/templates/entries/field_confirm_delete.html
@@ -1049,10 +1235,6 @@ msgid "Save something"
 msgstr ""
 
 #: src/hrcek/entries/templates/entries/form.html
-msgid "Save"
-msgstr ""
-
-#: src/hrcek/entries/templates/entries/form.html
 msgid "Delete this entry"
 msgstr ""
 
@@ -1062,10 +1244,6 @@ msgstr ""
 
 #: src/hrcek/entries/templates/entries/list.html
 msgid "All entries"
-msgstr ""
-
-#: src/hrcek/entries/templates/entries/list.html
-msgid "Edit"
 msgstr ""
 
 #: src/hrcek/entries/templates/entries/list.html
@@ -1087,10 +1265,6 @@ msgstr ""
 
 #: src/hrcek/entries/templates/entries/list.html
 msgid "Older"
-msgstr ""
-
-#: src/hrcek/entries/views.py
-msgid "Saved."
 msgstr ""
 
 #: src/hrcek/entries/views.py

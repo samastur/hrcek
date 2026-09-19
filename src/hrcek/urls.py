@@ -12,5 +12,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("hrcek.accounts.urls")),
     path("entries/", include("hrcek.entries.urls")),
+    path("collections/", include("hrcek.collections.urls")),
     path("api/", api.urls),
 ]

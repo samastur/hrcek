@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 05:50+0000\n"
+"POT-Creation-Date: 2026-09-19 18:40+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -247,11 +247,13 @@ msgstr "uporabnik"
 msgid "users"
 msgstr "uporabniki"
 
-#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
+#: src/hrcek/accounts/models.py src/hrcek/collections/models.py
+#: src/hrcek/entries/models.py
 msgid "name"
 msgstr "ime"
 
-#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
+#: src/hrcek/accounts/models.py src/hrcek/collections/models.py
+#: src/hrcek/entries/models.py
 msgid "created at"
 msgstr "ustvarjeno ob"
 
@@ -280,7 +282,8 @@ msgstr "API-žetoni"
 msgid "note"
 msgstr "opomba"
 
-#: src/hrcek/accounts/models.py src/hrcek/entries/models.py
+#: src/hrcek/accounts/models.py src/hrcek/collections/models.py
+#: src/hrcek/entries/models.py
 msgid "added at"
 msgstr "dodano ob"
 
@@ -719,6 +722,225 @@ msgstr "Prekopirajte ta žeton zdaj, ker ne bo več prikazan: %(token)s"
 msgid "The token has been deleted."
 msgstr "Žeton je izbrisan."
 
+#: src/hrcek/collections/errors.py
+msgid "That entry is not yours to collect."
+msgstr "Ta vnos ni vaš, da bi ga zbirali."
+
+#: src/hrcek/collections/errors.py
+msgid "This collection follows a label, so entries cannot be added by hand."
+msgstr "Ta zbirka sledi oznaki, zato vnosov ni mogoče dodajati ročno."
+
+#: src/hrcek/collections/forms.py
+msgid "Optional. Anyone who can see this collection sees its description too."
+msgstr "Neobvezno. Kdor vidi to zbirko, vidi tudi njen opis."
+
+#: src/hrcek/collections/forms.py
+msgid ""
+"Choose entries by hand, or let the collection hold everything carrying one "
+"label. This cannot be changed afterwards."
+msgstr ""
+"Izberite vnose ročno ali pustite, da zbirka vsebuje vse z eno oznako. Tega "
+"pozneje ni mogoče spremeniti."
+
+#: src/hrcek/collections/forms.py
+msgid "Only needed for a collection that follows a label."
+msgstr "Potrebno le za zbirko, ki sledi oznaki."
+
+#: src/hrcek/collections/forms.py
+msgid "Choose the label this collection follows."
+msgstr "Izberite oznako, ki ji sledi ta zbirka."
+
+#: src/hrcek/collections/forms.py
+msgid "A collection chosen by hand does not follow a label."
+msgstr "Zbirka, izbrana ročno, ne sledi oznaki."
+
+#: src/hrcek/collections/models.py
+msgid "chosen by hand"
+msgstr "ročno izbrani"
+
+#: src/hrcek/collections/models.py
+msgid "everything with a label"
+msgstr "vse z oznako"
+
+#: src/hrcek/collections/models.py src/hrcek/entries/models.py
+msgid "owner"
+msgstr "lastnik"
+
+#: src/hrcek/collections/models.py
+msgid "description"
+msgstr "opis"
+
+#: src/hrcek/collections/models.py src/hrcek/entries/models.py
+msgid "kind"
+msgstr "vrsta"
+
+#: src/hrcek/collections/models.py
+msgid "label"
+msgstr "oznaka"
+
+#: src/hrcek/collections/models.py src/hrcek/entries/models.py
+msgid "changed at"
+msgstr "spremenjeno ob"
+
+#: src/hrcek/collections/models.py
+msgid "collection"
+msgstr "zbirka"
+
+#: src/hrcek/collections/models.py
+msgid "collections"
+msgstr "zbirke"
+
+#: src/hrcek/collections/models.py src/hrcek/entries/models.py
+msgid "entry"
+msgstr "vnos"
+
+#: src/hrcek/collections/models.py
+msgid "collection entry"
+msgstr "vnos v zbirki"
+
+#: src/hrcek/collections/models.py
+msgid "collection entries"
+msgstr "vnosi v zbirki"
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+msgid "Delete this collection?"
+msgstr "Izbrišem to zbirko?"
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+msgid ""
+"The collection goes; the entries in it stay. You are deleting the grouping, "
+"not the things grouped."
+msgstr ""
+"Zbirka izgine, vnosi v njej ostanejo. Brišete razvrstitev, ne stvari v njej."
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
+msgid "This cannot be undone."
+msgstr "Tega ni mogoče razveljaviti."
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
+msgid "Yes, delete it"
+msgstr "Da, izbriši"
+
+#: src/hrcek/collections/templates/collections/confirm_delete.html
+#: src/hrcek/entries/templates/entries/confirm_delete.html
+#: src/hrcek/entries/templates/entries/field_confirm_delete.html
+msgid "Keep it"
+msgstr "Obdrži"
+
+#: src/hrcek/collections/templates/collections/detail.html
+#: src/hrcek/entries/templates/entries/list.html
+msgid "Edit"
+msgstr "Uredi"
+
+#: src/hrcek/collections/templates/collections/detail.html
+#: src/hrcek/collections/templates/collections/list.html
+msgid "Your collections"
+msgstr "Vaše zbirke"
+
+#: src/hrcek/collections/templates/collections/detail.html
+#, python-format
+msgid ""
+"This collection holds every entry labelled %(label)s. Label an entry and it "
+"appears here; remove the label and it goes. There is nothing to add by hand."
+msgstr ""
+"Ta zbirka vsebuje vsak vnos z oznako %(label)s. Označite vnos in pojavi se "
+"tu; odstranite oznako in izgine. Ročno ni treba dodajati ničesar."
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Add an entry"
+msgstr "Dodaj vnos"
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Entry"
+msgstr "Vnos"
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Add it"
+msgstr "Dodaj"
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Every entry you have is already in this collection."
+msgstr "Vsi vaši vnosi so že v tej zbirki."
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "In this collection"
+msgstr "V tej zbirki"
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Take it out"
+msgstr "Odstrani"
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Nothing in this collection yet."
+msgstr "V tej zbirki še ni ničesar."
+
+#: src/hrcek/collections/templates/collections/form.html
+msgid "Edit this collection"
+msgstr "Uredi to zbirko"
+
+#: src/hrcek/collections/templates/collections/form.html
+#: src/hrcek/collections/templates/collections/list.html
+msgid "Make a collection"
+msgstr "Ustvari zbirko"
+
+#: src/hrcek/collections/templates/collections/form.html
+#, python-format
+msgid ""
+"This collection is %(kind)s, and that cannot be changed. To hold its entries "
+"a different way, make another collection."
+msgstr ""
+"Ta zbirka je %(kind)s in tega ni mogoče spremeniti. Za drugačen način "
+"zbiranja ustvarite novo zbirko."
+
+#: src/hrcek/collections/templates/collections/form.html
+#: src/hrcek/entries/templates/entries/form.html
+msgid "Save"
+msgstr "Shrani"
+
+#: src/hrcek/collections/templates/collections/form.html
+msgid "Delete this collection"
+msgstr "Izbriši to zbirko"
+
+#: src/hrcek/collections/templates/collections/form.html
+msgid "Back to the collection"
+msgstr "Nazaj na zbirko"
+
+#: src/hrcek/collections/templates/collections/form.html
+msgid "Back to your collections"
+msgstr "Nazaj na vaše zbirke"
+
+#: src/hrcek/collections/templates/collections/list.html
+msgid ""
+"A collection is a set of your entries with a name. You can choose what goes "
+"in it, or let it hold everything carrying one label."
+msgstr ""
+"Zbirka je poimenovan nabor vaših vnosov. Sami izberete, kaj je v njej, ali "
+"pa naj vsebuje vse z eno oznako."
+
+#: src/hrcek/collections/templates/collections/list.html
+msgid "You have no collections yet."
+msgstr "Še nimate zbirk."
+
+#: src/hrcek/collections/views.py
+msgid "Collection made."
+msgstr "Zbirka je ustvarjena."
+
+#: src/hrcek/collections/views.py src/hrcek/entries/views.py
+msgid "Saved."
+msgstr "Shranjeno."
+
+#: src/hrcek/collections/views.py
+msgid "Collection deleted. Its entries are untouched."
+msgstr "Zbirka je izbrisana. Njeni vnosi ostajajo nedotaknjeni."
+
+#: src/hrcek/collections/views.py
+msgid "That entry cannot be added here."
+msgstr "Tega vnosa ni mogoče dodati sem."
+
 #: src/hrcek/core/api.py
 msgid "Service is running."
 msgstr "Storitev deluje."
@@ -776,6 +998,10 @@ msgstr "Glavni meni"
 #: src/hrcek/core/templates/base.html src/hrcek/entries/apps.py
 msgid "Entries"
 msgstr "Vnosi"
+
+#: src/hrcek/core/templates/base.html
+msgid "Collections"
+msgstr "Zbirke"
 
 #: src/hrcek/core/templates/base.html
 msgid "Sign out"
@@ -855,10 +1081,6 @@ msgid "You already have a field with that name."
 msgstr "Polje s tem imenom že imate."
 
 #: src/hrcek/entries/models.py
-msgid "owner"
-msgstr "lastnik"
-
-#: src/hrcek/entries/models.py
 msgid "tag"
 msgstr "oznaka"
 
@@ -881,14 +1103,6 @@ msgstr "zapiski"
 #: src/hrcek/entries/models.py
 msgid "saved at"
 msgstr "shranjeno ob"
-
-#: src/hrcek/entries/models.py
-msgid "changed at"
-msgstr "spremenjeno ob"
-
-#: src/hrcek/entries/models.py
-msgid "entry"
-msgstr "vnos"
 
 #: src/hrcek/entries/models.py
 msgid "entries"
@@ -947,10 +1161,6 @@ msgid "choice"
 msgstr "izbira"
 
 #: src/hrcek/entries/models.py
-msgid "kind"
-msgstr "vrsta"
-
-#: src/hrcek/entries/models.py
 msgid "options"
 msgstr "možnosti"
 
@@ -995,21 +1205,6 @@ msgstr "To polje mora biti eno od: %(options)s."
 #: src/hrcek/entries/templates/entries/confirm_delete.html
 msgid "Delete this entry?"
 msgstr "Izbrišem ta vnos?"
-
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-#: src/hrcek/entries/templates/entries/field_confirm_delete.html
-msgid "This cannot be undone."
-msgstr "Tega ni mogoče razveljaviti."
-
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-#: src/hrcek/entries/templates/entries/field_confirm_delete.html
-msgid "Yes, delete it"
-msgstr "Da, izbriši"
-
-#: src/hrcek/entries/templates/entries/confirm_delete.html
-#: src/hrcek/entries/templates/entries/field_confirm_delete.html
-msgid "Keep it"
-msgstr "Obdrži"
 
 #
 #: src/hrcek/entries/templates/entries/field_confirm_delete.html
@@ -1098,10 +1293,6 @@ msgid "Save something"
 msgstr "Shrani nekaj"
 
 #: src/hrcek/entries/templates/entries/form.html
-msgid "Save"
-msgstr "Shrani"
-
-#: src/hrcek/entries/templates/entries/form.html
 msgid "Delete this entry"
 msgstr "Izbriši ta vnos"
 
@@ -1112,10 +1303,6 @@ msgstr "Vaši vnosi"
 #: src/hrcek/entries/templates/entries/list.html
 msgid "All entries"
 msgstr "Vsi vnosi"
-
-#: src/hrcek/entries/templates/entries/list.html
-msgid "Edit"
-msgstr "Uredi"
 
 #: src/hrcek/entries/templates/entries/list.html
 msgid "Nothing saved yet."
@@ -1137,10 +1324,6 @@ msgstr "Stran %(current)s od %(total)s"
 #: src/hrcek/entries/templates/entries/list.html
 msgid "Older"
 msgstr "Starejši"
-
-#: src/hrcek/entries/views.py
-msgid "Saved."
-msgstr "Shranjeno."
 
 #: src/hrcek/entries/views.py
 msgid "Deleted."

@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n %}
+{% block heading %}{% trans "Your collections" %}{% endblock %}
+{% block content %}
+  {% if messages %}
+    <ul class="messages">{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  <p>{% trans "A collection is a set of your entries with a name. You can choose what goes in it, or let it hold everything carrying one label." %}</p>
+
+  <ul class="row">
+    <li><a href="{% url 'collections:create' %}">{% trans "Make a collection" %}</a></li>
+  </ul>
+
+  {% if collections %}
+    <ul class="stacked">
+      {% for collection in collections %}
+        <li>
+          <a href="{% url 'collections:detail' collection.pk %}">{{ collection.name }}</a>
+          <span class="kind">({{ collection.get_kind_display }})</span>
+          {% if collection.description %}<p>{{ collection.description }}</p>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% trans "You have no collections yet." %}</p>
+  {% endif %}
+{% endblock %}

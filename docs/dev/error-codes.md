@@ -58,6 +58,8 @@ must never contain anything private.
 | `HRC-ENTRY-0001` | 422 | More rows in one batch than the limit allows. The whole request is refused; nothing is saved. |
 | `HRC-FIELD-0001` | 422 | The request named a field this person does not have. `details.field` is the name as sent. |
 | `HRC-ACCT-0006` | 409 | Another account already uses that email address. Shown inline on the form too, where the status is 200 because the person can simply pick another. |
+| `HRC-COLL-0001` | 404 | An entry belonging to somebody else was offered to a collection. 404, not 403: a 403 would confirm the entry exists. |
+| `HRC-COLL-0002` | 422 | Entries cannot be added by hand to a collection that follows a label; its membership comes from the label. |
 | `HRC-IMAGE-0001` | 422 | The bytes are not a raster image Pillow can decode, or are in a format we do not accept. SVG is refused on purpose. |
 | `HRC-IMAGE-0002` | 422 | The image is larger than the byte limit. `details.limit_bytes` carries the limit. |
 | `HRC-IMAGE-0003` | 422 | The image decoded as a known format but could not be read — truncated, damaged, or too many pixels. `details.limit_pixels` appears in the last case. |

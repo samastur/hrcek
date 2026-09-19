@@ -5,6 +5,7 @@ can get back to them later.
 
 - [Getting started](getting-started.md)
 - [Saving things](entries.md)
+- [Collections](collections.md)
 - [Your account](accounts.md)
 - [Languages](languages.md)
 - [When something goes wrong](troubleshooting.md)

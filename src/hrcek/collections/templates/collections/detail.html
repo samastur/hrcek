@@ -1,4 +1,8 @@
 {% extends "base.html" %}{% load i18n %}
+{% block head %}
+  <link rel="alternate" type="application/atom+xml"
+        title="{{ collection.name }}" href="{% url 'collections:feed' collection.pk %}">
+{% endblock %}
 {% block heading %}{{ collection.name }}{% endblock %}
 {% block content %}
   {% if messages %}
@@ -21,6 +25,7 @@
   <ul class="row">
     <li><a href="{% url 'collections:edit' collection.pk %}">{% trans "Edit" %}</a></li>
     <li><a href="{% url 'collections:list' %}">{% trans "Your collections" %}</a></li>
+    <li><a href="{% url 'collections:feed' collection.pk %}">{% trans "Feed" %}</a></li>
   </ul>
 
   {% if collection.kind == 'label' %}

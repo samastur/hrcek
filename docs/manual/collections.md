@@ -80,3 +80,17 @@ your own fields separately.
 its own address, outside the page.** That is what publishing a picture
 means. Turn the picture off, or make the collection private, and it
 goes back to being yours alone straight away.
+
+## Feeds
+
+Every collection page has a feed, at the same address with `feed/` on
+the end. Put that address into any feed reader and new entries appear
+there as you add them.
+
+A feed is exactly as private as its page. Your private collection's
+feed is yours alone and needs you to be signed in, so most readers
+cannot fetch it. The feed of a collection shared by link sits under the
+same hard-to-guess address, and a public collection's feed is public.
+
+A feed shows only what its page shows: if you have not turned notes on,
+they are not in the feed either.

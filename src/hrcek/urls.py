@@ -13,5 +13,8 @@ urlpatterns = [
     path("accounts/", include("hrcek.accounts.urls")),
     path("entries/", include("hrcek.entries.urls")),
     path("collections/", include("hrcek.collections.urls")),
+    # Shared collection pages sit at the root, not under
+    # /collections/, so a shared link stays short.
+    path("", include("hrcek.collections.shared_urls")),
     path("api/", api.urls),
 ]

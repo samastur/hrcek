@@ -7,6 +7,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
 
@@ -115,6 +116,28 @@ class Entry(models.Model):
     @property
     def display_title(self) -> str:
         return self.title or self.url
+
+    def is_publicly_visible(self) -> bool:
+        """Is this entry's picture readable by anybody at all?
+
+        True when the entry is in at least one collection that is
+        shared — by link or in the open — and that shows pictures.
+        Both kinds of collection count: a label collection reaches its
+        entries through the label rather than through membership rows.
+
+        Imported here rather than at module level: entries must not
+        depend on collections while Django is loading the apps, or the
+        two import each other in a circle.
+        """
+        from hrcek.collections.models import Collection  # noqa: PLC0415
+
+        return Collection.objects.filter(
+            Q(memberships__entry=self)
+            | Q(kind=Collection.BY_LABEL, label__in=self.tags.all()),
+            owner=self.owner,
+            show_images=True,
+            visibility__in=(Collection.UNLISTED, Collection.PUBLIC),
+        ).exists()
 
     @staticmethod
     def normalise_url(value: str) -> str:

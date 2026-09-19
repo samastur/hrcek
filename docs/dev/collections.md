@@ -60,3 +60,58 @@ read.
 Deleting a collection cascades to its `CollectionEntry` rows and stops
 there. The entries themselves are untouched, which the confirmation
 page says in as many words.
+
+## Visibility
+
+`Collection.visibility` is one of `private`, `unlisted` or `public`,
+and each has its own address:
+
+| Level | Address | Route |
+|---|---|---|
+| private | `/collections/<id>/` | `collections:detail` |
+| unlisted | `/c/<secret>/` | `shared:unlisted` |
+| public | `/u/<namespace>/<slug>/` | `shared:public` |
+
+The shared routes live in `shared_urls.py`, included at the root rather
+than under `/collections/`, and in their own URL namespace: two
+includes cannot share one.
+
+Every lookup filters on the visibility as well as the address, so a
+collection that stops being public stops answering at its public
+address in the same request cycle. A wrong secret, an unknown public
+name, or a visibility that does not match the address is a **404**,
+never a 403 — a 403 tells a stranger that something exists.
+
+Unlisted pages send `X-Robots-Tag: noindex, nofollow`. Public pages do
+not: they are meant to be found.
+
+### The secret
+
+`secrets.token_urlsafe(16)` — 22 characters — written once by `save()`
+and never rewritten, so a link already shared survives the owner
+changing their mind about visibility twice. Adding the column took the
+three-step migration Django documents for a unique field: add it
+loose, fill it row by row, then tighten it. A callable default would
+have been evaluated once and handed every row the same value.
+
+### The slug
+
+`slugify(name)`, made unique within the account by appending `-2`,
+`-3`, and regenerated on every save of a public collection — so
+renaming one moves it. That is why the form warns about it. A name
+with nothing sluggable in it falls back to `collection`.
+
+## What a shared page shows
+
+The name and description always; of each entry, the address and title
+always. Notes, labels, pictures and each custom field are off by
+default and turned on per collection. Hidden means **absent from the
+HTML**, not styled away: the template asks before it renders, and
+`test_hidden_things_are_absent_from_the_source` holds that line.
+
+## Pictures
+
+Entry images used to be readable by their owner and nobody else.
+Sharing changes that rule, and it is the one place here where getting
+it wrong leaks private data. See
+[images](images.md#who-may-see-a-picture).

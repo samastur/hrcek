@@ -14,7 +14,11 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from hrcek.accounts.managers import UserManager
-from hrcek.accounts.validators import validate_display_name, validate_domain
+from hrcek.accounts.validators import (
+    validate_display_name,
+    validate_domain,
+    validate_namespace,
+)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -51,6 +55,23 @@ class User(AbstractBaseUser, PermissionsMixin):
         validators=[validate_display_name],
         help_text=_("Optional. Can be used to sign in instead of the email."),
     )
+    # Null until somebody publishes something. It becomes part of the
+    # address of every public collection, which is why the character
+    # set is narrow and why changing it is warned about rather than
+    # done quietly. NULL, like display_name, so many accounts can have
+    # none while the ones that are set stay unique.
+    namespace = models.CharField(  # noqa: DJ001
+        _("public name"),
+        max_length=50,
+        blank=True,
+        null=True,
+        validators=[validate_namespace],
+        help_text=_(
+            "Only needed if you make a collection public. It appears in "
+            "the address of every public collection you have, like "
+            "/u/your-name/watches/."
+        ),
+    )
     email_verified_at = models.DateTimeField(
         _("email confirmed at"), null=True, blank=True
     )
@@ -75,6 +96,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             models.UniqueConstraint(
                 Lower("display_name"), name="user_display_name_ci_unique"
             ),
+            models.UniqueConstraint(
+                Lower("namespace"), name="user_namespace_ci_unique"
+            ),
         ]
 
     def __str__(self) -> str:
@@ -84,6 +108,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.email = self.email.strip().lower()
         if self.display_name is not None:
             self.display_name = self.display_name.strip() or None
+        if self.namespace is not None:
+            self.namespace = self.namespace.strip() or None
 
     def clean(self) -> None:
         self.normalise()

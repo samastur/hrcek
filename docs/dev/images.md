@@ -107,10 +107,38 @@ this. Read it before changing anything here.
 
 `GET /entries/<pk>/image/` (`entries:image`) is the only way a picture
 reaches a browser. It goes through Django rather than off the web
-server's disk, because a family's pictures are not public and an
-unguessable filename is not access control. The lookup is scoped to the
-owner, so another account's entry is a **404, never a 403** — a 403
+server's disk, because an unguessable filename is not access control.
+
+### Who may see a picture
+
+Either of two things is enough:
+
+- the requester owns the entry, or
+- the entry sits in at least one collection that is **shared** (by
+  link or in the open) **and** has `show_images` on.
+
+`Entry.is_publicly_visible()` answers the second, counting both kinds
+of collection — a label collection reaches its entries through its
+label rather than through membership rows.
+
+Two consequences, both deliberate:
+
+- **A shared picture is readable on its own address**, outside the page
+  that shows it, by anybody who has that address. That is what
+  publishing a picture means, and the collection form says so before
+  anybody ticks the box.
+- **Taking the sharing away takes the picture back.** The question is
+  asked on every request, so turning `show_images` off, or making the
+  collection private, refuses the very next one.
+
+A request for a private picture from somebody signed out is redirected
+to sign in; from another account it is a **404, never a 403** — a 403
 would confirm that the entry exists.
+
+Cache headers follow the same split: a private picture is
+`private, max-age=0, must-revalidate`, so no shared cache may hold one
+person's picture; a public one is `public, max-age=300`, so a page of
+them is not re-fetched on every scroll.
 
 The response negotiates its format. A browser whose `Accept` header
 mentions `image/avif` gets the stored display copy; anything else gets

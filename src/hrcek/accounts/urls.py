@@ -9,6 +9,7 @@ app_name = "accounts"
 urlpatterns = [
     path("me/", views.account, name="account"),
     path("me/display-name/", views.display_name, name="display_name"),
+    path("me/public-name/", views.public_name, name="public_name"),
     path("me/email/", views.email_change, name="email_change"),
     path("me/clients/", views.clients, name="clients"),
     path("me/tokens/", views.token_create, name="token_create"),

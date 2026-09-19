@@ -7,6 +7,17 @@
 
   {% if collection.description %}<p>{{ collection.description }}</p>{% endif %}
 
+  {% if collection.visibility == 'private' %}
+    <p>{% trans "Private. Only you can see this collection; there is no address to share." %}</p>
+  {% elif collection.visibility == 'unlisted' %}
+    <p>{% trans "Anyone with this link can see this collection:" %}
+      <a href="{{ collection.unlisted_url }}">{{ collection.unlisted_url }}</a></p>
+    <p>{% trans "The link is hard to guess, but it is not a password: whoever you send it to can pass it on." %}</p>
+  {% else %}
+    <p>{% trans "Public. Anyone can see this collection at:" %}
+      <a href="{{ collection.public_url }}">{{ collection.public_url }}</a></p>
+  {% endif %}
+
   <ul class="row">
     <li><a href="{% url 'collections:edit' collection.pk %}">{% trans "Edit" %}</a></li>
     <li><a href="{% url 'collections:list' %}">{% trans "Your collections" %}</a></li>

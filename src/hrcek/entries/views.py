@@ -5,8 +5,14 @@ from typing import cast
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import redirect_to_login
 from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse, HttpResponseNotModified
+from django.http import (
+    Http404,
+    HttpRequest,
+    HttpResponse,
+    HttpResponseNotModified,
+)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 
@@ -192,17 +198,27 @@ def _apply_picture(entry: Entry, form: EntryForm) -> None:
         EntryImage.attach(entry, form.picture, source_url=form.picture_source)
 
 
-@login_required
 def entry_image(request: HttpRequest, pk: int) -> HttpResponse:
-    """The picture for one entry, for its owner only.
+    """The picture for one entry.
 
-    Served by Django rather than off the web server's disk: a family's
-    pictures are not public, and an unguessable filename is not access
-    control. The scope on `owner` makes somebody else's entry a 404,
-    never a 403, which would confirm that it exists.
+    Readable by its owner, and by anybody at all once the entry sits in
+    a collection that is shared and shows pictures. That is what
+    publishing a picture means: the address works on its own, not only
+    inside the page that shows it. Take the sharing away and the next
+    request is refused again — the question is asked per request, and
+    nothing public is cached in between.
+
+    Served by Django rather than off the web server's disk, because an
+    unguessable filename is not access control. Somebody else's private
+    entry is a 404, never a 403, which would confirm that it exists.
     """
-    owner = cast("User", request.user)
-    image = get_object_or_404(EntryImage, entry__pk=pk, entry__owner=owner)
+    image = get_object_or_404(EntryImage, entry__pk=pk)
+    public = image.entry.is_publicly_visible()
+    if not public:
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path())
+        if image.entry.owner_id != request.user.pk:
+            raise Http404
 
     # AVIF is small but not universal; anything that does not ask for it
     # gets WebP, rendered from the archived original on first request.
@@ -222,6 +238,9 @@ def entry_image(request: HttpRequest, pk: int) -> HttpResponse:
     )
     response.headers["ETag"] = etag
     response.headers["Vary"] = "Accept"
-    # Private: a shared cache must never hold one person's picture.
-    response.headers["Cache-Control"] = "private, max-age=0, must-revalidate"
+    # A private picture must never sit in a shared cache; a public one
+    # may, briefly, so a page of them is not re-fetched on every scroll.
+    response.headers["Cache-Control"] = (
+        "public, max-age=300" if public else "private, max-age=0, must-revalidate"
+    )
     return response

@@ -27,6 +27,7 @@ from hrcek.accounts.forms import (
     DisplayNameForm,
     EmailChangeForm,
     InvitationAcceptForm,
+    PublicNameForm,
     SignupForm,
     TokenForm,
 )
@@ -64,10 +65,20 @@ def render_account(request: HttpRequest, **overrides: Any) -> HttpResponse:
     the person sees a single page while each view keeps one
     responsibility.
     """
+    # Imported here, not at module level: accounts must not depend on
+    # collections when Django loads it, or the two apps import each
+    # other in a circle.
+    from hrcek.collections.models import Collection  # noqa: PLC0415
+
     # login_required guarantees a real User; the annotation does not.
     user = cast("User", request.user)
     context: dict[str, Any] = {
         "display_name_form": DisplayNameForm(instance=user),
+        "public_name_form": PublicNameForm(instance=user),
+        # Only warn about breaking links when there are links to break.
+        "has_public_collections": Collection.objects.filter(
+            owner=user, visibility=Collection.PUBLIC
+        ).exists(),
         "email_change_form": EmailChangeForm(user),
     }
     context.update(overrides)
@@ -91,6 +102,17 @@ def render_clients(request: HttpRequest, **overrides: Any) -> HttpResponse:
     }
     context.update(overrides)
     return render(request, "accounts/clients.html", context)
+
+
+@require_http_methods(["POST"])
+@login_required
+def public_name(request: HttpRequest) -> HttpResponse:
+    form = PublicNameForm(request.POST, instance=cast("User", request.user))
+    if not form.is_valid():
+        return render_account(request, public_name_form=form)
+    form.save()
+    messages.success(request, _("Your public name has been updated."))
+    return redirect("accounts:account")
 
 
 @require_http_methods(["POST"])

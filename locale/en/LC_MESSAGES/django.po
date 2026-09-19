@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 12:31+0000\n"
+"POT-Creation-Date: 2026-09-19 12:53+0000\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -157,6 +157,10 @@ msgid "Email address"
 msgstr ""
 
 #: src/hrcek/accounts/forms.py
+msgid "That public name is already taken."
+msgstr ""
+
+#: src/hrcek/accounts/forms.py
 msgid "New email address"
 msgstr ""
 
@@ -212,6 +216,16 @@ msgstr ""
 
 #: src/hrcek/accounts/models.py
 msgid "Optional. Can be used to sign in instead of the email."
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid "public name"
+msgstr ""
+
+#: src/hrcek/accounts/models.py
+msgid ""
+"Only needed if you make a collection public. It appears in the address of "
+"every public collection you have, like /u/your-name/watches/."
 msgstr ""
 
 #: src/hrcek/accounts/models.py
@@ -321,6 +335,26 @@ msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/account.html
 msgid "Save display name"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Public name"
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid ""
+"Only needed if you make a collection public. Your public name appears in the "
+"address of every public collection you have, like /u/your-name/watches/."
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid ""
+"You have public collections. Changing your public name changes their "
+"addresses, and any link you have already shared will stop working."
+msgstr ""
+
+#: src/hrcek/accounts/templates/accounts/account.html
+msgid "Save public name"
 msgstr ""
 
 #: src/hrcek/accounts/templates/accounts/account.html
@@ -656,6 +690,16 @@ msgstr ""
 msgid "Enter a valid domain, for example example.com."
 msgstr ""
 
+#: src/hrcek/accounts/validators.py
+msgid ""
+"A public name may use only letters, digits, hyphens and underscores, and may "
+"be at most 50 characters long."
+msgstr ""
+
+#: src/hrcek/accounts/views.py
+msgid "Your public name has been updated."
+msgstr ""
+
 #: src/hrcek/accounts/views.py
 msgid "Your display name has been updated."
 msgstr ""
@@ -715,6 +759,39 @@ msgid "Only needed for a collection that follows a label."
 msgstr ""
 
 #: src/hrcek/collections/forms.py
+msgid ""
+"Private — only you can see this collection. There is no address to share. "
+"Anyone with the link — anyone who has the link can see this collection and "
+"everything you have chosen to show. The link is hard to guess, but it is not "
+"a password: whoever you send it to can pass it on. Public — anyone can see "
+"this collection, and it can be found by search engines. Its address contains "
+"your public name."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
+msgid ""
+"Shown to everyone who can see the page. Anything you leave unticked stays "
+"private."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
+msgid ""
+"A picture you show here can be opened by anyone who can see this page, even "
+"outside it."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
+msgid ""
+"Only the fields you tick are shown. The address and the title of each entry "
+"are always shown."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
+msgid ""
+"Choose a public name on your account page before making a collection public."
+msgstr ""
+
+#: src/hrcek/collections/forms.py
 msgid "Choose the label this collection follows."
 msgstr ""
 
@@ -724,6 +801,18 @@ msgstr ""
 
 #: src/hrcek/collections/models.py
 msgid "everything with a label"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "Private"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "Anyone with the link"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "Public"
 msgstr ""
 
 #: src/hrcek/collections/models.py src/hrcek/entries/models.py
@@ -740,6 +829,30 @@ msgstr ""
 
 #: src/hrcek/collections/models.py
 msgid "label"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "visibility"
+msgstr ""
+
+#: src/hrcek/collections/models.py src/hrcek/entries/models.py
+msgid "address"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "show notes"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "show labels"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "show pictures"
+msgstr ""
+
+#: src/hrcek/collections/models.py
+msgid "visible fields"
 msgstr ""
 
 #: src/hrcek/collections/models.py src/hrcek/entries/models.py
@@ -792,6 +905,25 @@ msgstr ""
 #: src/hrcek/entries/templates/entries/confirm_delete.html
 #: src/hrcek/entries/templates/entries/field_confirm_delete.html
 msgid "Keep it"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid ""
+"Private. Only you can see this collection; there is no address to share."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Anyone with this link can see this collection:"
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid ""
+"The link is hard to guess, but it is not a password: whoever you send it to "
+"can pass it on."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Public. Anyone can see this collection at:"
 msgstr ""
 
 #: src/hrcek/collections/templates/collections/detail.html
@@ -880,6 +1012,10 @@ msgstr ""
 
 #: src/hrcek/collections/templates/collections/list.html
 msgid "You have no collections yet."
+msgstr ""
+
+#: src/hrcek/collections/templates/collections/shared.html
+msgid "Nothing here yet."
 msgstr ""
 
 #: src/hrcek/collections/views.py
@@ -1040,10 +1176,6 @@ msgstr ""
 
 #: src/hrcek/entries/models.py
 msgid "tags"
-msgstr ""
-
-#: src/hrcek/entries/models.py
-msgid "address"
 msgstr ""
 
 #: src/hrcek/entries/models.py

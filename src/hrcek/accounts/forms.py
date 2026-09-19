@@ -142,6 +142,27 @@ class ConfirmedUserAuthenticationForm(AuthenticationForm):
             )
 
 
+class PublicNameForm(forms.ModelForm):
+    """The handle that appears in public collection addresses."""
+
+    class Meta:
+        model = User
+        fields = ("namespace",)
+
+    def clean_namespace(self) -> str | None:
+        name = (self.cleaned_data.get("namespace") or "").strip()
+        if not name:
+            return None
+        # Excluding yourself is what makes re-saving your own name work
+        # rather than colliding with yourself.
+        taken = User.objects.filter(namespace__iexact=name).exclude(pk=self.instance.pk)
+        if taken.exists():
+            raise forms.ValidationError(
+                _("That public name is already taken."), code="namespace_taken"
+            )
+        return name
+
+
 class DisplayNameForm(forms.ModelForm):
     """The optional handle, which doubles as a sign-in identifier."""
 

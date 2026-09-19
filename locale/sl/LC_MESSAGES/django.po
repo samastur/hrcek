@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hrcek 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 12:53+0000\n"
+"POT-Creation-Date: 2026-09-19 13:01+0000\n"
 "Language-Team: Slovenian\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -987,6 +987,10 @@ msgstr "Uredi"
 #: src/hrcek/collections/templates/collections/list.html
 msgid "Your collections"
 msgstr "Vaše zbirke"
+
+#: src/hrcek/collections/templates/collections/detail.html
+msgid "Feed"
+msgstr "Vir"
 
 #: src/hrcek/collections/templates/collections/detail.html
 #, python-format

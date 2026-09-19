@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
 
@@ -143,6 +144,17 @@ def _shared_context(collection: Collection) -> dict[str, object]:
     """
     return {
         "collection": collection,
+        "feed_url": (
+            reverse(
+                "shared:public_feed",
+                kwargs={
+                    "namespace": collection.owner.namespace,
+                    "slug": collection.slug,
+                },
+            )
+            if collection.visibility == Collection.PUBLIC
+            else reverse("shared:unlisted_feed", kwargs={"secret": collection.secret})
+        ),
         "entries": collection.entries().prefetch_related(
             "tags", "field_values__definition"
         ),

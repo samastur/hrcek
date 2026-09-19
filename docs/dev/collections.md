@@ -115,3 +115,34 @@ Entry images used to be readable by their owner and nobody else.
 Sharing changes that rule, and it is the one place here where getting
 it wrong leaks private data. See
 [images](images.md#who-may-see-a-picture).
+
+## Feeds
+
+Atom, from `django.contrib.syndication` with `Atom1Feed`. Nothing here
+writes XML by hand.
+
+`src/hrcek/collections/feeds.py` holds three classes sharing a base.
+They differ only in `get_object`, which is where visibility is
+enforced: the private feed requires the owner's session, the unlisted
+one looks up by secret **and** `visibility=UNLISTED`, the public one by
+public name, slug **and** `visibility=PUBLIC`. A feed therefore cannot
+be reachable anywhere its page is not.
+
+| Feed | Address | Route |
+|---|---|---|
+| private | `/collections/<id>/feed/` | `collections:feed` |
+| unlisted | `/c/<secret>/feed/` | `shared:unlisted_feed` |
+| public | `/u/<namespace>/<slug>/feed/` | `shared:public_feed` |
+
+Items come from `Collection.entries()` — the same method the page uses,
+so neither what a feed holds nor the order it holds it in can drift
+from the page. Notes appear only where `show_notes` is on; a feed that
+carried what its page hides would be a back door, and
+`test_a_feed_hides_what_its_page_hides` holds that line.
+
+Django's `Feed` wants the collection's description under two names:
+`description` for RSS readers, and `subtitle`, which is what Atom
+actually emits. Both are defined.
+
+Each page advertises its feed with a `<link rel="alternate">` in the
+head, through the `head` block added to `base.html`.

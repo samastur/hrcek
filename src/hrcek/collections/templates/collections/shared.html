@@ -1,5 +1,9 @@
 {% extends "base.html" %}{% load i18n %}
 {% block title %}{{ collection.name }}{% endblock %}
+{% block head %}
+  <link rel="alternate" type="application/atom+xml"
+        title="{{ collection.name }}" href="{{ feed_url }}">
+{% endblock %}
 {% block heading %}{{ collection.name }}{% endblock %}
 {% block content %}
   {# The description is as visible as the collection itself. #}

@@ -30,6 +30,12 @@ class RequestIDMiddleware:
         incoming = request.headers.get(REQUEST_ID_HEADER, "").strip()
         request_id = incoming if is_acceptable(incoming) else new_request_id()
         token = set_request_id(request_id)
+        # Also on the request itself. Django logs a failing response
+        # *after* the middleware chain has unwound, by which time the
+        # context variable below has been reset; the record it writes
+        # carries the request, so the id can still be found there.
+        # HttpRequest carries no such field, hence the silenced check.
+        request.request_id = request_id  # ty: ignore[unresolved-attribute]
         try:
             # A no-op when Sentry is not configured.
             set_tag("request_id", request_id)

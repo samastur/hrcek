@@ -7,6 +7,7 @@
 @source "../templates";
 @source "../../accounts/templates";
 @source "../../entries/templates";
+@source "../../collections/templates";
 
 /* ------------------------------------------------------------------ */
 /* Design tokens. Restyling Hrček starts (and usually ends) here.     */
@@ -120,6 +121,39 @@
   form select:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 1px;
+  }
+
+  /* A checkbox belongs beside its label, not under it. Django renders
+     the label first, so the box is moved ahead of it visually; there
+     is only one focusable control in the row, so tab order is
+     unaffected. The help text drops to its own line beneath both. */
+  form p:has(> input[type="checkbox"]),
+  form p:has(> input[type="radio"]) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+  }
+
+  form p:has(> input[type="checkbox"]) > input,
+  form p:has(> input[type="radio"]) > input {
+    order: -1;
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+  }
+
+  form p:has(> input[type="checkbox"]) > label,
+  form p:has(> input[type="radio"]) > label {
+    display: inline;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  form p:has(> input[type="checkbox"]) > .helptext,
+  form p:has(> input[type="radio"]) > .helptext {
+    flex-basis: 100%;
+    margin: 0;
   }
 
   form .helptext {

@@ -193,3 +193,30 @@ def test_the_label_picker_is_marked_for_the_kind_that_needs_it(signed_in):
     page = signed_in.get(reverse("collections:create")).text
     assert "data-kind-select" in page
     assert f'data-label-field="{Collection.BY_LABEL}"' in page
+
+
+def test_no_template_comment_leaks_onto_the_page(signed_in, nina):
+    """A {# #} comment cannot span lines; Django renders it verbatim.
+
+    It looked like a comment in the source and appeared as prose on
+    the page, which is exactly the failure that is easy to miss.
+    """
+    for url in (
+        reverse("collections:create"),
+        reverse("collections:list"),
+    ):
+        body = signed_in.get(url).text
+        assert "{#" not in body, f"template comment leaked into {url}"
+        assert "Progressive enhancement" not in body
+
+
+def test_every_page_of_this_app_is_free_of_leaked_comments(signed_in, nina):
+    collection = Collection.objects.create(owner=nina, name="Watches")
+    pages = [
+        reverse("collections:detail", args=[collection.pk]),
+        reverse("collections:edit", args=[collection.pk]),
+        reverse("collections:delete", args=[collection.pk]),
+    ]
+    for url in pages:
+        body = signed_in.get(url).text
+        assert "{#" not in body, f"template comment leaked into {url}"

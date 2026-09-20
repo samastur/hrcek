@@ -22,6 +22,19 @@ class TokenCreateIn(Schema):
     expires_at: datetime | None = None
 
 
+class TokenExchangeIn(Schema):
+    """Credentials traded for a token, for a client with no session.
+
+    `identifier` and `password` are the same pair `login` takes; the
+    name is the one the clients page will show beside the token.
+    """
+
+    name: str
+    identifier: str
+    password: str
+    expires_at: datetime | None = None
+
+
 class TokenOut(Schema):
     """The only time the raw token exists outside the client.
 

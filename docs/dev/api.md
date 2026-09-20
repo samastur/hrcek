@@ -95,6 +95,49 @@ comes back as **422** `HRC-CORE-0002` with the offending field named in
 
 To remove a token, use the clients page at `/accounts/me/clients/`.
 
+### POST /api/auth/tokens/exchange
+
+Trade an email address and password directly for a token. Same body
+as above plus `identifier` and `password`, same **201** reply.
+
+```bash
+curl -X POST https://hrcek.example.com/api/auth/tokens/exchange \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Hrček extension (Firefox on macOS)",
+       "identifier": "nina@example.com",
+       "password": "…"}'
+```
+
+This exists for clients that cannot hold a session. A browser
+extension is the case: Firefox attaches `Origin: moz-extension://<uuid>`
+to every request it makes, the uuid differs for every install so it
+cannot be trusted in advance, and Django refuses the origin before it
+reads anything else. An extension can therefore sign in and then do
+nothing unsafe with the session it was given.
+
+The route reads **no session at all**, which is what makes it safe
+without a CSRF check: nothing here can be reached with a cookie alone,
+so a signed-in browser visiting a hostile page gains an attacker
+nothing. Being signed in does not stand in for the password either.
+
+Refusals reuse the sign-in codes: **401** `HRC-AUTH-0001` for a wrong
+password, an unknown identifier or a disabled account — one answer for
+all three, so the route cannot be used to discover who has an account
+— and **403** `HRC-AUTH-0002` for an address that has never been
+confirmed. A missing, blank or over-long name, or an expiry in the
+past, is **422** `HRC-CORE-0002`.
+
+**It is rate-limited.** It is unauthenticated and it hands out a
+durable credential, so it counts every call from a caller, successful
+or not, and answers **429** past the limit. The default is ten an
+hour; `HRCEK_TOKEN_EXCHANGE_RATE` changes it. Counters live in
+Django's cache, which is per-process local memory by default: with one
+process that is exactly right, and with several each keeps its own
+tally.
+
+Store the token and nothing else. There is no way to look it up
+again, and the password should not be kept once the token exists.
+
 ## Errors
 
 Every failure has the same shape and a truthful status code:

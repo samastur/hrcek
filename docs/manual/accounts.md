@@ -82,9 +82,13 @@ copy it before you leave the page. Only a fingerprint of it is stored,
 so nobody, including whoever runs this Hrček, can look it up for you
 afterwards.
 
-A program signed in as you can also make a token for itself, which
-saves pasting one in by hand when it is set up. That is a detail for
-whoever writes it; the developer documentation covers it.
+A program can also make a token for itself, which saves pasting one in
+by hand when it is set up: it asks for your email address and password
+once, trades them for a token, and keeps only the token. A browser
+extension works this way. Your password should never be stored by it —
+if a program asks to keep your password rather than a token, that is
+worth questioning. That is a detail for whoever writes the program;
+the developer documentation covers it.
 
 Delete a token and it stops working immediately, which is what to do if
 you think one has leaked. Deleting cannot be undone; make a new one.

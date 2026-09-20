@@ -153,6 +153,14 @@ STATIC_URL = "static/"
 # on the next request. See docs/dev/images.md.
 MEDIA_ROOT = Path(env_str("HRCEK_MEDIA_PATH", str(BASE_DIR / "media")))
 
+# Rate limits for the unauthenticated routes that hand out
+# credentials. Counters live in Django's cache, which here is the
+# per-process default: with one process that is exactly right, and
+# with several each would keep its own tally. See docs/dev/api.md.
+NINJA_DEFAULT_THROTTLE_RATES = {
+    "token_exchange": env_str("HRCEK_TOKEN_EXCHANGE_RATE", "10/h"),
+}
+
 DEBUG_SQL = env_bool("HRCEK_DEBUG_SQL", default=False)
 
 LOGGING = {

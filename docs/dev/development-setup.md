@@ -44,6 +44,7 @@ file cannot surprise a deployment.
 | `HRCEK_DB_PATH` | `db.sqlite3` | SQLite file location |
 | `HRCEK_MEDIA_PATH` | `media/` | Where rendered image copies are cached; disposable |
 | `HRCEK_DEBUG_SQL` | `false` | Log every query |
+| `HRCEK_TOKEN_EXCHANGE_RATE` | `10/h` | Limit on `POST /api/auth/tokens/exchange`, per caller |
 | `HRCEK_API_DOCS` | `true` | Serve `/api/docs`; forced off in production |
 | `HRCEK_BASE_URL` | `http://localhost:8000` | Absolute links in email are built from this |
 | `HRCEK_FROM_EMAIL` | `hrcek@localhost` | Sender address |

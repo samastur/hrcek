@@ -169,6 +169,17 @@ LOGGING = {
     },
     "root": {"handlers": ["console"], "level": "INFO"},
     "loggers": {
+        # Named explicitly, and deliberately not propagating. Django's
+        # own DEFAULT_LOGGING runs before this one and gives "django" a
+        # plain-text console handler and a mail_admins handler. Leaving
+        # the logger unmentioned keeps both of those *and* lets every
+        # record travel on to the root handler here, so one event was
+        # printed twice — once as text, once as JSON. See issue #52.
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
         "django.db.backends": {
             "handlers": ["console"],
             "level": "DEBUG" if DEBUG_SQL else "INFO",

@@ -10,6 +10,27 @@ traceback. One line per record keeps logs greppable and parseable.
 uv run python manage.py runserver | jq 'select(.level == "ERROR")'
 ```
 
+That pipe only works if **every** line is JSON, which is why the
+`django` logger is named explicitly in `LOGGING`:
+
+```python
+"django": {"handlers": ["console"], "level": "INFO", "propagate": False},
+```
+
+Django applies its own `DEFAULT_LOGGING` before the project's, and it
+gives the `django` logger a plain-text console handler and a
+`mail_admins` handler. A config that does not mention the logger keeps
+both of those, and — because the logger still propagates — adds the
+JSON handler from the root on top. One event was therefore printed
+twice, once as text and once as JSON. Naming the logger replaces
+Django's handlers with ours; `propagate: False` stops the second copy.
+
+One event can still be reported by two *different* loggers, which is
+not duplication: a rejected request has a reason
+(`django.security.csrf`, "Origin checking failed …") and an outcome
+(`django.request`, "Forbidden: /path"), and they say different things.
+Both carry the same `request_id`, so they can be tied together.
+
 ## Request IDs
 
 Each request gets an id, taken from an `X-Request-ID` header when the
@@ -21,6 +42,16 @@ log lines and the exact Sentry event.
 Supplied ids are accepted only if they match `[A-Za-z0-9._-]{1,64}`. The
 value is echoed in a response header, so anything that could smuggle
 header syntax is replaced rather than sanitised.
+
+The id lives in a context variable for the life of the request, and is
+also stamped on the request object. Both are needed: Django logs a
+failing response in `BaseHandler.get_response`, **after** the
+middleware chain has unwound, so by then `RequestIDMiddleware` has
+reset the context variable. That record carries the request, so
+`JSONFormatter` falls back to the id stamped there — which is why the
+line reporting a failure, the one most worth correlating, still has an
+id. Resetting the variable is kept: an id leaking into the next
+request on a reused thread would be worse than none.
 
 ## SQL
 

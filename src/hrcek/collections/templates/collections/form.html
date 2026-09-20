@@ -14,10 +14,15 @@
   </form>
 
   {% if form.kind %}
-    {# Progressive enhancement. The two inputs are marked server-side;
-       this reveals the label picker only for the kind that needs it.
-       Without JavaScript both stay visible and the form explains the
-       mismatch instead of silently dropping half the submission. #}
+    {% comment %}
+      Progressive enhancement. The two inputs are marked server-side;
+      this reveals the label picker only for the kind that needs it.
+      Without JavaScript both stay visible and the form explains the
+      mismatch instead of silently dropping half the submission.
+
+      {% templatetag opencomment %} cannot span lines — Django renders
+      such a "comment" as text — so this block is the only safe form.
+    {% endcomment %}
     <script>
       (function () {
         var kind = document.querySelector('[data-kind-select]');

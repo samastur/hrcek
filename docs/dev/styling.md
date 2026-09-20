@@ -9,6 +9,11 @@ styles.
 
 ## The files
 
+Every directory holding templates must be listed as an `@source` in
+the stylesheet, or utilities used only there are never generated. The
+collections app was added to that list after the fact; check it when
+adding an app.
+
 | File | Role |
 |---|---|
 | `src/hrcek/core/static_src/hrcek.css` | The source: design tokens and the few component rules. Edit this. |
@@ -94,6 +99,13 @@ defines the small vocabulary templates use for structure:
 | `messages` | Django's flash messages |
 | `tag` | A tag pill |
 | `danger` | A destructive button (deletes) |
+
+Checkbox rows get their own treatment. Django renders the label
+before the input, and the global `label { display: block }` would drop
+the box onto the next line, so a row containing a checkbox becomes a
+flex line with the box moved ahead of the label and the help text
+below both. Only one control in the row is focusable, so moving it
+visually does not disturb tab order.
 
 Do not name a template class after a Tailwind utility (`inline`,
 `block`, `flex`...): the generated utility would override the component

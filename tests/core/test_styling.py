@@ -1,4 +1,7 @@
+from pathlib import Path
+
 import pytest
+from django.conf import settings
 from django.urls import reverse
 
 pytestmark = pytest.mark.django_db
@@ -29,3 +32,17 @@ def test_pages_link_the_favicon(client):
     assert 'rel="apple-touch-icon" href="/static/img/apple-touch-icon.png"' in (
         response.text
     )
+
+
+def test_checkbox_rows_are_laid_out_beside_their_label():
+    """The compiled stylesheet carries the rule, not just the source.
+
+    The compiled file is committed, so forgetting to rebuild after
+    editing static_src ships a stylesheet that does not match the
+    source. This catches that.
+    """
+    compiled = (
+        Path(settings.BASE_DIR) / "src/hrcek/core/static/css/hrcek.css"
+    ).read_text(encoding="utf-8")
+    assert ":has(>input[type=checkbox])" in compiled
+    assert "checkbox])>label" in compiled, "the label rule did not compile"

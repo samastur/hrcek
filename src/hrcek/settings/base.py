@@ -159,7 +159,17 @@ MEDIA_ROOT = Path(env_str("HRCEK_MEDIA_PATH", str(BASE_DIR / "media")))
 # with several each would keep its own tally. See docs/dev/api.md.
 NINJA_DEFAULT_THROTTLE_RATES = {
     "token_exchange": env_str("HRCEK_TOKEN_EXCHANGE_RATE", "10/h"),
+    "token_exchange_account": env_str("HRCEK_TOKEN_EXCHANGE_ACCOUNT_RATE", "10/h"),
 }
+
+# How many reverse proxies sit in front. Zero means "believe the
+# socket, not the headers", which is the only safe default: with this
+# unset, django-ninja takes the caller's identity from
+# X-Forwarded-For whenever the header is present, so anyone could send
+# a different value on each request and get a fresh rate-limit
+# allowance every time. Set it to 1 behind a single nginx or Caddy,
+# and the last hop it appends is believed instead.
+NINJA_NUM_PROXIES = env_int("HRCEK_PROXY_COUNT", default=0)
 
 DEBUG_SQL = env_bool("HRCEK_DEBUG_SQL", default=False)
 

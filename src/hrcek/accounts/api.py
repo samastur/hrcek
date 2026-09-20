@@ -6,6 +6,8 @@ through the admin and the web pages.
 
 from __future__ import annotations
 
+import hashlib
+import json
 from datetime import datetime
 from typing import cast
 
@@ -16,7 +18,7 @@ from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from ninja import Router, Status
-from ninja.throttling import AnonRateThrottle
+from ninja.throttling import AnonRateThrottle, SimpleRateThrottle
 
 from hrcek.accounts.errors import (
     EMAIL_NOT_CONFIRMED,
@@ -129,21 +131,63 @@ def _issue_token(user: User, *, name: str, expires_at: datetime | None) -> Statu
 
 
 class TokenExchangeThrottle(AnonRateThrottle):
-    """Counted per caller, whether or not the credentials were right.
+    """Counted per calling address, right credentials or wrong.
 
     The route is unauthenticated and hands out a durable credential,
     so guessing at it has to get expensive. Successes count too: a
     client needs this once per install, not repeatedly.
+
+    Which address counts depends on `NINJA_NUM_PROXIES`; see the note
+    beside it in the settings. Left unset, the header decides, and a
+    header is whatever the caller says it is.
     """
 
     scope = "token_exchange"
+
+
+class TokenExchangeAccountThrottle(SimpleRateThrottle):
+    """Counted per account named in the request.
+
+    The address limit above does nothing against somebody with a pool
+    of addresses working through one account's password. This counts
+    the account instead, so the guessing is expensive however many
+    places it comes from.
+    """
+
+    scope = "token_exchange_account"
+
+    def get_cache_key(self, request: HttpRequest) -> str | None:
+        identifier = self._identifier(request)
+        if not identifier:
+            # Nothing to count against; the address limit still applies
+            # and the request is about to fail validation anyway.
+            return None
+        # Hashed, so a cache dump is not a list of who has an account.
+        digest = hashlib.sha256(identifier.casefold().encode()).hexdigest()
+        return f"throttle_{self.scope}_{digest}"
+
+    @staticmethod
+    def _identifier(request: HttpRequest) -> str:
+        """The identifier from the body, without disturbing the view.
+
+        Django caches `request.body`, so reading it here does not stop
+        the view parsing the same bytes afterwards.
+        """
+        try:
+            payload = json.loads(request.body or b"{}")
+        except (ValueError, UnicodeDecodeError):
+            return ""
+        if not isinstance(payload, dict):
+            return ""
+        value = payload.get("identifier")
+        return value.strip() if isinstance(value, str) else ""
 
 
 @router.post(
     "/tokens/exchange",
     response={201: TokenOut},
     auth=None,
-    throttle=[TokenExchangeThrottle()],
+    throttle=[TokenExchangeThrottle(), TokenExchangeAccountThrottle()],
     operation_id="exchange_credentials_for_token",
 )
 def exchange_credentials_for_token(

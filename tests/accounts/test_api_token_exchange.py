@@ -246,3 +246,39 @@ def test_throttling_leaves_the_rest_of_the_api_alone(client, nina):
     for _ in range(12):
         _exchange(client, password="wrong")
     assert client.get("/api/health").status_code == 200
+
+
+def test_a_forged_forwarded_header_does_not_buy_more_attempts(client, nina):
+    """Otherwise the limit is decoration.
+
+    django-ninja identifies a caller by X-Forwarded-For when it is
+    present, so unless the number of proxies in front is stated, a
+    caller can send a different value on every request and get a fresh
+    allowance each time.
+    """
+    statuses = [
+        client.post(
+            URL,
+            {
+                "name": "x",
+                "identifier": "nina@example.com",
+                "password": "wrong",
+            },
+            content_type="application/json",
+            headers={"x-forwarded-for": f"203.0.113.{n}"},
+        ).status_code
+        for n in range(12)
+    ]
+    assert 429 in statuses, "the throttle was bypassed by forging a header"
+
+
+def test_one_account_cannot_be_guessed_at_from_many_addresses(client, nina):
+    """An address-based limit alone does not protect an account: an
+    attacker with a pool of addresses gets the whole allowance again
+    from each one."""
+    statuses = []
+    for n in range(12):
+        client.defaults["REMOTE_ADDR"] = f"198.51.100.{n}"
+        statuses.append(_exchange(client, password="wrong").status_code)
+    client.defaults.pop("REMOTE_ADDR", None)
+    assert 429 in statuses, "the account took unlimited guesses"

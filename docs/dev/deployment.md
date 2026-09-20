@@ -42,6 +42,12 @@ location /api/auth/login { limit_req zone=hrcek_login burst=5 nodelay; }
 location /accounts/      { limit_req zone=hrcek_login burst=10 nodelay; }
 ```
 
+**Set `HRCEK_PROXY_COUNT=1` when you run a proxy.** Hrček ignores
+forwarding headers by default, because believing them unconditionally
+lets a caller forge a fresh rate-limit identity on every request.
+Behind a proxy that default counts every visitor as the proxy itself,
+so they share one allowance — safe, but stricter than you want.
+
 Caddy has `rate_limit`; if you run neither, `fail2ban` watching the
 access log does the same job. Whichever you pick, do pick one — without
 it an attacker can guess passwords as fast as the network allows.

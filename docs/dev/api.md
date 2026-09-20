@@ -127,13 +127,33 @@ all three, so the route cannot be used to discover who has an account
 confirmed. A missing, blank or over-long name, or an expiry in the
 past, is **422** `HRC-CORE-0002`.
 
-**It is rate-limited.** It is unauthenticated and it hands out a
-durable credential, so it counts every call from a caller, successful
-or not, and answers **429** past the limit. The default is ten an
-hour; `HRCEK_TOKEN_EXCHANGE_RATE` changes it. Counters live in
-Django's cache, which is per-process local memory by default: with one
-process that is exactly right, and with several each keeps its own
-tally.
+**It is rate-limited, two ways.** It is unauthenticated and it hands
+out a durable credential, so every call counts, successful or not, and
+past either limit it answers **429**:
+
+| Counted per | Default | Setting |
+|---|---|---|
+| Calling address | 10/h | `HRCEK_TOKEN_EXCHANGE_RATE` |
+| Account named in the request | 10/h | `HRCEK_TOKEN_EXCHANGE_ACCOUNT_RATE` |
+
+Both are needed. An address limit alone does nothing against somebody
+with a pool of addresses working through one account's password, and
+an account limit alone does nothing against somebody sweeping many
+accounts.
+
+Which address counts depends on `HRCEK_PROXY_COUNT`, the number of
+reverse proxies in front. It defaults to **0**, meaning the socket is
+believed and forwarding headers are ignored. That default is
+deliberate: left unset, django-ninja takes the caller's identity from
+`X-Forwarded-For` whenever the header is present, and a header is
+whatever the caller says it is — so the limit could be sidestepped by
+sending a different value each time. Behind a single nginx or Caddy,
+set it to 1, or every caller will be counted as the proxy and share
+one allowance.
+
+Counters live in Django's cache, which is per-process local memory by
+default: with one process that is exactly right, and with several each
+keeps its own tally.
 
 Store the token and nothing else. There is no way to look it up
 again, and the password should not be kept once the token exists.

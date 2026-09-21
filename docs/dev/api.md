@@ -534,6 +534,90 @@ is a document that can carry script.
 All of them are 422, in the usual envelope. Full text in
 [error codes](error-codes.md).
 
+## What this account has defined
+
+Two read-only calls, so a client can fit its own interface to whoever
+is using it. Both are created and renamed through the web pages; there
+is no way to change them here.
+
+### GET /api/fields/
+
+The fields this account's entries may carry.
+
+```bash
+curl https://hrcek.example.com/api/fields/ \
+  -H "Authorization: Bearer $HRCEK_TOKEN"
+```
+
+```json
+{"items": [{"name": "Price", "kind": "number", "options": []},
+           {"name": "Priority", "kind": "choice",
+            "options": ["high", "medium", "low"]}],
+ "count": 2}
+```
+
+`kind` is `text`, `number` or `choice`. `options` is empty except for
+a choice field, where it is the only way to know what the choices are.
+
+**`name` is the key**: it is what an entry's `fields` object uses, so
+what you read here is what you write back. Do not hard-code these —
+they are renamed and deleted by their owner, and every account starts
+with its own copy.
+
+### GET /api/labels/
+
+This account's labels, in name order.
+
+```bash
+curl -G https://hrcek.example.com/api/labels/ \
+  -H "Authorization: Bearer $HRCEK_TOKEN" \
+  --data-urlencode "starts_with=wat"
+```
+
+```json
+{"items": [{"name": "watches"}, {"name": "water"}], "count": 2}
+```
+
+`starts_with` narrows the list to labels beginning with it, ignoring
+capitals and surrounding space. It is a literal, not a pattern, so
+punctuation somebody types into an autocomplete box means itself. Omit
+it and you get the lot.
+
+The same call serves an autocomplete and a full list because they
+differ only by that filter.
+
+Labels come back in alphabetical order, ignoring capitals.
+
+**`count` is how many labels match, not how many this page carries**,
+so a client knows whether to ask again. A page holds up to a thousand,
+which is both the default and the maximum: asking plainly returns
+everything up to that many, and asking for more is refused with
+**422** rather than quietly truncated — a client that believed it had
+asked for five thousand would page wrongly.
+
+To read the rest, **pass the last name you were given as `after`**:
+
+```bash
+curl -G https://hrcek.example.com/api/labels/ \
+  -H "Authorization: Bearer $HRCEK_TOKEN" \
+  --data-urlencode "after=watches"
+```
+
+Keep going until a page comes back empty. There is no offset, on
+purpose: an offset counts rows, and the rows move. Add a label that
+sorts earlier while somebody is reading and every later row shifts
+along by one, so the next offset lands past a row that was never
+served. A cursor names a place in the order instead, and that place
+does not move. `after` need not be a label that exists — whatever
+comes after it alphabetically is returned — so a label deleted
+mid-read costs nothing.
+
+`after` works with `starts_with` as well, should an account ever have
+more than a thousand labels sharing a prefix.
+
+A label that no entry carries is not listed: they are removed when the
+last entry using one lets it go.
+
 ## The other endpoints
 
 `GET /api/health` needs no credentials and reports that the service is

@@ -16,6 +16,8 @@ EXPECTED_PATHS = {
     "/api/entries/",
     "/api/entries/batch/",
     "/api/entries/by-url/",
+    "/api/fields/",
+    "/api/labels/",
     "/api/entries/{pk}/image",
 }
 

@@ -24,6 +24,7 @@ from hrcek.core.errors import (
     HrcekError,
 )
 from hrcek.entries.api import router as entries_router
+from hrcek.entries.fields_api import fields_router, labels_router
 
 logger = logging.getLogger(__name__)
 
@@ -109,3 +110,5 @@ register_exception_handlers(api)
 api.add_router("/", core_router)
 api.add_router("/auth/", accounts_router)
 api.add_router("/entries/", entries_router)
+api.add_router("/fields/", fields_router)
+api.add_router("/labels/", labels_router)

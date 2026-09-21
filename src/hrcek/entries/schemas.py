@@ -104,3 +104,23 @@ class BatchResult(Schema):
 
 class BatchOut(Schema):
     results: list[BatchResult]
+
+
+class FieldOut(Schema):
+    """One of the fields this account's entries may carry.
+
+    `name` is the key: it is what an entry's `fields` object uses, so a
+    client writes back what it read here. `options` is empty except
+    for a choice field, where it is the only way to know what the
+    choices are.
+    """
+
+    name: str
+    kind: str
+    options: list[str]
+
+
+class LabelOut(Schema):
+    """A label already in use on this account's entries."""
+
+    name: str

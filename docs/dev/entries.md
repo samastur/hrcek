@@ -176,3 +176,33 @@ import, which is what the per-row results are for.
 Exceeding the limit refuses the whole request with `HRC-ENTRY-0001`
 rather than saving a prefix — a half-applied batch with no report is
 worse than none.
+
+
+## Reading the definitions
+
+`src/hrcek/entries/fields_api.py` serves `/api/fields/` and
+`/api/labels/`, both read-only. They are mounted at the top level
+rather than under `/api/entries/`: a client asking what fields it has
+is not asking about any particular entry.
+
+Labels take an optional `starts_with`, so one endpoint serves both a
+full list and an autocomplete. The filter is `istartswith` — a
+literal, not a pattern, because whatever somebody types into an
+autocomplete box has to mean itself.
+
+A label page holds a thousand, set as both the default and the
+maximum on the pagination input so the ceiling appears in the OpenAPI
+schema. Over that is a 422, not a silent truncation: a client that
+asked for five thousand and got a thousand would page wrongly.
+
+Paging is by cursor, not offset: `after` takes the last name served
+and the next page begins past it. An offset counts rows and the rows
+move — insert a label that sorts earlier and everything after it
+shifts, so the next offset skips whatever crossed the boundary.
+
+The ordering and the cursor have to agree exactly or pages fall
+between rows, so both use the lowercased name: the queryset is
+annotated `sort_key=Lower("name")` and ordered by it, and the cursor
+compares `sort_key__gt=after.casefold()`. There are no ties to break,
+because a label cannot differ from another only by case — the
+per-owner unique constraint is case-insensitive.

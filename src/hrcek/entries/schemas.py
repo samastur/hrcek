@@ -33,6 +33,17 @@ class EntryIn(Schema):
     image_url: str | None = None
 
 
+class EntryLookupIn(Schema):
+    """The address to look up.
+
+    In a body rather than a query string: an address is the private
+    part of an entry, and a query string is written into every access
+    log the request passes through.
+    """
+
+    url: str
+
+
 class ImageOut(Schema):
     """What a client needs to show the picture, and nothing more.
 

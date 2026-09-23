@@ -24,10 +24,12 @@ def nina():
     return _person("nina@example.com")
 
 
-def test_a_new_account_gets_price_and_priority(nina):
+def test_a_new_account_gets_priority_and_nothing_else(nina):
+    """Price was seeded here once and is not any more: a price without
+    a currency says too little, and a currency needs a field type this
+    project does not have."""
     fields = {f.name: f for f in FieldDefinition.objects.filter(owner=nina)}
-    assert sorted(fields) == ["Price", "Priority"]
-    assert fields["Price"].kind == FieldDefinition.NUMBER
+    assert sorted(fields) == ["Priority"]
     assert fields["Priority"].kind == FieldDefinition.CHOICE
     assert fields["Priority"].options == ["high", "medium", "low"]
 
@@ -42,23 +44,23 @@ def test_seeded_fields_are_ordinary_rows(nina):
 
 def test_seeding_twice_does_not_duplicate(nina):
     seed_default_fields(nina)
-    assert FieldDefinition.objects.filter(owner=nina).count() == 2
+    assert FieldDefinition.objects.filter(owner=nina).count() == 1
 
 
 def test_fields_belong_to_their_owner(nina):
     _person("marko@example.com")
-    assert FieldDefinition.objects.filter(owner=nina).count() == 2
-    assert FieldDefinition.objects.count() == 4
+    assert FieldDefinition.objects.filter(owner=nina).count() == 1
+    assert FieldDefinition.objects.count() == 2
 
 
 def test_a_name_is_unique_per_owner_ignoring_case(nina):
     with pytest.raises(IntegrityError):
-        FieldDefinition.objects.create(owner=nina, name="price")
+        FieldDefinition.objects.create(owner=nina, name="priority")
 
 
 def test_two_people_may_use_the_same_field_name(nina):
     _person("marko@example.com")
-    assert FieldDefinition.objects.filter(name="Price").count() == 2
+    assert FieldDefinition.objects.filter(name="Priority").count() == 2
 
 
 def test_a_text_value_round_trips(nina):
@@ -72,7 +74,9 @@ def test_a_text_value_round_trips(nina):
 
 def test_a_number_value_round_trips(nina):
     entry = Entry.objects.create(owner=nina, url="https://example.com/1")
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.create(
+        owner=nina, name="Cost", kind=FieldDefinition.NUMBER
+    )
     value = FieldValue(entry=entry, definition=price)
     value.value = "129.00"
     value.save()
@@ -102,7 +106,9 @@ def test_an_entry_may_have_no_value_for_a_field(nina):
 
 def test_one_value_per_field_per_entry(nina):
     entry = Entry.objects.create(owner=nina, url="https://example.com/1")
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.create(
+        owner=nina, name="Cost", kind=FieldDefinition.NUMBER
+    )
     FieldValue.objects.create(entry=entry, definition=price, value_number=1)
     with pytest.raises(IntegrityError):
         FieldValue.objects.create(entry=entry, definition=price, value_number=2)
@@ -110,7 +116,9 @@ def test_one_value_per_field_per_entry(nina):
 
 def test_deleting_a_definition_removes_its_values(nina):
     entry = Entry.objects.create(owner=nina, url="https://example.com/1")
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.create(
+        owner=nina, name="Cost", kind=FieldDefinition.NUMBER
+    )
     FieldValue.objects.create(entry=entry, definition=price, value_number=1)
     price.delete()
     assert FieldValue.objects.filter(entry=entry).count() == 0
@@ -118,7 +126,9 @@ def test_deleting_a_definition_removes_its_values(nina):
 
 def test_deleting_an_entry_removes_its_values(nina):
     entry = Entry.objects.create(owner=nina, url="https://example.com/1")
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.create(
+        owner=nina, name="Cost", kind=FieldDefinition.NUMBER
+    )
     FieldValue.objects.create(entry=entry, definition=price, value_number=1)
     entry.delete()
     assert FieldValue.objects.count() == 0

@@ -21,7 +21,15 @@ def _person(email):
 
 @pytest.fixture
 def nina():
-    return _person("nina@example.com")
+    """An account with a number field beside the seeded Priority.
+
+    Only Priority is seeded now, so a test wanting a number makes one.
+    """
+    person = _person("nina@example.com")
+    FieldDefinition.objects.create(
+        owner=person, name="Cost", kind=FieldDefinition.NUMBER
+    )
+    return person
 
 
 @pytest.fixture
@@ -41,26 +49,26 @@ def _post(client, headers, body, path="/api/entries/"):
 
 def test_an_entry_can_be_created_with_fields(client, auth):
     response = _post(
-        client, auth, {"url": URL, "fields": {"price": "129.00", "priority": "high"}}
+        client, auth, {"url": URL, "fields": {"cost": "129.00", "priority": "high"}}
     )
     assert response.status_code == 201
-    assert response.json()["fields"] == {"Price": "129", "Priority": "high"}
+    assert response.json()["fields"] == {"Cost": "129", "Priority": "high"}
 
 
 def test_values_come_back_as_strings(client, auth):
-    response = _post(client, auth, {"url": URL, "fields": {"price": 129}})
-    assert response.json()["fields"]["Price"] == "129"
+    response = _post(client, auth, {"url": URL, "fields": {"cost": 129}})
+    assert response.json()["fields"]["Cost"] == "129"
 
 
 def test_a_number_may_be_sent_as_a_json_number(client, auth):
-    response = _post(client, auth, {"url": URL, "fields": {"price": 38.5}})
+    response = _post(client, auth, {"url": URL, "fields": {"cost": 38.5}})
     assert response.status_code == 201
-    assert response.json()["fields"]["Price"] == "38.5"
+    assert response.json()["fields"]["Cost"] == "38.5"
 
 
 def test_names_match_without_regard_to_case(client, auth):
-    response = _post(client, auth, {"url": URL, "fields": {"PRICE": "12"}})
-    assert response.json()["fields"] == {"Price": "12"}
+    response = _post(client, auth, {"url": URL, "fields": {"COST": "12"}})
+    assert response.json()["fields"] == {"Cost": "12"}
 
 
 def test_an_entry_without_fields_has_an_empty_object(client, auth):
@@ -69,27 +77,27 @@ def test_an_entry_without_fields_has_an_empty_object(client, auth):
 
 def test_omitting_fields_leaves_existing_values_alone(client, auth):
     """A client that predates custom fields must not destroy them."""
-    _post(client, auth, {"url": URL, "fields": {"price": "129"}})
+    _post(client, auth, {"url": URL, "fields": {"cost": "129"}})
     response = _post(client, auth, {"url": URL, "title": "A watch"})
     assert response.status_code == 200
-    assert response.json()["fields"] == {"Price": "129"}
+    assert response.json()["fields"] == {"Cost": "129"}
 
 
 def test_an_empty_fields_object_changes_nothing(client, auth):
-    _post(client, auth, {"url": URL, "fields": {"price": "129"}})
+    _post(client, auth, {"url": URL, "fields": {"cost": "129"}})
     response = _post(client, auth, {"url": URL, "fields": {}})
-    assert response.json()["fields"] == {"Price": "129"}
+    assert response.json()["fields"] == {"Cost": "129"}
 
 
 def test_a_field_the_mapping_does_not_name_keeps_its_value(client, auth):
-    _post(client, auth, {"url": URL, "fields": {"price": "129", "priority": "high"}})
+    _post(client, auth, {"url": URL, "fields": {"cost": "129", "priority": "high"}})
     response = _post(client, auth, {"url": URL, "fields": {"priority": "low"}})
-    assert response.json()["fields"] == {"Price": "129", "Priority": "low"}
+    assert response.json()["fields"] == {"Cost": "129", "Priority": "low"}
 
 
 def test_an_empty_string_clears_one_value(client, auth):
-    _post(client, auth, {"url": URL, "fields": {"price": "129", "priority": "high"}})
-    response = _post(client, auth, {"url": URL, "fields": {"price": ""}})
+    _post(client, auth, {"url": URL, "fields": {"cost": "129", "priority": "high"}})
+    response = _post(client, auth, {"url": URL, "fields": {"cost": ""}})
     assert response.json()["fields"] == {"Priority": "high"}
 
 
@@ -111,12 +119,12 @@ def test_somebody_elses_field_is_unknown_to_you(client, auth):
 
 
 def test_a_bad_number_is_ordinary_validation(client, auth):
-    response = _post(client, auth, {"url": URL, "fields": {"price": "cheap"}})
+    response = _post(client, auth, {"url": URL, "fields": {"cost": "cheap"}})
     assert response.status_code == 422
     error = response.json()["error"]
     assert error["code"] == "HRC-CORE-0002"
     # Keyed by the field's name, so a client knows which input to blame.
-    assert list(error["details"]["fields"]) == ["Price"]
+    assert list(error["details"]["fields"]) == ["Cost"]
 
 
 def test_a_value_outside_a_choice_is_refused(client, auth):
@@ -135,9 +143,9 @@ def test_a_bad_url_is_still_reported_under_url(client, auth):
 
 
 def test_the_list_carries_fields(client, auth, nina):
-    save_entry(nina, url=URL, fields={"price": "129"})
+    save_entry(nina, url=URL, fields={"cost": "129"})
     response = client.get("/api/entries/", headers=auth)
-    assert response.json()["items"][0]["fields"] == {"Price": "129"}
+    assert response.json()["items"][0]["fields"] == {"Cost": "129"}
 
 
 def test_a_batch_row_may_carry_fields(client, auth):
@@ -145,7 +153,7 @@ def test_a_batch_row_may_carry_fields(client, auth):
         client,
         auth,
         [
-            {"url": "https://example.com/1", "fields": {"price": "10"}},
+            {"url": "https://example.com/1", "fields": {"cost": "10"}},
             {"url": "https://example.com/2", "fields": {"priority": "low"}},
         ],
         path="/api/entries/batch/",
@@ -161,9 +169,9 @@ def test_a_bad_field_fails_only_its_own_row(client, auth):
         client,
         auth,
         [
-            {"url": "https://example.com/1", "fields": {"price": "10"}},
+            {"url": "https://example.com/1", "fields": {"cost": "10"}},
             {"url": "https://example.com/2", "fields": {"colour": "red"}},
-            {"url": "https://example.com/3", "fields": {"price": "30"}},
+            {"url": "https://example.com/3", "fields": {"cost": "30"}},
         ],
         path="/api/entries/batch/",
     )
@@ -179,13 +187,13 @@ def test_a_bad_value_in_a_batch_row_leaves_its_siblings_alone(client, auth):
         client,
         auth,
         [
-            {"url": "https://example.com/1", "fields": {"price": "cheap"}},
-            {"url": "https://example.com/2", "fields": {"price": "30"}},
+            {"url": "https://example.com/1", "fields": {"cost": "cheap"}},
+            {"url": "https://example.com/2", "fields": {"cost": "30"}},
         ],
         path="/api/entries/batch/",
     )
     assert response.status_code == 207
     results = response.json()["results"]
     assert results[0]["error"]["code"] == "HRC-CORE-0002"
-    assert list(results[0]["error"]["details"]["fields"]) == ["Price"]
+    assert list(results[0]["error"]["details"]["fields"]) == ["Cost"]
     assert results[1]["status"] == "created"

@@ -116,7 +116,9 @@ def test_shown_things_appear(client, collection):
 
 
 def test_only_chosen_custom_fields_appear(client, nina, collection):
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.create(
+        owner=nina, name="Cost", kind=FieldDefinition.NUMBER
+    )
     entry = collection.entries().first()
     FieldValue.objects.create(entry=entry, definition=price, value_number=1450)
     _publish(collection)

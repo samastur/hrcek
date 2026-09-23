@@ -238,7 +238,7 @@ that the field values survive:
 ```
 
 If your client means to change one attribute, read the entry first —
-[`by-url`](#reading-one-entry-by-its-address) is there for exactly
+[the lookup](#reading-one-entry-by-its-address) is there for exactly
 that — and send the whole thing back. There is no PATCH.
 
 **`fields` is the one exception**, and the next section says why.
@@ -252,10 +252,16 @@ address.
 
 Every account has fields of its own: extra things to record about an
 entry, beyond its address, title and notes. A new account starts with
-**Price**, which takes a number, and **Priority**, which takes `high`,
-`medium` or `low`. Both can be renamed or deleted by their owner, and
-more can be added, so **do not hard-code them** — read what came back
-on an entry, or ask a person what they called theirs.
+one, **Priority**, which takes `high`, `medium` or `low`. It can be
+renamed or deleted by its owner, and any number of others added, so
+**do not hard-code any of them** — read
+[`GET /api/fields/`](#get-apifields), or read what came back on an
+entry.
+
+The examples below use a number field called Price. It is not one an
+account is given: a price without a currency says too little, and
+Hrček has no field type that holds a currency, so anybody wanting one
+makes it themselves.
 
 ```json
 {"url": "https://example.com/watch",
@@ -416,14 +422,22 @@ address; their entries are unrelated.
 
 ### Reading one entry by its address
 
-`GET /api/entries/by-url/` answers the entry you hold at an address, so
+`POST /api/entries/lookup` answers the entry you hold at an address, so
 your client can look before it writes.
 
 ```bash
-curl -G https://hrcek.example.com/api/entries/by-url/ \
+curl -X POST https://hrcek.example.com/api/entries/lookup \
   -H "Authorization: Bearer $HRCEK_TOKEN" \
-  --data-urlencode "url=https://example.com/watch"
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/watch"}'
 ```
+
+**A POST, and the address goes in the body**, even though this reads
+rather than writes. An address is the private half of an entry — what
+somebody reads — and a query string is written into the web server's
+access log, into any proxy in front of it, and onto Sentry events.
+None of those are Hrček's to control, so the address never goes near
+one. Hrček's own log records the path and never the query string.
 
 ```json
 {"id": 1, "url": "https://example.com/watch",

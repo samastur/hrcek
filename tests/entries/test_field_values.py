@@ -23,7 +23,17 @@ def _person(email):
 
 @pytest.fixture
 def nina():
-    return _person("nina@example.com")
+    """An account with a number field to put values in.
+
+    Only Priority is seeded now, so a test that wants a number makes
+    one rather than borrowing whatever the account happened to start
+    with.
+    """
+    person = _person("nina@example.com")
+    FieldDefinition.objects.create(
+        owner=person, name="Cost", kind=FieldDefinition.NUMBER
+    )
+    return person
 
 
 def _value(entry, name):
@@ -74,15 +84,15 @@ def test_values_are_set_from_the_service(nina):
     entry, _ = save_entry(
         nina,
         url="https://example.com/1",
-        fields={"price": "129.00", "priority": "high"},
+        fields={"cost": "129.00", "priority": "high"},
     )
-    assert _value(entry, "price").value == "129"
+    assert _value(entry, "cost").value == "129"
     assert _value(entry, "priority").value == "high"
 
 
 def test_field_names_match_without_regard_to_case(nina):
-    entry, _ = save_entry(nina, url="https://example.com/1", fields={"PRICE": "12"})
-    assert _value(entry, "price").value == "12"
+    entry, _ = save_entry(nina, url="https://example.com/1", fields={"COST": "12"})
+    assert _value(entry, "cost").value == "12"
 
 
 def test_omitting_fields_leaves_existing_values_alone(nina):
@@ -90,45 +100,45 @@ def test_omitting_fields_leaves_existing_values_alone(nina):
 
     A client written before custom fields must not destroy them.
     """
-    entry, _ = save_entry(nina, url="https://example.com/1", fields={"price": "129"})
+    entry, _ = save_entry(nina, url="https://example.com/1", fields={"cost": "129"})
     save_entry(nina, url="https://example.com/1", title="Renamed")
-    assert _value(entry, "price").value == "129"
+    assert _value(entry, "cost").value == "129"
 
 
 def test_an_empty_fields_object_changes_nothing(nina):
-    entry, _ = save_entry(nina, url="https://example.com/1", fields={"price": "129"})
+    entry, _ = save_entry(nina, url="https://example.com/1", fields={"cost": "129"})
     save_entry(nina, url="https://example.com/1", fields={})
-    assert _value(entry, "price").value == "129"
+    assert _value(entry, "cost").value == "129"
 
 
 def test_a_field_left_out_of_a_given_mapping_keeps_its_value(nina):
     entry, _ = save_entry(
-        nina, url="https://example.com/1", fields={"price": "129", "priority": "high"}
+        nina, url="https://example.com/1", fields={"cost": "129", "priority": "high"}
     )
     save_entry(nina, url="https://example.com/1", fields={"priority": "low"})
-    assert _value(entry, "price").value == "129"
+    assert _value(entry, "cost").value == "129"
     assert _value(entry, "priority").value == "low"
 
 
 def test_an_empty_string_clears_one_value(nina):
     entry, _ = save_entry(
-        nina, url="https://example.com/1", fields={"price": "129", "priority": "high"}
+        nina, url="https://example.com/1", fields={"cost": "129", "priority": "high"}
     )
-    save_entry(nina, url="https://example.com/1", fields={"price": ""})
-    assert _value(entry, "price") is None
+    save_entry(nina, url="https://example.com/1", fields={"cost": ""})
+    assert _value(entry, "cost") is None
     assert _value(entry, "priority").value == "high"
 
 
 def test_a_value_can_be_changed(nina):
-    entry, _ = save_entry(nina, url="https://example.com/1", fields={"price": "129"})
-    save_entry(nina, url="https://example.com/1", fields={"price": "99"})
-    assert _value(entry, "price").value == "99"
+    entry, _ = save_entry(nina, url="https://example.com/1", fields={"cost": "129"})
+    save_entry(nina, url="https://example.com/1", fields={"cost": "99"})
+    assert _value(entry, "cost").value == "99"
     assert FieldValue.objects.filter(entry=entry).count() == 1
 
 
 def test_a_number_field_refuses_text(nina):
     with pytest.raises(ValidationError):
-        save_entry(nina, url="https://example.com/1", fields={"price": "cheap"})
+        save_entry(nina, url="https://example.com/1", fields={"cost": "cheap"})
 
 
 def test_a_choice_field_refuses_an_option_it_does_not_have(nina):
@@ -151,19 +161,19 @@ def test_somebody_elses_field_is_unknown_to_you(nina):
 
 def test_nothing_is_written_when_a_later_value_is_bad(nina):
     """Validation runs over the whole mapping before anything is saved."""
-    entry, _ = save_entry(nina, url="https://example.com/1", fields={"price": "129"})
+    entry, _ = save_entry(nina, url="https://example.com/1", fields={"cost": "129"})
     with pytest.raises(ValidationError):
         save_entry(
             nina,
             url="https://example.com/1",
-            fields={"price": "99", "priority": "urgent"},
+            fields={"cost": "99", "priority": "urgent"},
         )
-    assert _value(entry, "price").value == "129"
+    assert _value(entry, "cost").value == "129"
 
 
 def test_a_number_may_be_given_as_a_json_number(nina):
-    entry, _ = save_entry(nina, url="https://example.com/1", fields={"price": 129.5})
-    assert _value(entry, "price").value == "129.5"
+    entry, _ = save_entry(nina, url="https://example.com/1", fields={"cost": 129.5})
+    assert _value(entry, "cost").value == "129.5"
 
 
 def test_the_entry_form_shows_an_input_per_field(client, nina):
@@ -182,7 +192,7 @@ def test_a_choice_field_is_rendered_as_a_choice(client, nina):
 
 
 def test_the_entry_form_saves_values(client, nina):
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.get(owner=nina, name="Cost")
     priority = FieldDefinition.objects.get(owner=nina, name="Priority")
     client.force_login(nina)
     client.post(
@@ -190,12 +200,12 @@ def test_the_entry_form_saves_values(client, nina):
         _post(**{f"field_{price.pk}": "129.00", f"field_{priority.pk}": "high"}),
     )
     entry = Entry.objects.get(owner=nina)
-    assert _value(entry, "price").value == "129"
+    assert _value(entry, "cost").value == "129"
     assert _value(entry, "priority").value == "high"
 
 
 def test_the_entry_form_refuses_a_bad_number(client, nina):
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.get(owner=nina, name="Cost")
     client.force_login(nina)
     response = client.post(
         reverse("entries:create"), _post(**{f"field_{price.pk}": "cheap"})
@@ -205,22 +215,22 @@ def test_the_entry_form_refuses_a_bad_number(client, nina):
 
 
 def test_the_edit_form_arrives_with_the_values_filled_in(client, nina):
-    entry, _ = save_entry(nina, url="https://example.com/1", fields={"price": "129"})
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    entry, _ = save_entry(nina, url="https://example.com/1", fields={"cost": "129"})
+    price = FieldDefinition.objects.get(owner=nina, name="Cost")
     client.force_login(nina)
     form = client.get(reverse("entries:edit", args=[entry.pk])).context["form"]
     assert form.initial[f"field_{price.pk}"] == "129"
 
 
 def test_emptying_an_input_on_the_form_clears_the_value(client, nina):
-    entry, _ = save_entry(nina, url="https://example.com/1", fields={"price": "129"})
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    entry, _ = save_entry(nina, url="https://example.com/1", fields={"cost": "129"})
+    price = FieldDefinition.objects.get(owner=nina, name="Cost")
     client.force_login(nina)
     client.post(
         reverse("entries:edit", args=[entry.pk]),
         _post(**{f"field_{price.pk}": ""}),
     )
-    assert _value(entry, "price") is None
+    assert _value(entry, "cost") is None
 
 
 def test_the_form_offers_only_your_own_fields(client, nina):
@@ -232,16 +242,16 @@ def test_the_form_offers_only_your_own_fields(client, nina):
 
 
 def test_the_list_shows_values(client, nina):
-    save_entry(nina, url="https://example.com/1", fields={"price": "129"})
+    save_entry(nina, url="https://example.com/1", fields={"cost": "129"})
     client.force_login(nina)
     body = client.get(reverse("entries:list")).content.decode()
     assert "129" in body
-    assert "Price" in body
+    assert "Cost" in body
 
 
 def test_the_list_marks_values_up_as_name_and_value_pairs(client, nina):
     """A description list, not a paragraph with a colon in it."""
-    save_entry(nina, url="https://example.com/1", fields={"price": "129"})
+    save_entry(nina, url="https://example.com/1", fields={"cost": "129"})
     client.force_login(nina)
     pairs = _pairs(client.get(reverse("entries:list")).content.decode())
-    assert pairs == [("Price", "129")]
+    assert pairs == [("Cost", "129")]

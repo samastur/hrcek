@@ -38,12 +38,17 @@ def _label(owner, name):
 # --- fields ------------------------------------------------------------
 
 
-def test_the_seeded_fields_are_described(signed_in):
+def test_the_seeded_field_is_described(signed_in):
     body = signed_in.get(FIELDS).json()
     by_name = {field["name"]: field for field in body["items"]}
 
-    assert by_name["Price"]["kind"] == FieldDefinition.NUMBER
     assert by_name["Priority"]["kind"] == FieldDefinition.CHOICE
+
+
+def test_a_field_somebody_made_is_described_too(signed_in, nina):
+    FieldDefinition.objects.create(owner=nina, name="Cost", kind=FieldDefinition.NUMBER)
+    by_name = {field["name"]: field for field in signed_in.get(FIELDS).json()["items"]}
+    assert by_name["Cost"]["kind"] == FieldDefinition.NUMBER
 
 
 def test_a_choice_field_says_what_the_choices_are(signed_in):
@@ -87,7 +92,7 @@ def test_a_token_can_read_the_fields(client, nina):
     _token, raw = ApiToken.issue(nina, name="extension")
     response = client.get(FIELDS, headers={"authorization": f"Bearer {raw}"})
     assert response.status_code == 200
-    assert response.json()["count"] >= 2
+    assert response.json()["count"] >= 1
 
 
 # --- labels ------------------------------------------------------------

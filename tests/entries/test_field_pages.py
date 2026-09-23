@@ -19,7 +19,16 @@ def _person(email):
 
 @pytest.fixture
 def nina():
-    return _person("nina@example.com")
+    """An account with a second field beside the seeded Priority.
+
+    Only Priority is seeded now, so a test that wants two fields makes
+    the other one.
+    """
+    person = _person("nina@example.com")
+    FieldDefinition.objects.create(
+        owner=person, name="Cost", kind=FieldDefinition.NUMBER
+    )
+    return person
 
 
 def test_the_page_needs_a_session(client):
@@ -29,7 +38,7 @@ def test_the_page_needs_a_session(client):
 def test_it_lists_your_fields(client, nina):
     client.force_login(nina)
     body = client.get(reverse("entries:fields")).content.decode()
-    assert "Price" in body
+    assert "Cost" in body
     assert "Priority" in body
 
 
@@ -69,7 +78,7 @@ def test_a_new_field_belongs_to_the_person_who_added_it(client, nina):
 def test_a_duplicate_name_is_refused_in_any_casing(client, nina):
     client.force_login(nina)
     response = client.post(
-        reverse("entries:fields"), {"name": "price", "kind": "number"}
+        reverse("entries:fields"), {"name": "cost", "kind": "number"}
     )
     assert response.status_code == 200
     assert FieldDefinition.objects.filter(owner=nina).count() == 2
@@ -100,30 +109,30 @@ def test_a_field_can_be_renamed(client, nina):
 
 
 def test_a_rename_may_keep_the_same_name(client, nina):
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.get(owner=nina, name="Cost")
     client.force_login(nina)
     assert (
         client.post(
-            reverse("entries:field_edit", args=[price.pk]), {"name": "Price"}
+            reverse("entries:field_edit", args=[price.pk]), {"name": "Cost"}
         ).status_code
         == 302
     )
 
 
 def test_a_rename_onto_another_field_is_refused(client, nina):
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.get(owner=nina, name="Cost")
     client.force_login(nina)
     response = client.post(
         reverse("entries:field_edit", args=[price.pk]), {"name": "priority"}
     )
     assert response.status_code == 200
     price.refresh_from_db()
-    assert price.name == "Price"
+    assert price.name == "Cost"
 
 
 def test_editing_somebody_elses_field_is_a_404(client, nina):
     marko = _person("marko@example.com")
-    theirs = FieldDefinition.objects.get(owner=marko, name="Price")
+    theirs = FieldDefinition.objects.get(owner=marko, name="Priority")
     client.force_login(nina)
     assert (
         client.get(reverse("entries:field_edit", args=[theirs.pk])).status_code == 404
@@ -132,7 +141,7 @@ def test_editing_somebody_elses_field_is_a_404(client, nina):
 
 def test_deleting_somebody_elses_field_is_a_404(client, nina):
     marko = _person("marko@example.com")
-    theirs = FieldDefinition.objects.get(owner=marko, name="Price")
+    theirs = FieldDefinition.objects.get(owner=marko, name="Priority")
     client.force_login(nina)
     assert (
         client.post(reverse("entries:field_delete", args=[theirs.pk])).status_code
@@ -141,7 +150,7 @@ def test_deleting_somebody_elses_field_is_a_404(client, nina):
 
 
 def test_deleting_asks_first_and_says_how_many_entries(client, nina):
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.get(owner=nina, name="Cost")
     entry = Entry.objects.create(owner=nina, url="https://example.com/1")
     FieldValue.objects.create(entry=entry, definition=price, value_number=1)
     client.force_login(nina)
@@ -152,7 +161,7 @@ def test_deleting_asks_first_and_says_how_many_entries(client, nina):
 
 
 def test_deleting_removes_the_field_and_its_values(client, nina):
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.get(owner=nina, name="Cost")
     entry = Entry.objects.create(owner=nina, url="https://example.com/1")
     FieldValue.objects.create(entry=entry, definition=price, value_number=1)
     client.force_login(nina)

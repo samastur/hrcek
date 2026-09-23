@@ -15,7 +15,7 @@ EXPECTED_PATHS = {
     "/api/auth/tokens/exchange",
     "/api/entries/",
     "/api/entries/batch/",
-    "/api/entries/by-url/",
+    "/api/entries/lookup",
     "/api/fields/",
     "/api/labels/",
     "/api/entries/{pk}/image",

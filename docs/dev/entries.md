@@ -178,6 +178,24 @@ rather than saving a prefix — a half-applied batch with no report is
 worse than none.
 
 
+## Addresses stay out of query strings
+
+`POST /api/entries/lookup` reads, but it is a POST, because the
+address travels in the body. A query string is written into the web
+server's access log, into any proxy in front, and onto Sentry events —
+none of which this project controls — and an address is the private
+half of an entry.
+
+Hrček's own JSON log records `request.path` and never the query
+string, so the application log was already clean; the exposure was
+everything downstream of it. Sentry now has its query strings stripped
+as well, in `hrcek.core.telemetry.strip_query_strings`, because
+`send_default_pii=False` covers cookies, bodies and user details but
+not the query string.
+
+The 404 carries no details for the same reason: the address would
+otherwise reach any client and any log that keeps bodies.
+
 ## Reading the definitions
 
 `src/hrcek/entries/fields_api.py` serves `/api/fields/` and

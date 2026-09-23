@@ -99,7 +99,9 @@ def test_a_feed_hides_what_its_page_hides(client, collection):
 
 
 def test_a_feed_hides_fields_its_page_hides(client, nina, collection):
-    price = FieldDefinition.objects.get(owner=nina, name="Price")
+    price = FieldDefinition.objects.create(
+        owner=nina, name="Cost", kind=FieldDefinition.NUMBER
+    )
     FieldValue.objects.create(
         entry=collection.entries().first(), definition=price, value_number=1450
     )

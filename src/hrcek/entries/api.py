@@ -22,7 +22,7 @@ from hrcek.accounts.models import User
 from hrcek.core.errors import NOT_FOUND, VALIDATION_ERROR, HrcekError
 from hrcek.entries.errors import BATCH_TOO_LARGE
 from hrcek.entries.models import Entry, EntryImage
-from hrcek.entries.schemas import BatchOut, EntryIn, EntryOut
+from hrcek.entries.schemas import BatchOut, EntryIn, EntryLookupIn, EntryOut
 from hrcek.entries.services import save_entry
 
 router = Router(tags=["entries"])
@@ -68,30 +68,33 @@ def list_entries(request: HttpRequest) -> QuerySet[Entry]:
     )
 
 
-@router.get("/by-url/", response=EntryOut, operation_id="get_entry_by_url")
-def get_entry_by_url(request: HttpRequest, url: str) -> Entry:
-    """Answer the entry held at *url*, so a client can compare.
+@router.post("/lookup", response=EntryOut, operation_id="lookup_entry")
+def lookup_entry(request: HttpRequest, payload: EntryLookupIn) -> Entry:
+    """Answer the entry held at an address, so a client can compare.
 
-    Posting is an upsert, which leaves a client no way to ask what an
-    address currently says before writing over it. Listing and filtering
-    client-side is the wrong shape once somebody holds thousands of
-    entries.
+    Posting an entry is an upsert, which leaves a client no way to ask
+    what an address currently says before writing over it. Listing and
+    filtering client-side is the wrong shape once somebody holds
+    thousands of entries.
 
-    Declared before any /{id}/ route: whoever adds one must keep it
-    below this, or "by-url" will be read as an id.
+    The address arrives in the body, never in the query string. An
+    address is the private half of an entry — what somebody reads —
+    and a query string is written into the web server's access log,
+    into any proxy in front, and onto Sentry events. A body is not.
     """
     owner = cast("User", request.user)
     # The same normalisation the upsert uses, so the lookup and the save
     # agree on what counts as the same address.
     entry = (
-        Entry.objects.filter(owner=owner, url=Entry.normalise_url(url))
+        Entry.objects.filter(owner=owner, url=Entry.normalise_url(payload.url))
         .prefetch_related("tags", "field_values__definition")
         .first()
     )
     if entry is None:
         # 404 rather than 403 for somebody else's address: a 403 would
-        # confirm that somebody holds it.
-        raise HrcekError(NOT_FOUND, {"url": url})
+        # confirm that somebody holds it. The address is deliberately
+        # absent from the details, which reach clients and logs.
+        raise HrcekError(NOT_FOUND)
     return entry
 
 
@@ -168,8 +171,9 @@ def create_entries(
     return Status(207 if any_failed else 200, {"results": results})
 
 
-# Declared after /by-url/, as that route's docstring requires: a path
-# segment here would otherwise be read as an id.
+# The id routes use an int converter, so a literal segment like
+# "lookup" cannot be swallowed by one. Keep it that way: an untyped
+# <pk> here would read /lookup as an id.
 @router.post(
     "/{int:pk}/image",
     response=EntryOut,

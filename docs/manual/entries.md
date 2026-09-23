@@ -70,13 +70,17 @@ Beyond an address, a title and notes, you can record whatever else
 matters to you. Those extras are called fields, and they are yours:
 nobody else sees them, and nobody else's appear on your form.
 
-You start with two:
+You start with one:
 
-- **Price**, which takes a number
 - **Priority**, which is one of `high`, `medium` or `low`
 
-Neither is special. Rename them, delete them, or leave them be. "Your
-fields" on the entry list is where you do it.
+It is not special. Rename it, delete it, or leave it be. "Your fields"
+on the entry list is where you do it, and where you add your own.
+
+A price field is not given to you, deliberately. A number on its own
+does not say which currency it is in, and Hrček has no field that
+holds a currency. If you want one, make a number field and put the
+currency in its name — "Price in EUR" — so it says what it means.
 
 ### Adding one
 

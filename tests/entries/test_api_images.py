@@ -48,8 +48,13 @@ def entry(nina):
 
 
 def _read(client, entry):
-    # There is no get-by-id endpoint; by-url is how a client reads one.
-    return client.get(f"/api/entries/by-url/?url={entry.url}").json()
+    # There is no get-by-id endpoint; the lookup is how a client reads
+    # one, and it takes the address in a body.
+    return client.post(
+        "/api/entries/lookup",
+        {"url": entry.url},
+        content_type="application/json",
+    ).json()
 
 
 def test_an_entry_without_a_picture_says_so(signed_in, entry):

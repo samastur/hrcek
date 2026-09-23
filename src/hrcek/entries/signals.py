@@ -13,8 +13,10 @@ from hrcek.entries.models import FieldDefinition
 #: Names are stored, not displayed from a catalogue, so they are not
 #: translated: a person may rename them, and a name that changed with the
 #: interface language would be two different fields to the API.
+#: Price was here once. It was withdrawn because a price means little
+#: without a currency, and carrying a currency needs a field type this
+#: project does not have — see migration 0005.
 DEFAULT_FIELDS: tuple[tuple[str, str, list[str]], ...] = (
-    ("Price", FieldDefinition.NUMBER, []),
     ("Priority", FieldDefinition.CHOICE, ["high", "medium", "low"]),
 )
 

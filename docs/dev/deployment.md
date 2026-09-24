@@ -165,6 +165,71 @@ crosses. `tests/test_migrations.py` migrates each app to zero and back
 on a fresh database, so a `RunPython` without `reverse_code` fails the
 suite. Write the reverse when you write the migration.
 
+## Deploying from GitHub
+
+`.github/workflows/ci.yml` is one pipeline:
+
+| Job | Runs on | Does |
+|---|---|---|
+| `test` | every push and PR | hooks and the test suite |
+| `image` | every push and PR | builds, smoke-tests, and on a push publishes |
+| `deploy` | `v*` tags; or by hand | SSHes to the host and runs the release |
+
+Pull requests build the image but never publish it or see a secret; no
+job uses `pull_request_target`. Actions are pinned to commit SHAs.
+
+### Cutting a release
+
+1. Bump `version` in `pyproject.toml` on `main`.
+2. Tag that commit `v` + the version and push the tag. `image` refuses
+   a tag that does not match.
+
+The image, Sentry's release and `releases.json` then all use that tag.
+
+### Rolling back from GitHub
+
+Actions → CI → Run workflow, with the tag to go back to. It runs the
+same `deploy.sh`, which sees the release ran before and migrates down.
+
+### One-time setup
+
+On the host, as the user that runs Docker:
+
+1. Copy `deploy/compose.yaml`, `deploy/deploy.sh` (as `deploy`) and
+   `deploy/env.example` (as `.env`, mode 600) to, say, `/srv/hrcek`,
+   and `mkdir data`. Fill in `.env`.
+2. Add the nginx site from `deploy/nginx.conf.example`; get its
+   certificate with `certbot --nginx`.
+3. Make a key for GitHub: `ssh-keygen -t ed25519 -N '' -f hrcek-deploy`.
+   Add the public half to `~/.ssh/authorized_keys` locked to the
+   script:
+
+   ```
+   command="/srv/hrcek/deploy --ssh",restrict ssh-ed25519 AAAA… github-deploy
+   ```
+
+   A stolen key can then only deploy one of the published images. It
+   cannot open a shell or run anything else.
+4. Record the host key: `ssh-keyscan -t ed25519 <host>`.
+5. Check the lock: start `./deploy vX.Y.Z` in one shell and run it
+   again in another; the second must say `Another deploy is running.`
+
+On GitHub:
+
+1. Settings → Environments → New `production`. Deployment branches and
+   tags: `main` (for the Run workflow button) and `v*`. Optionally,
+   require your review.
+2. Add its secrets: `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_SSH_KEY` (the
+   private half) and `DEPLOY_KNOWN_HOSTS` (the `ssh-keyscan` line).
+   Delete the private key file from the host afterwards.
+3. Settings → Rules → New tag ruleset for `v*`, restricting creation to
+   maintainers.
+4. After the first push to `main`, make the `hrcek` package public
+   (Packages → hrcek → Package settings), so the host can pull without
+   logging in.
+5. Push the first tag. Then create the first account:
+   `docker compose exec app python manage.py createsuperuser`.
+
 ## Email
 
 Production sends through SMTP, configured with `HRCEK_SMTP_HOST`,
